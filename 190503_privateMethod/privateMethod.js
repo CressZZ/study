@@ -19,12 +19,16 @@ let Person = (function () {
   let privateProps = new WeakMap();
   class Person {
     constructor(name) {
-      this.name = name; // this is public
-      privateProps.set(this, {age: 20}); // this is private
+      privateProps.set(this, {age: 20, name}); // this is private
     }
     greet() {
       // Here we can access both name and age
-      console.log(`name: ${this.name}, age: ${privateProps.get(this).age}`);
+      console.log(`name: ${privateProps.get(this).name}, age: ${privateProps.get(this).age}`);
+    }
+    addAge(){
+      const originals = privateProps.get(this);
+      const originalAge = privateProps.get(this).age;
+      privateProps.set(this, Object.assign({},original,{age: originalAge+1}));
     }
   }
   return Person;
@@ -32,3 +36,5 @@ let Person = (function () {
 let joe = new Person('Joe');
 joe.greet();
 // here we can access joe's name but not age
+
+
