@@ -38,18 +38,45 @@ joe.greet();
 // here we can access joe's name but not age
 
 
-// Symbole 을 이용한 private member 구조
-const Index = (() => {
-  const Private = Symbol();
 
-  return class {
-    constructor (target) {
-      if (!target || typeof target !== 'string') throw 'invalid param';
-      this[Private] = { target };
+
+
+
+
+// Symbole 을 이용한 private member 구조
+const Count = (() => {
+  const count = Symbol('COUNT');
+  class Count {
+    constructor() {
+      this[count] = 0;
     }
-    get target () {
-      const { target } = this[Private];
-      return target;
+    inc() {
+      return ++this[count];
     }
-  };
-});
+    dec() {
+      return --this[count];
+    }
+    get score() { return this[count]; }
+    set score(n) { this[count] = n; }
+  }
+  return Count;
+})();
+const test = new Count();
+console.log(test.inc());   // 1
+console.log(test.inc());   // 2
+console.log(test.dec());   // 1
+console.log(test.score);   // 1
+test.score = 10;
+console.log(test.score);   // 10
+console.log(test.inc());   // 11
+
+// 접근루트가 있다....
+const testSymbol = Object.getOwnPropertySymbols(test)[0];
+test[testSymbol] = 20;
+console.log(test.score);    // 20
+console.log(test.inc());    // 21
+
+const testSymbol = Reflect.ownKeys(test)[0];
+test[testSymbol] = 20;
+console.log(test.score);    // 20
+console.log(test.dec());    // 19
