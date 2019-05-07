@@ -38,3 +38,18 @@ joe.greet();
 // here we can access joe's name but not age
 
 
+// Symbole 을 이용한 private member 구조
+const Index = (() => {
+  const Private = Symbol();
+
+  return class {
+    constructor (target) {
+      if (!target || typeof target !== 'string') throw 'invalid param';
+      this[Private] = { target };
+    }
+    get target () {
+      const { target } = this[Private];
+      return target;
+    }
+  };
+});
