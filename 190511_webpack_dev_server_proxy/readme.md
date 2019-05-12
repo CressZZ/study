@@ -1,0 +1,1 @@
+http://www.pierre-beitz.eu/2017/01/24/Dealing-with-CORS-in-a-Development-Environment-Using-a-Reverse-Proxy.html
