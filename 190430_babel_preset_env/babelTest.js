@@ -1,20 +1,21 @@
-
-// class Test {
-//     property=1;
-//     method=function(){
-//         console.log(this.property)
-
-//         this.#increaseAge()
-//         console.log('age:', this.#age)
-//     }
-//     #age=19;
-//     #increaseAge() {
-//         this.#age++;
-//     }
+// import "@babel/polyfill";
+class Test {
+    property=1;
+    method=function(){
+        console.log(this.property)
+    }
 
     
-// }
-const test = new Test()
+}
+const test = new Test();
 
 
-console.log(aa)
+console.log('aa');
+
+const test3 = async() => {
+    var list = [1,2];
+    list.map((e)=>{return e+1;})
+};
+
+var b = new Map();
+
