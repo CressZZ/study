@@ -8,8 +8,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "colosure.js",
-            "program": "${workspaceFolder}/closure.js"
+            "name": "190621_recursive.js",
+            "program": "${workspaceFolder}/190621_recursive/index.js"
         }
     ]
 }
