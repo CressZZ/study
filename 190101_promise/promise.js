@@ -61,7 +61,8 @@ async function asyncTest() {
     }
 }
 
-// promise chain
+// promise chain에 대한 고찰
+
 
 Promise.reject(1)
     .catch(res => { 
@@ -93,7 +94,7 @@ Promise.reject(1)
     .catch((res) => {
         console.log(res + 10) 
     })
-    
+
 Promise.reject(1)
     .catch(res => { 
         console.log(res); 

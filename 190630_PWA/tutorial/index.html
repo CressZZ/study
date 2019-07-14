@@ -6,14 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Study-PWA</title>
     <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
     <div class="container">
         Hello PWA
+        <img src="images/icons/192x.png" alt="">
     </div>
     <script>
 
-        console.log('aa');
+        // console.log('aa');
 
         if('serviceWorker' in navigator){
             navigator.serviceWorker.register('sw.js')
