@@ -60,10 +60,11 @@ package.json 파일에 버전을 "react-native-router-flux": "4.0.0-beta.24" 지
 ....
 
 # package-lock.json에 있는 `requires`와 `dependencies`의 차이
-- 한마디로 말하면 `requires`는 현재 프로젝트의 최상위 node_modules에서 가져다 쓸수 있는 dependencies를 말하고, 
+- 개념은 `requires` > `dependencies` 
+- 한마디로 말하면 `requires`는 현재 패키지에서 사용하는 depency의(여기서는 `gulp`) dependencies(아래의 다양한 `package`)를 모두 말한다. (`인스톨 된 위치에 상관없이`)
 - `dependencies는`는 버전 문제대문에 최상위 node_modules에서 가져다 쓸수 없는 package를 해당 (여기서는 `gulp`) 페이지 안에 node_modules를 만들어서 별도로 설치하는 것을 말함
-- `dependencies` 경로: `/Users/yjpark/Documents/static/lineagem-preorder/node_modules/gulp/node_modules/semver/`
--  `requires` 경로 : /Users/yjpark/Documents/static/lineagem-preorder/node_modules/archy/  
+- `dependencies`인 `requires` 경로 : `/Users/yjpark/Documents/static/lineagem-preorder/node_modules/gulp/node_modules/semver/`
+- `dependencies`가 아닌 `requires` 경로 : /Users/yjpark/Documents/static/lineagem-preorder/node_modules/archy/  
 
 ## 참고
 https://stackoverflow.com/questions/52926922/package-lock-json-requires-vs-dependencies
