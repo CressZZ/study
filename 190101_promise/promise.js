@@ -60,3 +60,39 @@ async function asyncTest(){
         console.log(err)
     }
 }
+
+// 4. promise chainig
+/*
+[https://javascript.info/promise-chaining#returning-promises]
+Normally, a value returned by a `.then` handler is immediately passed to the next handler, But thiere's and exceoption.
+If the returned value is a promise, then the futher execution is suspended until it settles. After that, the result of that promise is given to the next `.then` handler.
+
+for instance:
+*/
+
+new Promise((resolve, reject)=>{
+    setTimeout(()=>resolve(1),1000);
+
+}).then(result=>{
+    alert(result); // 1
+
+    return new Promise((resolve, reject)=>{ // (*)
+        setTimeout(()=>resolve(result * 2), 1000);
+    })
+
+}).then(result =>{ //(**)
+    alert(result) // 2
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>resolve(result*2), 1000)
+    });
+}).then(result =>{
+    alert(result) // 4
+});
+
+/*
+Here the first `.then` shows `1` and return `new Promise(...)` in the line(*).
+After one sectond it resolves, and the result (the argument of `resolve`, here it's `result*2`) is passed on to handeler of the second `.then`in the line `(**)`. it shows `2` and does the same thing.
+so the output is again 1->2->4, but now with 1second delay between `alert` calls.
+Returning promises allows us to build chains of asynchronous actions.
+
+*/

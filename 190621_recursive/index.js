@@ -17,24 +17,18 @@
 // console.log(findObject(arr));
 const arr = [
 	{ idx: 10, children: [] },
-	{
-		idx: 12, children: [
-			{ idx: 20, children: [] },
-			{
-				idx: 30, children: [
-					{ idx: 40, children: [] }
-				]
-			}
-		]
-	},
+	{ idx: 12, children: [
+        { idx: 20, children: [] },
+        { idx: 30, children: [
+            { idx: 40, children: [] }
+        ]}
+    ]},
 	{ idx: 50, children: [
-    { idx: 60, children: [] },
-			{
-				idx: 90, children: [
-					{ idx: 100, children: [] }
-				]
-			}
-  ] }
+        { idx: 60, children: [] },
+        { idx: 90, children: [
+            { idx: 100, children: [] }
+        ]}
+    ]}
 ];
 
 
