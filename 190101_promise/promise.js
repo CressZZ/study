@@ -61,6 +61,7 @@ async function asyncTest() {
     }
 }
 
+<<<<<<< HEAD
 
 // 4. promise chainig
 /*
@@ -98,6 +99,8 @@ Returning promises allows us to build chains of asynchronous actions.
 
 */
 
+=======
+>>>>>>> ff875708306a0b577ec2c95398d0260165d97a4d
 // promise chain에 대한 고찰
 
 
@@ -152,7 +155,11 @@ Promise.reject(1)
     .then(console.log)
     .catch((res) => {
         console.log(res + 10) 
+<<<<<<< HEAD
     })
     })
     })
     })
+=======
+    })
+>>>>>>> ff875708306a0b577ec2c95398d0260165d97a4d
