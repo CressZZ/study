@@ -4,7 +4,10 @@ var CACHE_NAME = 'pwa-offline-v1';
 // 캐싱할 웹 자원(이미지, css의 목록등)
 var filesToCache = [
   '/',
-  '/css/appsds,css',
+  '/css/app.css',
+  '/images/icons/192x.png',
+  '/images/icons/512x.png'
+
 ];
 
 // 서비스 워커 설치 (웹 자원 캐싱)
@@ -21,4 +24,17 @@ self.addEventListener('install', function (event) {
       })
   );
 
+})
+
+self.addEventListener('fetch', function(event){
+  console.log('ok!');
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response){
+        return response || fetch(event.request);
+      })
+      .catch(function(err){
+        return console.log(err);
+      })
+  );
 })

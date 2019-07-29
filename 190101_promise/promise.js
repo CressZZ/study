@@ -3,20 +3,20 @@
  */
 
 // 1. promise의 가장 기본적인 예제 - 프로미스 객체를 직접 실행
-var promise1 = new Promise((resolve, reject)=>{
-    setTimeout(()=>{
+var promise1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
         resolve('Done');
     }, 3000);
-}) 
+})
 
-promise1.then((result)=>console.log(result)); // 프로미스 객체를 직접 실행
+promise1.then((result) => console.log(result)); // 프로미스 객체를 직접 실행
 
 
 // 2. promise를 함수를 통하여 실행 - Promise를 반환해주면 된다. 
-function myAsyncFunction(text){
-    var promiseObj = new Promise((resolve, reject)=>{
-        setTimeout((text)=>{
-            resolve(text+" !!!")
+function myAsyncFunction(text) {
+    var promiseObj = new Promise((resolve, reject) => {
+        setTimeout((text) => {
+            resolve(text + " !!!")
         }, 1000)
     })
 
@@ -24,22 +24,22 @@ function myAsyncFunction(text){
 }
 
 myAsyncFunction("done")
-    .then((result)=>console.log(result));
+    .then((result) => console.log(result));
 
 
 
 // 3. 'ajax' && 'promise' && 'async/await' 예제
 
 // ajax 및 프로미스 관련 함수 
-function ajaxTest(){
-    var promise = new Promise((resolve, reject)=>{
-        try{
+function ajaxTest() {
+    var promise = new Promise((resolve, reject) => {
+        try {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', 'index.html');
-            xhr.onload = ()=>{resolve(xhr.responseText)};
-            xhr.onerror = () =>{reject(xhr.status)};
+            xhr.onload = () => { resolve(xhr.responseText) };
+            xhr.onerror = () => { reject(xhr.status) };
             xhr.send();
-        }catch{
+        } catch{
             reject('애러가 발생했당')
         }
     })
@@ -48,18 +48,19 @@ function ajaxTest(){
 
 // 일반적인 프로미스
 ajaxTest()
-    .then((result)=>console.log(result), (message)=>console.log(message))
-    .catch((err)=>console.log(err))
+    .then((result) => console.log(result), (message) => console.log(message))
+    .catch((err) => console.log(err))
 
 // async/await
-async function asyncTest(){
-    try{
+async function asyncTest() {
+    try {
         var message = await ajaxTest();
         console.log(message);
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
 }
+
 
 // 4. promise chainig
 /*
@@ -96,3 +97,62 @@ so the output is again 1->2->4, but now with 1second delay between `alert` calls
 Returning promises allows us to build chains of asynchronous actions.
 
 */
+
+// promise chain에 대한 고찰
+
+
+Promise.reject(1)
+    .catch(res => { 
+        console.log(res); 
+        return new Promise((resolve) => {
+            resolve(res + 3) 
+        }) 
+    })
+    .then(console.log)
+
+Promise.reject(1)
+    .catch(res => { 
+        console.log(res); 
+        return new Promise((resolve, reject) => { 
+            reject(res + 3) 
+        }) 
+    })
+    .then(console.log)
+    .catch((res) => {
+        console.log(res + 10) 
+    })
+
+Promise.reject(1)
+    .catch(res=>{
+        console.log(res);
+        return res+4
+    })
+    .then(console.log)
+    .catch((res) => {
+        console.log(res + 10) 
+    })
+
+Promise.reject(1)
+    .catch(res => { 
+        console.log(res); 
+        return new Promise((resolve, reject) => { 
+            return 5
+        }) 
+    })
+    .then(console.log)
+    .catch((res) => {
+        console.log(res + 10) 
+    })
+
+Promise.reject(1)
+    .catch(res => { 
+        console.log(res); 
+        return Promise.resolve(5)
+    })
+    .then(console.log)
+    .catch((res) => {
+        console.log(res + 10) 
+    })
+    })
+    })
+    })
