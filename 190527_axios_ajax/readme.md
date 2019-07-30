@@ -142,7 +142,10 @@ formData.append('image', $('input[type=file]')[0].files[0]);
 - 크롬의 경우도 encoding이 한번 되어 있는 경우라면, 두번 인코딩 하지 않기 때문이다. (**다시중요**, 근데 뭐 확실하게 나와있는 문서가 없어 ㅅㅂ) 
 - 근데 search모듈에서는 인코딩을 두번 해버린 것이다. 
 - 아 헷갈려! 몰라. 
-
+13. 우리회사는 주소창에 percent encoding 되지 않은 문자가 들어가면 404 bad request가 떨어진다. 
+    - IE에서 한글 쿼리 스트링을 넣어 보면 안다. 
+    - 아마 서버 앞단에서 막았겠지 뭐
+    
 
 ## 참고
 https://stackoverflow.com/questions/23559077/jquery-ajax-encodeuricomponent-not-working-encodeuri-does  

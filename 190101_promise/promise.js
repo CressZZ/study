@@ -153,3 +153,81 @@ Promise.reject(1)
     .catch((res) => {
         console.log(res + 10) 
     })
+
+
+/** 
+ * 아래 두개의 차이점을 알아야 한다. 
+ * // 1,2,3,4,5,6,7
+ */
+
+async function test(){
+    console.log(1);
+    console.log(await test2());
+    console.log(3);
+    await test3(); // await가 있음
+    console.log(7);
+}
+
+function test2(){
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(2);
+        }, (1000));
+    })
+};
+
+async function test3(){
+    console.log(4);
+    console.log(await test4());
+    console.log(6);
+};
+
+function test4(){
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(5);
+        }, (1000));
+    })
+};
+
+test();
+
+
+
+/**
+ * // 1,2,3,4,7,5,6
+ */
+
+
+async function test(){
+    console.log(1);
+    console.log(await test2());
+    console.log(3);
+    test3(); // awiat가 빠졌음
+    console.log(7);
+}
+
+function test2(){
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(2);
+        }, (1000));
+    })
+};
+
+async function test3(){
+    console.log(4);
+    console.log(await test4());
+    console.log(6);
+};
+
+function test4(){
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(5);
+        }, (1000));
+    })
+};
+
+test();
+
