@@ -231,3 +231,42 @@ function test4(){
 
 test();
 
+/**
+ * 아무튼 reject를 잡아낸 catch뒤에는 resolve.
+ * reject뒤에 catch가 없어야 진정한 reject(대신 catch없다면서 애러 난다)
+ */
+Promise.reject('1'); // reject (1)
+
+Promise.reject('1') // reject (1)
+    .catch(err=>{   // resolve(undefined)
+        console.log(err); 
+    });
+
+Promise.reject('1') // reject (1)
+    .catch(err=>{  // reject (3) // 밑에서 reject해줬으니까
+        console.log(err); 
+        return Promise.reject(3)
+    })
+    .catch(err=>{ // resolve (5)
+        console.log(err); 
+        return Promise.resolve(5) 
+    });
+
+/**
+ * 위 상황에 대한 현실적인 예시
+ */
+
+self.addEventListener('install', event => {
+    console.log('io');
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+        .then(cache => {
+            console.log('install origin!', self.location.origin);
+
+            return cache.addAll(CACHED_URLS) // 실패한다고 치자. reject 가 반환되고 부모의 then도 reject가 된다.
+                .then(()=>{console.log('service worker is installed!')}) 
+                .then(()=>{  self.skipWaiting();}) // 여기까지 올수 없다. 
+        })
+        .catch(err => console.log(err)) // 프로미스에 catch가 있으므로 이 프로미스는 resolve 된것 이고, 결과적으로  event.waitUntil()의 인자는 resolve이므로, install 이벤트가 완료 된다.
+    )
+})

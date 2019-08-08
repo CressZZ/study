@@ -35,7 +35,7 @@ Take a look at the links below, you will have a better understanding:
 
 
 # application/x-www-form-urlencoded, multipart/form-data, text/plain, JSON
-- POST등으로 data를 서버로 보낼때 request의 body 타입은 `application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`, `JSON` 등 여러가기가 있다. 
+- `POST등`으로 data를 서버로 보낼때 request의 body 타입은 `application/x-www-form-urlencoded`, `multipart/form-data`, `text/plain`, `JSON` 등 여러가기가 있다. 
 - 모두 `form` 태그로 전송할 수 있고, `form`태그의 `enctype` 속성값을 바꿈으로서 지정할 수 있다. 
 
 ```html
@@ -134,18 +134,18 @@ formData.append('image', $('input[type=file]')[0].files[0]);
         // %5B%5D는 아마도 [] 이다. 
     ```
 11. Axios에서 10번의 역할을 해주려면 qs module의 아래의 기능을 사용한다. (https://www.npmjs.com/package/qs)
--  return Qs.stringify(params, {arrayFormat: 'brackets'})
+    -  return Qs.stringify(params, {arrayFormat: 'brackets'})
 12. search모듈에서 인코딩 문제가 발생했던건, jquery ajax를 사용하고 있으면서, querystring을 util에서 설정해서 url에 박아 버리고, data 옵션 없이 url을 ajax로 호출 했기 때문이다. 
-- 이러면 크롬은 queyrstring을 인코딩 하는데
-- ie는 하지 않는다. 
-- 그러니까 한번 인코딩이 된 querystring을 넘겨줘야 한다. 
-- 크롬의 경우도 encoding이 한번 되어 있는 경우라면, 두번 인코딩 하지 않기 때문이다. (**다시중요**, 근데 뭐 확실하게 나와있는 문서가 없어 ㅅㅂ) 
-- 근데 search모듈에서는 인코딩을 두번 해버린 것이다. 
-- 아 헷갈려! 몰라. 
+    - 이러면 크롬은 queyrstring을 인코딩 하는데
+    - ie는 하지 않는다. 
+    - 그러니까 한번 인코딩이 된 querystring을 넘겨줘야 한다. 
+    - 크롬의 경우도 encoding이 한번 되어 있는 경우라면, 두번 인코딩 하지 않기 때문이다. (**다시중요**, 근데 뭐 확실하게 나와있는 문서가 없어 ㅅㅂ) 
+    - 근데 search모듈에서는 인코딩을 두번 해버린 것이다. 
+    - 아 헷갈려! 몰라. 
 13. 우리회사는 주소창에 percent encoding 되지 않은 문자가 들어가면 404 bad request가 떨어진다. 
     - IE에서 한글 쿼리 스트링을 넣어 보면 안다. 
     - 아마 서버 앞단에서 막았겠지 뭐
-    
+
 
 ## 참고
 https://stackoverflow.com/questions/23559077/jquery-ajax-encodeuricomponent-not-working-encodeuri-does  
