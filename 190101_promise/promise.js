@@ -85,6 +85,20 @@ Promise.reject(1)
         console.log(res + 10) 
     })
 
+
+Promise.reject(1)
+    .catch(res => { 
+        console.log(res); 
+        return new Promise((resolve, reject) => { 
+            reject(res + 3) 
+        })
+        .catch(res=>{return res+2}) 
+    })
+    .then(console.log)
+    .catch((res) => {
+        console.log(res + 10) 
+    })
+
 Promise.reject(1)
     .catch(res=>{
         console.log(res);
