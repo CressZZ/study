@@ -1,4 +1,4 @@
-// import "@babel/polyfill";
+
 class Test {
     property=1;
     method=function(){
