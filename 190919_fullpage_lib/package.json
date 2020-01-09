@@ -1,0 +1,19 @@
+{
+  "name": "190919_fullpage_lib",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^6.2.0"
+  },
+  "dependencies": {
+    "fullpage.js": "^3.0.7",
+    "jquery": "^3.4.1"
+  }
+}
