@@ -1,7 +1,7 @@
 # 내용
 .ignore 가 적용되는 범위는 어떻게 될까?
 
-# 일단 .gitignore 파일이 있는 폴더의 상위 폴더내용은 ignore처리를 못하는 것으로 보임
+# 일단 기본적으로 .gitignore 파일이 있는 폴더의 상위 폴더내용은 ignore처리를 못한다.
 
 # /ignore.js
 - .gitignore 파일이 있는 depth의 ignore.js만 적용한다. 하위폴더는 적용 안됨
