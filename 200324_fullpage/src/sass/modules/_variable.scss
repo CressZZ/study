@@ -1,0 +1,14 @@
+// $image-url: '/promo/lineage2m/update/2020/200109_oren_teaser/img/';
+$image-url: '/img/';
+
+// Breakpoint
+$breakpoints: (
+    popup: 'min-width: 500px',
+    tablet: 'min-width: 640px',
+    pc: 'min-width: 960px',
+    max: 'min-width:1260px',
+
+    // guild only
+    pre_guild_bp1: 'min-width:1260px',
+    pre_guild_bp2: 'min-width:1920px'
+);

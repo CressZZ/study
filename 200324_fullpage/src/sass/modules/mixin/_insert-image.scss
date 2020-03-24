@@ -1,0 +1,14 @@
+@mixin insert-image($url, $width: auto, $height: auto, $pc: false, $size: contain, $position: center, $repeat: no-repeat) {
+  @include hide-text;
+  @if $pc == true {
+    width: $width;
+    height: $height;
+  } @else {
+    width: $width / 2;
+    height: $height / 2;
+  }
+  background-image: url($url);
+  background-size: $size;
+  background-position: $position;
+  background-repeat: $repeat;
+}

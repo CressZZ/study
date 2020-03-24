@@ -1,0 +1,95 @@
+#share {
+  display: none;
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .share-dimmed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .share-list {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: inline-block;
+    padding: 45px 15px 25px;
+    font-size: 0;
+    white-space: nowrap;
+    background-color: #000;
+    transform: translate(-50%, -50%);
+    @include bp(pc) {
+      top: 20px;
+      left: auto;
+      right: 20px;
+      transform: translate(0, 0);
+    }
+    a[class^=share] {
+      @include hide-text;
+      display: inline-block;
+      margin: 2px 3px 3px 2px;
+      cursor: pointer;
+      &.share-kakaotalk {
+        @include insert-image($image-url + 'aside/share-kakaotalk.png', 102px, 102px);
+        @include bp(pc) {
+          @include insert-image($image-url + 'aside/share-kakaotalk.png', 51px, 51px, true);
+        }
+        .pc & {
+          display: none;
+        }
+      }
+      &.share-kakaostory {
+        @include insert-image($image-url + 'aside/share-kakaostory.png', 102px, 102px);
+        @include bp(pc) {
+          @include insert-image($image-url + 'aside/share-kakaostory.png', 51px, 51px, true);
+        }
+        .mobile & {
+          display: none;
+        }
+      }
+      &.share-line {
+        @include insert-image($image-url + 'aside/share-line.png', 102px, 102px);
+        @include bp(pc) {
+          @include insert-image($image-url + 'aside/share-line.png', 51px, 51px, true);
+        }
+      }
+      &.share-facebook {
+        @include insert-image($image-url + 'aside/share-facebook.png', 102px, 102px);
+        @include bp(pc) {
+          @include insert-image($image-url + 'aside/share-facebook.png', 51px, 51px, true);
+        }
+      }
+      &.share-twitter {
+        @include insert-image($image-url + 'aside/share-twitter.png', 102px, 102px);
+        @include bp(pc) {
+          @include insert-image($image-url + 'aside/share-twitter.png', 51px, 51px, true);
+        }
+      }
+      &.share-copy {
+        @include insert-image($image-url + 'aside/share-copy.png', 102px, 102px);
+        @include bp(pc) {
+          @include insert-image($image-url + 'aside/share-copy.png', 51px, 51px, true);
+        }
+      }
+    }
+    .share-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 0;
+      background-color: transparent;
+      border: 0;
+      cursor: pointer;
+      @include insert-image($image-url + 'aside/share-close.png', 34px, 34px);
+      @include bp(pc) {
+        @include insert-image($image-url + 'aside/share-close.png', 17px, 17px, true);
+      }
+    }
+  }
+}

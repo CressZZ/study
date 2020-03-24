@@ -1,0 +1,13 @@
+@import "main";
+@import "slide";
+@import "scroll";
+@import "sub";
+
+.container .section {
+  font-size: 30px;
+  color: #fff;
+  .fp-bg {
+    background-size: cover;
+    background-position: center 80%;
+  }
+}

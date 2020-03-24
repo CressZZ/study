@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+}
+
+input, textarea, button {
+  outline: 0;
+}
+
+[class*=" is-show"] {
+  display: block;
+}
+
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  overflow: auto;
+  margin: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, Verdana, "맑은 고딕", "Malgun Gothic", "Microsoft JhengHei", "meiryo", "MS PGothic", "돋움", Dotum, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  //max-width: 100%;
+  vertical-align: top;
+  color: red;
+}
