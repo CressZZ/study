@@ -49,20 +49,19 @@ function _test() {
 function test2() {
   return new Promise(function (res) {
     setTimeout(function () {
-      console.log('done test2');
       res(true);
-    }, 2100);
+    }, 1000);
   });
 }
 
 function test3() {
   return new Promise(function (res) {
     setTimeout(function () {
-      console.log('done test3');
       res(true);
     }, 2000);
   });
-} // test2().then(r=>console.log(r))
+}
 
-
-test();
+test2().then(function (r) {
+  return console.log(r);
+});

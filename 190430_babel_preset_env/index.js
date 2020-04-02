@@ -1,15 +1,29 @@
 
+async function test(){
+    await Promise.all([
+         test2(),
+         test3()
+    ]);
+    console.log('end')
+}
 
-// class Test {
-//     // property=1;
-//     method=function(){
-//         console.log(this.property)
-//     }
-// }
-// const test = new Test();
-console.log('aa'); 
-const test3 = async() => {
-    var list = [1,2];
-    list.map((e)=>{return e+1;})
-};
-var b = new Map();
+ function test2(){
+
+    return new Promise(res=>{
+        setTimeout(()=>{
+            console.log('done test2')
+            res(true)
+        },2100)
+    })
+}
+function test3(){
+    return new Promise(res=>{
+        setTimeout(()=>{
+            console.log('done test3')
+
+            res(true)
+        },2000)
+    })
+}
+// test2().then(r=>console.log(r))
+test()

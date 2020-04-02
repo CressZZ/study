@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/b.js"],"names":[],"mappings":";;;;;;;;;AAAA;AACA,gB","file":"1.js","sourcesContent":["// import './c.js'\nconsole.log('b')"],"sourceRoot":""}
