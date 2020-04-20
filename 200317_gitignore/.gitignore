@@ -1,1 +1,3 @@
 # ignore.js
+*.launch.json
+**/.test
