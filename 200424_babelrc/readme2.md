@@ -18,6 +18,10 @@
 - project-wide config 파일은 물리적인 경로와는 무관하기 때문에 실제 babel.config.json(js)가 어디 있던지, 컴파일 하려는 파일들이 어디에 있던지 일단 전부 적용시켜 버린다. 
 - 그래서 `node_module`안에도 적용되는 것이고, 테스트 결과 config 파일이 있는 곳의 상위 폴더에 있는 파일이라도 컴파일 할경우 해당 config 파일이 적용된다. 
 
+### 세부적인 테스트 결과 ****
+- rootDirectory(opts.root = opts.cwd = process.cwd()) = working directory 경로에 존재하는 babel.config.json(js)이 무조건 적용된다.
+- 단, 하위의 .babelrc.json(js) 가 해당 설정을 덮어 쓴다. 
+- package.json 파일을 가지고 있는 폴더의 경우 (다른 패키지라고 하자.), 즉 다른 패키지인 경우 babel.config.json(js)에 `babelrcRoots` 옵션이 적용되어 있는 경우에만 .babelrc.json(js) 가 적용된다.
 
 ## .babelrc.json(js) File-relative configuration
 - 프로젝트(package) 별로 바벨을 설정하는 컨피그 파일이다.
@@ -30,6 +34,7 @@
 ### .babelrc.json(js)의 의미
 - .babelrc.json 파일은 오직 그 파일이 속해 있는 패키지에만 영향을 준다.
 -  babelrcRoots(opts.root = opts.cwd = process.cwd())에서 벗어난 .babelrc.json 파일은 무시된다.
+
 
 # npm script 로 시작하는 경우
 - npm script를 실행할때 package.json이 있는 곳까지 폴더를 상위로 탐색한다. 
