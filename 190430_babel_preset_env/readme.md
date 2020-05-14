@@ -108,3 +108,34 @@ modules의 기본 설정인 `auto` 가 자동으로 `false` 처리를 하게 바
 https://medium.com/naver-fe-platform/webpack%EC%97%90%EC%84%9C-tree-shaking-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0-1748e0e0c365
 
 https://hoilzz.github.io/webpack/2-add-babel/
+
+
+# babel-register
+- 이건 뭐하는건지 잘 모르겠다. 
+- gulp에서 사용하는것 같다
+- 무슨 gulp hook module 이라는데...
+- 아무튼, preset-env에서 module 옵션을 false 로 주고 useBuiltIns 옵션을 usage로 주고 gulp를 돌리면
+- 자동으로 core-js 가 import 구문으로 들어간 지점에서 애러가 난다. (import 구문을 해석 못하는 듯 하다.);
+- 단, preset-env를 통해 들어간 import 구문이 아니라 수동으로 넣은 import 구문은 무리 없이 통과 된다. 
+- gulp로 번들링 되는 과정에서  preset-env가 core-js 를 import 시키는 시점이 조금 다른 것같다. 
+- 같은 파일로 webpack만들 통해 번들링 할경우 잘 번들링 된다. 
+
+## 위 상황에 대한 예시
+- 예시로 어떤 파일에 `jQuery('.test').find('.test2)` 라는 문구가 있다고 하자
+- preset-env의 module은 false, useBuiltIns는 usage 인경우, 바벨을 돌리면 바벨은 find 를 보고는 `Array.prototype.find` 인줄 알고 `import "core-js/modules/es.array.find";` 를 삽입한다. (module은 false 이므로 ESModule 형태로 들어감)
+- 그런데 이 상황에서 gulp인지, babel-register 인지, 그안에서 쓰는 다른 라이브러리든지 여튼 거기서 애러를 밷는다. 
+```
+import "core-js/modules/es.array.concat";
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+SyntaxError: Unexpected string
+    at Module._compile (internal/modules/cjs/loader.js:723:23)
+    ...
+```
+- 그러나 webpack 만 사용했을때는 (babel-loader) 문제 없이 빌드 되고 정상 작동 한다. 
+- 만약 preset-env 가 동작하지 않는 상황(`find` 같은 문구가 파일에 안쓰였을 경우)에서는
+- 파일내에 `import '../vendor/test';` 라는 ESModule이 있다 하더라도
+- 애러가 나지 않는다!
+
+
+
