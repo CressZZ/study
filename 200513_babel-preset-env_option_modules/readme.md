@@ -38,6 +38,8 @@ modules의 기본 설정인 `auto` 가 자동으로 `false` 처리를 하게 바
 즉 아무것도 안해도 트리쉐이킹이 된다는 이야기. 
 참고로 modules의 설정으로 false로 한것과 아무것도 안한것과의 번들 파일의 크기는 같았다. 
 
+위에건 babel 7 부터 적용된다. (https://github.com/babel/website/issues/1852)
+
 # 참고
 
 https://medium.com/naver-fe-platform/webpack%EC%97%90%EC%84%9C-tree-shaking-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0-1748e0e0c365

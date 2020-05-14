@@ -8,8 +8,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "190621_recursive.js",
-            "program": "${workspaceFolder}/190621_recursive/index.js"
+            "name": "190430_babel_preset_env",
+            "program": "${workspaceFolder}/190430_babel_preset_env/lib/index.js"
         }
     ]
 }

@@ -1,6 +1,6 @@
 // import "core-js";
 // import "regenerator-runtime/runtime";
-// import "./babelTest";
+
 // async function test(){
 //     await Promise.all([
 //          test2(),
@@ -9,7 +9,7 @@
 //     console.log('end')
 // }
 
- function test2(){
+function test2(){
 
     return new Promise(res=>{
         setTimeout(()=>{
@@ -18,7 +18,7 @@
         },2100)
     })
 }
-import "./babelTest";
+// import "./babelTest";
 // require("./compiled");
 // function test3(){
 //     return new Promise(res=>{
@@ -45,4 +45,4 @@ console.log(typeof [1,2]);
 var a = 2;
 if(a === 1) this._node.find('iframe').attr('src', '');
 
-exports.Modal = 1;
+// exports.Modal = 1;

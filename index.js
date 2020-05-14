@@ -1,4 +1,5 @@
-
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 function delayPromiseFactory(callback, ms){
     return new Promise((response)=>{
@@ -11,7 +12,7 @@ function delayPromiseFactory(callback, ms){
 
 
 const sayGoodmorning = ()=>{
-    console.log('good morning');
+    console.log('good mornings');
 }
 
 const sayHi = () => {

@@ -19,3 +19,4 @@ const test3 = async() => {
 
 var b = new Map();
 
+module.exports = {Test}

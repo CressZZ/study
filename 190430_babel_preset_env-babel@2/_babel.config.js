@@ -7,11 +7,11 @@ const presets = [
           // firefox: "60",
           // chrome: "79",
           // safari: "11.1",
-          // node: 8,
+          // ie:9,
         },
         useBuiltIns: "usage",
-        corejs:2,
-        // modules: 'cjs'
+        corejs:3,
+        modules: false
         // "modules": false
         // "corejs": { "version": 3, "proposals": true}
 
@@ -21,7 +21,7 @@ const presets = [
     
   ];
   const plugins=[
-      "@babel/plugin-proposal-class-properties", 
-      "@babel/plugin-proposal-private-methods"
+      // "@babel/plugin-proposal-class-properties", 
+      // "@babel/plugin-proposal-private-methods"
     ]
   module.exports = { presets, plugins };
