@@ -19,7 +19,7 @@ https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-
 -  This package doesn't make it possible to provide a smooth migration path from core-js@2 to core-js@3: for this reason, it was decided to deprecate @babel/polyfill in favor of separate inclusion of required parts of core-js and regenerator-runtime.
 
 
-# important!!!!!!!!! 바벨에서 ESModule 과 Commonjs 모듈을 혼용하고 + preset 설정중 useBuiltIns를 usage로 하면 애러가 생긴다. 
+# important!!!!!!!!! 바벨에서 ESModule 과 Commonjs 모듈을 혼용하고 + preset 설정중 useBuiltIns를 usage로 하고 modules를 auto(babel-loader 사용시) 및 false로 하면 애러가 생긴다. 
 
 해결책은 babel 옵션중 `sourceType` 을 `unambiguous`로 설정함 
 
@@ -44,7 +44,9 @@ Note: This option will not affect parsing of .mjs files, as they are currently h
 # 위에 내용을 정리하면
 - 바벨은 모든 파일을 ESmodule 이라고 생각한다. 
 - preset-env 의 설정중 module 옵션을 false로 변경 하면 core-js 가 ESModule 형태로 들어간다. (import)
-- cjs로 변경하면 require, auto(default)로 변경해도  require. (뒤에 나오지만 babel-loader가 개입된경우 auto(defaul)인 경우에도 ESModule 이 된다.)
+- false가 아니라 cjs로 변경하면 core-js 는 require 로 들어가고, auto(default)로 변경해도  require 로 들어간다. 
+- **뒤에 나오지만 babel-loader가 개입된경우 auto(defaul)인 경우에도 ESModule 이 된다. 이경우에도 당연히 애러가 남**
+
 - preset-env usebuiltinst: usage 는 필요한 core-js 를 각각의 파일에 집어 넣는데, 만약 파일 하나가 이미 commonjs 모듈을 쓰고 있었다면, 이경우 두개의 모듈 문법이 섞여 버린다. (core-js 가 MSModule 형태로 들어가기 때문)
 - 자세한 내막을 모르겠으나, 이렇게 혼재 되어 사용될경우 webpack은 exports 객체(commonjs 모듈시스템을 위한 객체)를 없애 버린다. (This can be particularly important in projects where compilation of node_modules dependencies is being performed, because inserting an import statements can cause Webpack and other tooling to see a file as an ES module, breaking what would otherwise be a functional CommonJS file.)
 - 그렇면 exports 객체를 찾을 수 없으므로 해당 모듈은 정상적으로 export 되지 않는다. 
@@ -59,7 +61,18 @@ Note: This option will not affect parsing of .mjs files, as they are currently h
 - babel-loader 는 현재의 환경이 ESModule을 알고 있다라고 판단하기 때문에 commonjs 모듈을 (다른 모듈도) commonjs 로 변경하지 않는다. 
 - 벗뜨... babel로만 돌릴 경우에는 현재의 프로세스가 ESMdule을 모른다고 판단하여 그냥 commonjs 로 core-js 를 집어 넣기 때문에 기존의 commonjs와 충돌나지 않는다. 
 
+- 그리고 당연히 preset 설정과 관계 없이 하나의 파일에 두개 이상의 module 문법이 섞여 있으면 애러가 터진다!
+- 완전히 참고로 typescript 의 경우 .tsconfig에서 아래의 esModuleInterop 옵션을 통해 모듈 형식이 섞여있어도 잘 풀어 주는듯 하다 
+- https://ui.toast.com/weekly-pick/ko_20190418/
+```js
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+    }
+}
+```
 
+- 결론은 문법을 섞어서 쓰지 맙시다!
 
 # babel.config.js 에서 preset-env 설정중 module 옵션에 관하여
 
@@ -92,17 +105,18 @@ So, what we've learned is that in order to take advantage of tree shaking, you m
 
 # 반전
 그런데
-2018년 8월에 babel에서 수정이 하나 있었는데, 현재의 프로세스가 ES6 모듈 문법을 알고 있으면
+2018년 8월에 babel에서 수정이 하나 있었는데, 현재의 프로세스(환경이)가 ES6 모듈 문법을 알고 있으면
 modules의 기본 설정인 `auto` 가 자동으로 `false` 처리를 하게 바꾼 것이다. 
 예를들면 babel-loader를 사용할경우 babel-loader가 현재의 프로세스는 ES6 모듈 문법을 알고 있다로 알려주고, 
 즉 이 경우에는 아무 설정도 안거드려도 기본적으로 Treeshaking 이 된다. 
 
-테스트 결과도 아무설정 안했을때 보다 babel.config.js 의 modules 설정을 cjs 등으로 변경했을때가 용량이 더 컷다. 
+테스트 결과도 아무설정 안했을때 보다(`auto`) babel.config.js 의 modules 설정을 cjs 등으로 변경했을때가 용량이 더 컷다. 
 즉 아무것도 안해도 트리쉐이킹이 된다는 이야기. 
 참고로 modules의 설정으로 false로 한것과 아무것도 안한것과의 번들 파일의 크기는 같았다. 
 
 위에건 babel 7 부터 적용된다. (https://github.com/babel/website/issues/1852)
 
+결론은 modules 옵션은 `false` 나 `auto`로 해야 treeshaking 이 된다.
 # 참고
 
 https://medium.com/naver-fe-platform/webpack%EC%97%90%EC%84%9C-tree-shaking-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0-1748e0e0c365
@@ -119,6 +133,9 @@ https://hoilzz.github.io/webpack/2-add-babel/
 - 단, preset-env를 통해 들어간 import 구문이 아니라 수동으로 넣은 import 구문은 무리 없이 통과 된다. 
 - gulp로 번들링 되는 과정에서  preset-env가 core-js 를 import 시키는 시점이 조금 다른 것같다. 
 - 같은 파일로 webpack만들 통해 번들링 할경우 잘 번들링 된다. 
+- module 옵션이 auto 일경우 애러가 안생기는건 좀 신기하다. 
+- 아마 auto 로 하면 일단 require로 집어 넣고(애러가 터질꺼면 이 시점에서 발생해야 하는거 아닐까?) babel-loader가 import로 변경해 줘서 그런 것일까?
+
 
 ## 위 상황에 대한 예시
 - 예시로 어떤 파일에 `jQuery('.test').find('.test2)` 라는 문구가 있다고 하자

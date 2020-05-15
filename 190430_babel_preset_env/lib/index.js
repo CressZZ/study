@@ -1,18 +1,6 @@
 "use strict";
 
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
-
-require("core-js/modules/es6.array.find");
-
-require("core-js/modules/es6.promise");
-
-require("core-js/modules/es6.object.to-string");
-
 require("./babelTest");
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 // import "core-js";
 // import "regenerator-runtime/runtime";
@@ -25,8 +13,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 //     console.log('end')
 // }
 function test2() {
-  return new Promise(function (res) {
-    setTimeout(function () {
+  return new Promise(res => {
+    setTimeout(() => {
       console.log('done test2');
       res(true);
     }, 2100);
@@ -48,7 +36,7 @@ function test2() {
 // export const a = 1;
 // exports.v = 1;
 // console.log(exports);
-console.log(_typeof([1, 2]));
+console.log(typeof [1, 2]);
 var a = 2;
 if (a === 1) (void 0)._node.find('iframe').attr('src', '');
 exports.Modal = 1;
