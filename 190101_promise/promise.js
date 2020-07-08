@@ -284,3 +284,32 @@ self.addEventListener('install', event => {
         .catch(err => console.log(err)) // 프로미스에 catch가 있으므로 이 프로미스는 resolve 된것 이고, 결과적으로  event.waitUntil()의 인자는 resolve이므로, install 이벤트가 완료 된다.
     )
 })
+
+/**
+ * 추가로 아래의 내용 참조 
+ * 1. then의 onFulfilled 함수가 어떤 '값'을 return 하면 
+ * 2. then은 return된 값으로 resolve 된 promise를 반환 한다. 
+ * 3. then의 onFulfilled 함수가 어떤 '프로미스'를 return 하면 
+ * 4. then은 return된 onFulfilled에서 리턴된 promise를 반환 한다.
+ * 
+ * 1. then의 onRejected 함수가 어떤 '값'을 throw 하면 
+ * 2. then은 return된 값으로 reject 된 promise를 반환 한다. 
+ * 3. then의 onFulfilled 함수가 어떤 '프로미스'(reject 된)를 return 하면 
+ * 4. then은 return된 onFulfilled에서 리턴된 promise (reject 된) 를 반환 한다.
+ */
+
+Promise.resolve()
+    .then(()=>'return done')
+    .then(res=>console.log('then: ' + res), rej=>console.log('catch: ' + rej))
+
+Promise.resolve()
+    .then(()=>Promise.resolve('prmomise done'))
+    .then(res=>console.log('then: ' + res), rej=>console.log('catch: ' + rej))
+
+Promise.resolve()
+    .then(()=>{throw 'throw fail'})
+    .then(res=>console.log('then: ' + res), rej=>console.log('catch: ' + rej))
+
+Promise.resolve()
+    .then(()=>Promise.reject('prmomise faile'))
+    .then(res=>console.log('then: ' + res), rej=>console.log('catch: ' + rej))
