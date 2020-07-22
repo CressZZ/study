@@ -1,0 +1,24 @@
+.swiper-container {
+  .swiper-wrapper {
+    .swiper-slide {
+      display: inline-block;
+      width: 200px;
+      height: 300px;
+      background-color: #aaa;
+    }
+  }
+  .swiper-button-next {
+
+  }
+  .swiper-button-prev {
+
+  }
+  .swiper-pagination {
+    bottom: 0;
+    .swiper-pagination-bullet {
+      &.swiper-pagination-bullet-active {
+
+      }
+    }
+  }
+}

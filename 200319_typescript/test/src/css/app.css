@@ -1,0 +1,16 @@
+
+
+body {
+    background: red;
+}
+.test2 {
+    background: blue;
+}
+.image {
+    width: 100px;
+    height: 100px;
+    /* background: url('../img/test.png'); */
+}
+/* .test1{
+    background: blue;
+} */

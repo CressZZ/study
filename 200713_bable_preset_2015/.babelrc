@@ -1,0 +1,14 @@
+{
+	"presets": [
+		// ["@babel/preset-env",
+		// {     
+		//    "useBuiltIns": "usage",
+		//   "targets": {
+		//     "chrome": "58",
+		//     "ie": "9"
+		//   }
+		// }]
+		"babel-preset-es2015"
+	]
+
+  }

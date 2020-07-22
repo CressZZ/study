@@ -1,0 +1,3 @@
+@function vw($sizeValue, $designBreakpoint: 640) {
+  @return $sizeValue*100vw / $designBreakpoint;
+}

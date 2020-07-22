@@ -1,0 +1,13 @@
+@function mpx($value, $percent: 60, $sign: 1) {
+
+    @if  $percent == ""  {
+        $percent: 60;
+    }
+
+    @if $sign != 1 {
+        $sign: -1;
+    }
+
+    @return $value*1px*($percent/100)*$sign;
+}
+// ex) margin-left: mpx(20, "", -1); // 20*0.6*-1 => -12px

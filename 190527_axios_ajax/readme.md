@@ -87,7 +87,7 @@ formData.append('image', $('input[type=file]')[0].files[0]);
 
 # 좀 복잡하지만, encoding에 관해서...
 `일단 확실하지 않은 내용 들이다.`  
-`아무리 찾아도 확실한 정보가 안나온다. 씨발 누가 좀 확실히 알려줘.`  
+`아무리 찾아도 확실한 정보가 안나온다. xx 누가 좀 확실히 알려줘.`  
 
 요약 하자면.
 1. Chrome은 get방식 요청 일때 자동으로 요청 url을 encoding(혹은 escape, percentEncoding, encodeURIComponent)를 실행한다. 

@@ -3,6 +3,7 @@ module.exports = {
         "browser": true,
         "es6": true,
         "commonjs":true,
+        "node": true,
     },
     "globals": {
         "Atomics": "readonly",

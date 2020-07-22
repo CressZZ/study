@@ -1,0 +1,83 @@
+{
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "title": "[ 타임스탬프 ]",
+      "default": "yymmddttss"
+    },
+    "meta": {
+      "type": "object",
+      "title": "[ meta 정보 ]",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "브라우저 타이틀"
+        },
+        "ogtitle": {
+          "type": "string",
+          "title": "페이스북 공유 타이틀"
+        },
+        "desc": {
+          "type": "string",
+          "title": "og:description"
+        },
+        "keywords": {
+          "type": "string",
+          "title": "keywords"
+        },
+        "url": {
+          "type": "string",
+          "title": "og:url(live url 전체 경로)"
+        },
+        "imgUrl": {
+          "type": "string",
+          "title": "facebook share 이미지(텍스트)",
+          "default": "https://"
+        }
+      }
+    },
+    "section": {
+      "type": "object",
+      "title": "[ 섹션 활성화 ]",
+      "properties": {
+        "main": {
+          "title": "메인",
+          "type": "boolean",
+          "titleMap": {
+            "true": "활성",
+            "false": "비활성"
+          },
+          "default": "true"
+        },
+        "slide": {
+          "title": "슬라이드",
+          "type": "boolean",
+          "titleMap": {
+            "true": "활성",
+            "false": "비활성"
+          },
+          "default": "true"
+        },
+        "scroll": {
+          "title": "스크롤",
+          "type": "boolean",
+          "titleMap": {
+            "true": "활성",
+            "false": "비활성"
+          },
+          "default": "true"
+        },
+        "sub": {
+          "title": "서브",
+          "type": "boolean",
+          "titleMap": {
+            "true": "활성",
+            "false": "비활성"
+          },
+          "default": "true"
+        }
+      }
+    }
+  }
+}

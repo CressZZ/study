@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>window loaded</title>
+</head>
+
+<body>
+    <!-- chrome network spped = Fast 3G -->
+    <!-- toggle 'autoplay' attribute -->
+    <!-- change video file's 'query number' -->
+    <video style="width:100%;" controls mute src="https://vod.plaync.com/Lineage2M/2020.04_veora%20update/bg_selihoden_raid.mp4?43" 
+        oncanplay="myOnCanPlayFunction()"
+        oncanplaythrough="myOnCanPlayThroughFunction()"
+        onloadeddata="myOnLoadedData()"
+        onloadedmetadata="myOnLoadedmataData()">
+    </video>
+    <!-- <video style="width:100%;" autoplay controls mute playsinline src="https://vod.plaync.com/Lineage2M/2020.04_veora%20update/bg_selihoden_raid.mp4?29" 
+        oncanplay="myOnCanPlayFunction()"
+        oncanplaythrough="myOnCanPlayThroughFunction()"
+        onloadeddata="myOnLoadedData()"
+        onloadedmetadata="myOnLoadedmataData()">
+    </video> -->
+</body>
+
+<script>
+    function myOnCanPlayFunction() { console.log('-------------Can play-------------','readyState: ', document.querySelector('video').readyState); }
+    function myOnCanPlayThroughFunction() { console.log('--------------Can play through-------------', 'readyState: ', document.querySelector('video').readyState); }
+    function myOnLoadedData() { console.log('-------------Loaded data-------------', 'readyState: ', document.querySelector('video').readyState); }
+    function myOnLoadedmataData() { console.log('-------------Loaded Meatadata-------------', 'readyState: ', document.querySelector('video').readyState); }
+
+    var time = 0;
+    var timer = setInterval(()=>{console.log(time++);  console.log('readyState: ', document.querySelector('video').readyState )}, 100)
+    window.addEventListener('load', ()=>{ clearInterval(timer); console.log('-------------window loaded-------------',' readyState: ', document.querySelector('video').readyState )})
+
+</script>
+</html>
