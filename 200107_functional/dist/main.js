@@ -97,6 +97,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./util.js");
 
+console.log('hi~');
 let products = [{
   name: 'product_1',
   price: 1000,
@@ -145,11 +146,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pipe", function() { return pipe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filter", function() { return filter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "log", function() { return log; });
-// iterable : iterator 객체를 리턴하는 [Symbol.iterator] 메서드를 가지고 있는 객체
-// iterator : next() 메서드를 통해 {valule, done} 를 리턴하는 객체
-// Well Fomred Iterator : 자기자신을  리턴하는 [Symbol.iterator] 메서드를 가지고 있는 iterator
-// generator : Well Fomred Iterator을 반환하는 함수 / iterator이자 iterable을 반환하는 함수,
-// curry : 함수를 받아서 함수를 리턴한 후, 이후 인자를 받으면, 인자가 원하는 갯수일 경우 함수를 실행한다. 
+/**
+ * iterable : iterator 객체를 리턴하는 [Symbol.iterator] 메서드를 가지고 있는 객체
+ * iterator : next() 메서드를 통해 {valule, done} 를 리턴하는 객체
+ * Well Fomred Iterator : 자기자신을  리턴하는 [Symbol.iterator] 메서드를 가지고 있는 iterator
+ * generator : Well Fomred Iterator을 반환하는 함수 / iterator이자 iterable을 반환하는 함수,
+ */
+
+/**
+ * curry
+ * 함수를 받아서 함수를 리턴한 후, 이후 인자를 받으면, 인자가 원하는 갯수일 경우 함수를 실행한다.
+ */
 const curry = f => function (a) {
   for (var _len = arguments.length, arg = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     arg[_key - 1] = arguments[_key];
@@ -162,7 +169,11 @@ const curry = f => function (a) {
 
     return f(a, ...arg2);
   };
-}; // reduce: 반복할 함수, 초기값, 이터럴을 받아서 누적값을 구한다.
+};
+/**
+ * reduce
+ * 반복할 함수, 초기값, 이터럴을 받아서 누적값을 구한다.
+ */
 
 const reduce = curry((f, acc, iter) => {
   if (!iter) {
@@ -175,7 +186,10 @@ const reduce = curry((f, acc, iter) => {
   }
 
   return acc;
-}); // map
+});
+/**
+ * map
+ */
 
 const map = curry((f, iter) => {
   let res = [];
@@ -185,8 +199,12 @@ const map = curry((f, iter) => {
   }
 
   return res;
-}); // go : [하나의 값과, 함수들]로 이루어진 인자들을 배열로 바꾼다음에 reduce의 iter매개변수에 던지고,
-// iter에 있는 함수를 누적값으로 실행하는 함수 
+});
+/**
+ * go 
+ * [하나의 값과, 함수들]로 이루어진 인자들을 배열로 바꾼다음에 reduce의 iter매개변수에 던지고,
+ * iter에 있는 함수를 누적값으로 실행하는 함수 
+ */
 
 const go = function go() {
   for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
@@ -194,7 +212,11 @@ const go = function go() {
   }
 
   return reduce((a, acc) => a(acc))(args);
-}; // pipe : go함수를 함수 팩토리 취급하여 go 함수를 만드는데, 인자로는 초기값을 던지는 함수를 만든다. 
+};
+/**
+ * pipe
+ * go함수를 함수 팩토리 취급하여 go 함수를 만드는데, 인자로는 초기값을 던지는 함수를 만든다. 
+ */
 
 const pipe = function pipe(firstFs) {
   for (var _len4 = arguments.length, fs = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
@@ -204,7 +226,10 @@ const pipe = function pipe(firstFs) {
   return function () {
     return go(firstFs(...arguments), ...fs);
   };
-}; // filter
+};
+/**
+ * filter
+ */
 
 const filter = curry((f, iter) => {
   let res = [];
@@ -215,6 +240,10 @@ const filter = curry((f, iter) => {
 
   return res;
 });
+/**
+ * console.log 
+ */
+
 const log = function log() {
   return console.log(...arguments);
 };

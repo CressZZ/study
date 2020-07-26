@@ -1,5 +1,5 @@
 import { reduce, go, pipe, curry, map, filter, log } from './util';
-
+console.log('hi~')
 let products = [
     {name: 'product_1', price: 1000, quantity: 3},
     {name: 'product_2', price: 2000, quantity: 4},
