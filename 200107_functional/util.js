@@ -22,7 +22,7 @@ export const reduce = curry((f, acc, iter) => {
     }
 
     for(const a of iter){
-        acc = f(a, acc); // 인자로 받은 함수를 '현재 값'과 '누적 값'을 인자로 실행한다. 
+        acc = f(acc, a); // 인자로 받은 함수를 '현재 값'과 '누적 값'을 인자로 실행한다. 
     }
 
     return acc;
@@ -44,7 +44,7 @@ export const map = curry((f, iter) => {
  * [하나의 값과, 함수들]로 이루어진 인자들을 배열로 바꾼다음에 reduce의 iter매개변수에 던지고,
  * iter에 있는 함수를 누적값으로 실행하는 함수 
  */
-export const go = (...args) => reduce((a, acc)=>a(acc))(args);
+export const go = (...args) => reduce( (acc, f)=>f(acc) )(args);
 
 /**
  * pipe

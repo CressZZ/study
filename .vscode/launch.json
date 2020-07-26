@@ -7,20 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-<<<<<<< Updated upstream
             "name": "190430_babel_preset_env",
             "program": "${workspaceFolder}/190430_babel_preset_env/lib/index.js"
         }
-=======
-            "name": "functional",
-            "program": "${workspaceFolder}/200107_functional/dist/main.js",
-            "sourceMaps":true,
-            "outFiles": [
-                // "${workspaceFolder}/200107_functional/dist/**/*.js", 
-                // "${workspaceFolder}/200107_functional/**/*.js"
-            ],
-            // "autoAttachChildProcesses": true 
-         }
->>>>>>> Stashed changes
     ]
 }
