@@ -153,3 +153,17 @@ https://blog.goodkiss.co.kr/entry/jQuery-ajax-사용시-Parameter-처리방법-�
 https://stackoverflow.com/questions/41953681/url-encode-in-ajax-call  
 https://stackoverflow.com/questions/5263708/jquery-ajax-encoding-data
 
+
+
+# 추가 이슈인 가이드북 이슈를 보자. 
+- 가이드 북은 view 페이지와 list 페이지로 나뉘고, 
+- 각 keyword(검색어) 대해 view 페이지는 queyrstring(?) 을사용하며, 
+- list 페이지는 SPA로서 hash(#)를 사용한다. 
+## 이슈가 발생한 상황
+- view페이지의 태그검색어(하단에 태그들의 나열)을 누르면(a 태그로 되어 있는 링크 버튼이다. keyword를 해쉬태그로 가지고 list페이지로 이동한다. ) 누른 태그를 keyword 로하는 list 페이지로 이동해야 하는데, 이상하게 IE에서만 애러가 발생했다. 
+- 위의 링크는 스크립트 파일에서 강제로 **encoding 처리**가 되어 있었다. 
+- 그럼 상식적으로 encoding 된것이 url에 밖힌거니까(ajax를 사용하지 않았다, data (axios인 경우 params)를 사용 하지 않았다). 아무튼 IE에서든, 크롬에서는 잘되야 하는게 맞는데, IE에서만 안됬다. 
+- 왜냐하면 list 페이지에서 list를 뿌려줄때 해쉬태그로 가져온 keyword를 ajax를 통해 서버로 get방식으로 보내야 하는데, 이때 IE 경우에는 keyworkd를 강제로 **인코딩**을 한번 더해서 보냈기 때문이다. 
+- 인코딩을 한번 더해서 보낸 이유는 아마도, 검색어 인풋에 직접 입력하는 경우 (위에처럼 링크를 타고온 경우가 아니라)에는 한글이 직접 주소창 hash태그로 가는거 같고, 이걸로 get방식 url을 직접 입력하는 방식으로 ajax를 하려면 인코딩을 했어야 한다. 물론 ajax를 사용하였다면 즉, data (axios인 경우 params)를 사용 했다면, 그 라이브러리에서(aixos, jquery) 에서 필요에 따라 알아서 변환 해줬을 것이다. 아무튼..
+- 위의 경우에서도 IE인 경우 2번 단락과, 4번단락에서 인코딩을 두번 해줬기 때문이다. 
+- 

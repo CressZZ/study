@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+
+    <title>Image Lasyloading - Intersection Observer</title>
+</head>
+<body>
+    <!-- <img class="lazy" src="placeholder-image.jpg" data-src="image-to-lazy-load-1x.jpg" data-srcset="image-to-lazy-load-2x.jpg 2x, image-to-lazy-load-1x.jpg 1x" alt="저는 이미지입니다!"> -->
+    <img style="display:block; margin-top: 150%" class="lazy" src="https://via.placeholder.com/150" data-src="https://tech.kakao.com/wp-content/uploads/ryan-150x150.jpg" data-srcset="image-to-lazy-load-2x.jpg 2x, image-to-lazy-load-1x.jpg 1x" alt="저는 이미지입니다!">
+    <img style="display:block; margin-top: 280%" class="lazy" src="https://via.placeholder.com/150" data-src="https://tech.kakao.com/wp-content/uploads/ryan-150x150.jpg" data-srcset="image-to-lazy-load-2x.jpg 2x, image-to-lazy-load-1x.jpg 1x" alt="저는 이미지입니다!">
+    <script>
+        // Intersection Observer 형식의 레이지 로딩
+        // 현대의 브라우저는 Intersection Observer API를 통해 레이지로딩을 지원한다. 
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('document ready')
+            var lazyImage = [].slice.call(document.querySelectorAll('img.lazy'));
+
+            if('IntersectionObserver' in window) {
+                let lazyImageObserver = new IntersectionObserver((entries, observer)=>{
+                    console.log(entries)
+                    console.log(observer)
+                    entries.forEach((entry)=>{
+                        if(entry.isIntersecting){
+                            let lazyImage = entry.target;
+                            lazyImage.src = lazyImage.dataset.src;
+                            // lazyImage.srcset = lazyImage.dataset.srcset;
+                            lazyImage.classList.remove('lazy');
+                            // lazyImageObserver.unobserve(lazyImage);
+                        }
+                    });
+                });
+                lazyImage.forEach(lazyImage => lazyImageObserver.observe(lazyImage))
+            }else{
+                // Possibly fall back to a more compaible method here
+            }
+        });
+        
+    </script>
+</body>
+</html>

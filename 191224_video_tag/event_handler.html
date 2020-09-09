@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+
+    <title>Image Lasyloading - Event Handler</title>
+</head>
+<body>
+    <img style="margin-top: 150%" class="lazy" src="https://via.placeholder.com/150" data-src="https://tech.kakao.com/wp-content/uploads/ryan-150x150.jpg" data-srcset="image-to-lazy-load-2x.jpg 2x, image-to-lazy-load-1x.jpg 1x" alt="저는 이미지입니다!">
+    
+    <script>
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('document ready!')
+            let lazyImages = [].slice.call(document.querySelectorAll('img.lazy'));
+            let active = false;
+
+            const lazyLoad = () => {
+                console.log('start', active)
+                if(active === false) {
+                    active = true;
+                    // throttle 
+                    setTimeout(() => {
+                        lazyImages.forEach(lazyImage => {
+                            console.log('settime')
+                            if((lazyImage.getBoundingClientRect().top <= window.innerHeight && lazyImage.getBoundingClientRect().bottom >= 0) && getComputedStyle(lazyImage).display !== 'none'){
+                                lazyImage.src = lazyImage.dataset.src;
+                                // lazyImage.srcset = lazyImage.dataset.srcset;
+                                lazyImage.classList.remove('lazy');
+
+                                lazyImage = lazyImages.filter(image => {
+                                    return image !== lazyImage;
+                                })
+
+                                if(lazyImage.length === 0){
+                                    document.removeEventListener('scroll', onScrollDocument);
+                                    window.removeEventListener('resize', lazyLoad);
+                                    window.removeEventListener('orientationchange', lazyLoad);
+                                }
+                            }
+                        });
+                        active = false;
+                        console.log('end', active)
+
+                    }, 200)
+                }
+            };
+
+            function onScrollDocument(){
+                console.log('scroll')
+                lazyLoad();
+            }
+
+            // lazyLoad();
+            document.addEventListener('scroll', onScrollDocument);
+            // window.addEventListener('resize', lazyLoad);
+            // window.addEventListener('orientationchange', lazyLoad);
+        });
+
+    </script>
+</body>
+</html>
+
