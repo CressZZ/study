@@ -5,6 +5,11 @@ https://www.simoahava.com/analytics/capturing-the-correct-element-in-google-tag-
 https://ko.javascript.info/bubbling-and-capturing
 https://ko.javascript.info/event-delegation
 
+# 실제로 알고싶은거 요약
+그래서 클릭이벤트가 안먹는 경우가 있다. 
+.title, .title *
+이렇게 클릭 클레스를 잡으면 된다. 
+
 # 개요
 gtm.js 에서 `documnet` 에 두개의 이벤트를 거는데, 
 `click` 이벤트와 `linkClick` 이 바로 그것이다. 
