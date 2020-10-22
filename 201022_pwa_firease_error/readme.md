@@ -173,3 +173,27 @@ https://github.com/firebase/firebase-js-sdk/issues/2364
 # 버전을 latest로 올리니 그냥 해결이 되긴하는데 테스트를 좀더 해보고 라이브에 반영 해야 할것 같다. 
 firebase@7.24.0
 
+# 추가 내용으로 7.24.0 의 경우
+같은 상황에서 
+[DELETE] https://fcmregistrations.googleapis.com/v1/projects/gamefcmwebpush/registrations/ 
+가 404로 실패하고 
+
+아래와 같이 console 에 비슷한 메시지를 뿌린다. 
+```js
+FirebaseError: Messaging: A problem occurred while unsubscribing the user from FCM: FirebaseError: Messaging: A problem occurred while unsubscribing the user from FCM: Requested entity was not found. (messaging/token-unsubscribe-failed). (messaging/token-unsubscribe-failed).
+    at https://rc-wstatic.plaync.co.kr/pwa/lineage2m/js/pwa.js?_=2002032023:3318:41
+    at step (https://rc-wstatic.plaync.co.kr/pwa/lineage2m/js/pwa.js?_=2002032023:14653:23)
+    at Object.next (https://rc-wstatic.plaync.co.kr/pwa/lineage2m/js/pwa.js?_=2002032023:14634:53)
+    at fulfilled (https://rc-wstatic.plaync.co.kr/pwa/lineage2m/js/pwa.js?_=2002032023:14624:58)
+```
+
+그러나 애러메시지는 warning으로 출력되며 뒤이어
+[POST] https://fcmregistrations.googleapis.com/v1/projects/gamefcmwebpush/registrations
+를 통해 새로운 토큰을 받아온다. 
+
+[POST] https://fcmregistrations.googleapis.com/v1/projects/gamefcmwebpush/registrations 은 구버전의
+[POST]https://fcm.googleapis.com/fcm/connect/subscribe 과 비슷한 역할을 하는 것으로 보이며
+
+아무튼 애러가 튀어나와도 토큰을 다시 받아온다는 것이 구버전과 7.24.0 버전의 차이이다.
+
+
