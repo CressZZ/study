@@ -156,3 +156,8 @@ registration.pushManager.getSubscription().then(s=>console.log(s))
 일단 예전 버전(라이브 firebase 버전은 6.3.4 (August 1, 2019) 라고 위키에 적어 놓앗다.) 돌려 보고,
 (package.json의 캐럿 때문에 버전이 자동으로 올라갔다.) 
 버전업을 해야 하는 .... 가....
+
+# 버전 내리는 것은 소용없다. 
+아 진짜 예전에는 이런 애러가 없었다. 
+있을 수가 없느데!
+내가 테스트를 몇번을 했는데
