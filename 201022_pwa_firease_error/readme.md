@@ -161,3 +161,16 @@ registration.pushManager.getSubscription().then(s=>console.log(s))
 아 진짜 예전에는 이런 애러가 없었다. 
 있을 수가 없느데!
 내가 테스트를 몇번을 했는데
+
+# 버전을 올려 보라고 한다. 
+https://github.com/firebase/firebase-js-sdk/issues/2469
+
+2364번 이슈의 경우 firebase 7.0.0 을 사용했는데 발생하는 애러로
+현재 환경과 상황이 조금 다르지만, 결국은 같은 이유로 같은 애러가 나오는 것으로 보인다. 
+https://github.com/firebase/firebase-js-sdk/issues/2364
+
+두상황 보두 최신버전으로 올리라고 한다.
+
+# 버전을 latest로 올리니 그냥 해결이 되긴하는데 테스트를 좀더 해보고 라이브에 반영 해야 할것 같다. 
+firebase@7.24.0
+
