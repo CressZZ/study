@@ -153,5 +153,6 @@ registration.pushManager.getSubscription().then(s=>console.log(s))
 ...firebase 서버에 들어가서 코드를 봐야 알거 같은데.......... 여기서는 알수가 없다. 
 
 # 그럼 이제 어쩌지?
-일단 예전 버전(라이브 firebase 버전은 6.3.4 (August 1, 2019) 라고 위키에 적어 놓앗다.) 돌려 보고, 
+일단 예전 버전(라이브 firebase 버전은 6.3.4 (August 1, 2019) 라고 위키에 적어 놓앗다.) 돌려 보고,
+(package.json의 캐럿 때문에 버전이 자동으로 올라갔다.) 
 버전업을 해야 하는 .... 가....
