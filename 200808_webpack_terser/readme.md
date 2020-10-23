@@ -1,3 +1,7 @@
+# !업데이트!!중요! terserWebpackPlugin을 v5 부터 sourceMap 옵셥이 사라졌다. 
+https://github.com/webpack-contrib/terser-webpack-plugin/releases/tag/v5.0.0
+
+
 # terser
 terser : https://github.com/terser/terser
 terserWebpackPlugin : https://webpack.js.org/plugins/terser-webpack-plugin/
@@ -53,9 +57,7 @@ module.exports = {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        terserOptions: {
-          sourceMap:  true
-        }
+        sourceMap:  true
       })
     ],
   },
@@ -85,9 +87,7 @@ module.exports = {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        terserOptions: {
-          sourceMap:  true
-        }
+        sourceMap:  true
       })
     ],
   },
