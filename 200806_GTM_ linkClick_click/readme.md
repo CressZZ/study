@@ -1,4 +1,4 @@
-# 참고
+x# 참고
 https://www.simoahava.com/gtm-tips/fix-problems-with-gtm-listeners/
 https://www.simoahava.com/analytics/capturing-the-correct-element-in-google-tag-manager/
 
