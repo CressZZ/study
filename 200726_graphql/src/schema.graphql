@@ -1,0 +1,136 @@
+type Query {
+  articles(where: ArticlesWhereInput): [Article!]!
+}
+
+input ArticlesWhereInput {
+  categoryId: ID
+}
+
+"""
+이 밑은 Google Drive로 공유됨
+"""
+type Article {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+
+  """
+  카테고리 (카테고리가 Null이면 기타 카테고리)
+  """
+  category: Category
+
+  """
+  제목
+  """
+  title: String!
+
+  """
+  조회수
+  """
+  viewNum: Int!
+
+  """
+  내용
+  """
+  content: String!
+
+  """
+  작성자
+  """
+  author: User!
+
+  """
+  댓글
+  """
+  comments: [Comment!]!
+
+  """
+  좋아요
+  """
+  likes: [Like!]!
+
+  """
+  썸네일 이미지
+  """
+  thumbnail: Image
+}
+
+type Category {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+
+  """
+  카테고리 이름
+  """
+  name: String!
+
+  """
+  해당 카테고리의 Articles
+  """
+  articles: [Article!]!
+}
+
+type Comment {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+
+  """
+  작성자
+  """
+  author: User!
+
+  """
+  내용
+  """
+  content: String!
+}
+
+type User {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+
+  """
+  닉네임
+  """
+  nickname: String!
+
+  """
+  이미지
+  """
+  image: Image
+}
+
+type Like {
+  id: ID!
+  createdAt: String!
+
+  """
+  좋아요를 한 사람
+  """
+  author: User!
+
+  """
+  좋아요를 받은 게시물
+  """
+  article: Article!
+}
+
+type Image {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  deletedAt: String
+
+  """
+  이미지 주소
+  """
+  url: String!
+}
+
