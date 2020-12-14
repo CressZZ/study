@@ -33,3 +33,29 @@ AFAICT, prior to that change you would still have needed a polyfill, as RxJS doe
 This is not a bug.
 
 IE11 does not support Promise. If you want to use RxJS in a application that has to support IE11, you will have to polyfill Promise yourself. It is not the responsibility of packages - like RxJS - to polyfilll features that were incorporated into the JavaScript language in 2015.
+
+
+# 정리
+일단 위 내용이 이슈였는데, 결국 node_moduels 의 rxjs의 의존모둘인 immediate.js 의 promise 을 어떻게 polyfill을 적용 할거냐의 문제이다. 
+
+## 전역 polyfill 사용
+바닦페이지에 bluebird.js 같은거 하나면 충분
+
+## babel 사용
+바베에서 preset-env 옵션중 useBuiltIns 을 디폴트 값인 `false` 로 놓고 바벨을 적용하려면 수동으로 `core-js` 와 `regenerator-runtime` 을 수동으로 넣어줘야 하고, 그렇게 되면 이건 전역으로 들어간다. 
+
+사실 `fasle` 고 `usage` 고 다 전역으로 들어 가니까 아무튼 이거만 쓰면 rxjs 도 폴리필이 적용된다. 
+
+문제는 바벨에서 `transform-runtime` 을 사용할 경우이다. 
+이건 전역변수가 아니라, 모듈을 사용하는 그곳에 polyfill 을 지역 변수로 만들어 버리니, 다른 스코프에서는 사용할수가 없다. 
+
+## 그런데 이번에 문제가 생긴건 이거다
+문제가 생긴 두 프로젝트 모두 `@babel/preset-env` 는 사용하지만, `babel-poylfill` 또는 `core-js`, `regenerator-runtime` 을 따로 import 하여 사용하고 있지 않았다. 그렇다고 `builtIn` 옵션에 `usage`를 넣은 것도 아니어서 자동으로 import 된것도 아니었다.
+결국 바벨이 es6 이상의 메서드 문법은 transfile 해주지도 않고 있었다는 이야기다. 
+아니 근데 promise 도 안쓸수 있나? 라고 생각이 들수 있다. 
+promise 는 두 프로젝트 모두 `promise-polyfill.js` 개별적으로(필요한 곳에 import 해서) 사용 하고 있었다. 두둥!
+결국 바벨이 polyfill 해주는 곳은 아무데도 없었다 라는 이야기
+........그렇다는 이야기!!!
+
+
+
