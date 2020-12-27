@@ -1,6 +1,24 @@
+
+https://ko.javascript.info/event-delegation
 ```js
+// 바닐라 이벤트 위임
+table.onclick = function(event) {
+	// elem.closest(selector) 메서드는 elem의 상위 요소 중 selector와 일치하는 가장 근접한 조상 요소를 반환합니다. 위 코드에선 이벤트가 발생한 요소부터 시작해 위로 올라가며 가장 가까운 <td> 요소를 찾습니다.	
+  	let td = event.target.closest('td'); 
 
+	// event.target이 <td>안에 있지 않으면 그 즉시 null을 반환하므로 아무 작업도 일어나지 않습니다.
+	if (!td) return; 
+	 
+	 // 중첩 테이블이 있는 경우 event.target은 현재 테이블 바깥에 있는 <td>가 될 수도 있습니다. 이런 경우를 처리하기 위해 <td>가 팔괘도 안에 있는지를 확인합니다.
+	if (!table.contains(td)) return;
 
+	// 이제 진짜 td를 강조해 줍니다.
+	highlight(td); 
+};
+
+```
+
+```js
 var classString = '.test4'
 
 $('#container').eq(0).addClass(classString.replace('.',''));
@@ -90,6 +108,7 @@ $(document).on('click','.test4', (e)=>{
 이때 당연하게 생각하면 e.CurrentTarget(jquery event 객체의 CurrentTarget) 가 document 여야 할거 같은데, 
 .test4 가 된다. 그리고, e.originalEvent.currentTarget 이 document 가 된다. 
 그냥 jquery 가 좀 알아 보기 쉽게 바꾼거 같다. 
+결국 jquery 입장에서는 document에 이벤트 위임을 했다고 보지 않고 그냥 .test4에 이벤트를 건 것 처럼 보이게 하는 것이 목적일지도 모른다. 
 
 
   

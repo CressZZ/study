@@ -30,6 +30,9 @@ class Test{
 }
 
 
+/**
+ * 밑밑에꺼 실행안됨 .. Object.assign 에 prototype 복사는 안된다.
+ */
 /* index.js */
 var singletonTest = SingletonTest.instance
 object.assigin(singletonTest.prototype, Test.prototype)
