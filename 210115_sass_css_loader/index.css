@@ -1,0 +1,11 @@
+@import 'test';
+
+
+body {
+	margin: auto;
+}
+
+.test{
+	background: red;
+	background-image: url('./img/2.png');
+}

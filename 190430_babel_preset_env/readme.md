@@ -45,6 +45,7 @@ Note: This option will not affect parsing of .mjs files, as they are currently h
 - 바벨은 모든 파일을 ESmodule 이라고 생각한다. 
 - preset-env 의 설정중 module 옵션을 false로 변경 하면 core-js 가 ESModule 형태로 들어간다. (import)
 - false가 아니라 cjs로 변경하면 core-js 는 require 로 들어가고, auto(default)로 변경해도  require 로 들어간다. 
+- auto(default)로 변경해도 require 로 들어가는 이유는 nodejs 환경이 ESModule 을 모르는 환경이므로 commonjs 로 변환 시켜 버릴려는 것이다. (babel-loader 가 있는 경우에는 babel-loader 가 webpack 은 ESModule 을 알고 있다고 판단하여 굳이 commonjs 로 변환 하지 않는 것)
 - **뒤에 나오지만 babel-loader가 개입된경우 auto(defaul)인 경우에도 ESModule 이 된다. 이경우에도 당연히 애러가 남**
 
 - preset-env usebuiltinst: usage 는 필요한 core-js 를 각각의 파일에 집어 넣는데, 만약 파일 하나가 이미 commonjs 모듈을 쓰고 있었다면, 이경우 두개의 모듈 문법이 섞여 버린다. (core-js 가 MSModule 형태로 들어가기 때문)
