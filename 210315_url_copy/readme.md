@@ -36,8 +36,8 @@
   
 
 # 2. 구형 브라우저 복사하기 - Range 객체 / Selection 객체 / document.execCommand('copy')
-- 1) 복사할 문구를 셀렉트 한다. 
-- 2) 복사한다. 
+1) 복사할 문구를 셀렉트 한다. 
+2) 복사한다. 
   
 ## 구형 브라우저 - 셀렉트 하는법 
 ### Range 객체 / Selection 객체를 사용하는 방법
@@ -67,13 +67,16 @@
 ### HTMLInputElement.setSelectionRange(0, 9999) / HTMLInputElement.select() 를 사용하는 방법
 
 ```js
-  textArea.setSelectionRange(0, 999999);
-  textArea.slect();
+  textArea.focus(); // IOS 12 이하 지원을 위해 사용해야 할듯 하다 
+
+  textArea.setSelectionRange(0, 999999); // 이거를 쓰거나 
+  textArea.slect(); // 이거를 쓴다
 ```
 
 #### IOS 12버전 이하 HTMLInputElement.select() 메서드가 동작하지 않는 문제
 - [In browsers where it is not supported, it is possible to replace it with a call to HTMLInputElement.setSelectionRange() with parameters 0 and the input's value length:](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/select#notes)
-- 테스트 결과 iphone6+ 에서 IOS 가 12버전 이하이면 아래의 코드가 동작 하지 않는다. 
+-  HTMLInputElement.select() 지원이 되지 않은 브라우저의 경우 setSelectionRange(0, 999999) 을 사용해야 한다.
+- 테스트 결과 IOS 가 12버전 이하이면 아래의 코드가 동작 하지 않는다. 
 
 ```js
     textArea.focus();
@@ -81,10 +84,11 @@
 ```
 - 아래의 코드로 변경해줘야 한다. 
 ```js
+   	textArea.focus();
     textArea.setSelectionRange(0, 999999);
 ```
 - MDN 에서는 select() 가 IOS 1 부터 지원된다고는 하는데, 테스트 해보면 안되는것 같다
-- [어떤 stackoverflow](https://stackoverflow.com/questions/3272089/programmatically-selecting-text-in-an-input-field-on-ios-devices-mobile-safari)와 [어떤 개인블로그](https://nicolasbouliane.com/blog/input-select-does-not-work-on-ios)에서는 일단 ios 에서는 textArea.select(); 안되고, setSelectionRange()을 써야 하는데 반드시 focus()와 함께 써야 동작한다고 나온다. 그런데 이건 12버전 이하의 경우의 이야기인것같다. 
+- [어떤 stackoverflow](https://stackoverflow.com/questions/3272089/programmatically-selecting-text-in-an-input-field-on-ios-devices-mobile-safari)와 [어떤 개인블로그](https://nicolasbouliane.com/blog/input-select-does-not-work-on-ios)에서는 일단 ios 에서는 textArea.select(); 안되고, setSelectionRange()을 써야 하는데 반드시 focus()와 함께 써야 동작한다고 나온다. 근데 focus()없어도 동작한다. 이건 12버전 이하의 경우의 이야기인것같다. 
 - 왜냐하면 블로그 작성일자는 2015.06.29, stackoverflow는 2010.07.17이고 IOS 12버전은 [2018.09.17](https://en.wikipedia.org/wiki/IOS_12)에 나왔기 때문이다.
   
 ## 구형 브라우저 - 복사하는법 
