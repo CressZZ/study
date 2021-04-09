@@ -52,3 +52,9 @@ th:with 등으로 한번이라도 정의 된 변수를 사용할때
 
 ## ${#test}
 임프트 된 클래스를 사용 할때
+
+
+# 중요! (추가로 알아낸 기능) - message property + handlbars + 조건문
+```html
+<button type="button" th:utext="#{ ${ '{{type}}' == 'BASIC' || '{{type}}' == 'SMS' || '{{type}}' == 'COUPON'  } ? type.btn.certify : type.btn.sendEmail }">
+```
