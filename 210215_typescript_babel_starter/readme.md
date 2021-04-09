@@ -9,7 +9,7 @@ https://github.com/Microsoft/TypeScript-Babel-Starter
 # 기본 컨셉
 - 타입체크는 바벨에서 해주지 않는다. (바벨은 typeScript 문법을 Plain Javascript 로 변환할 뿐이다. )
 - 즉, 타입체크 부터 하고 그다음 바벨로 돌린다는 컨셉
-- 타입체크 후 바벨 빌드를 한번 하는데, 이때 .d.ts files 이 생성 된다. (이게 뭔지 아직 잘 모름)
+- 타입체크 후 바벨 빌드를 한번 하는데, 이때 옵션에 따라 .d.ts files 이 생성 된다.
 - 
 
 
@@ -74,3 +74,9 @@ module.exports = {
     "build": "npm run build:types && npm run build:js"
   },
   ```
+
+
+  # Using Babel with TypeScript
+  https://www.typescriptlang.org/docs/handbook/babel-with-typescript.html
+
+  # s
