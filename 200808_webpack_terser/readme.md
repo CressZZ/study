@@ -53,6 +53,9 @@ module.exports = {
 
   /* minimizer에서 쓸거면 해당 옵션 필요함 */
   // The plugin respect the devtool and using the SourceMapDevToolPlugin plugin. Using supported devtool values enable source map generation. Using SourceMapDevToolPlugin with enabled the columns option enables source map generation.
+  /* 이제는 필요했었다. 라는 것이 맞는 표현 이다. */
+  /* # !업데이트!!중요! terserWebpackPlugin을 v5 부터 sourceMap 옵셥이 사라졌다. */
+  /* 즉 minimizer에서 source 맵을 쓸지 안쓸지는, minimizer 인 TerserPlugin 의 옵션이 아닌 webpack 의 옵션인 devtool 의 결정에 따른다는 것이다. */
   optimization: {
     minimize: true,
     minimizer: [
@@ -83,6 +86,9 @@ module.exports = {
 
   /* minimizer에서 쓸거면 해당 옵션 필요함 */
   // The plugin respect the devtool and using the SourceMapDevToolPlugin plugin. Using supported devtool values enable source map generation. Using SourceMapDevToolPlugin with enabled the columns option enables source map generation.
+  /* 이제는 필요했었다. 라는 것이 맞는 표현 이다. */
+  /* # !업데이트!!중요! terserWebpackPlugin을 v5 부터 sourceMap 옵셥이 사라졌다. */
+  /* 즉 minimizer에서 source 맵을 쓸지 안쓸지는, minimizer 인 TerserPlugin 의 옵션이 아닌 webpack 의 옵션인 devtool 의 결정에 따른다는 것이다. */
   optimization: {
     minimize: true,
     minimizer: [
