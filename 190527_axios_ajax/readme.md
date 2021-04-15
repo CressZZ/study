@@ -166,4 +166,39 @@ https://stackoverflow.com/questions/5263708/jquery-ajax-encoding-data
 - 왜냐하면 list 페이지에서 list를 뿌려줄때 해쉬태그로 가져온 keyword를 ajax를 통해 서버로 get방식으로 보내야 하는데, 이때 IE 경우에는 keyworkd를 강제로 **인코딩**을 한번 더해서 보냈기 때문이다. 
 - 인코딩을 한번 더해서 보낸 이유는 아마도, 검색어 인풋에 직접 입력하는 경우 (위에처럼 링크를 타고온 경우가 아니라)에는 한글이 직접 주소창 hash태그로 가는거 같고, 이걸로 get방식 url을 직접 입력하는 방식으로 ajax를 하려면 인코딩을 했어야 한다. 물론 ajax를 사용하였다면 즉, data (axios인 경우 params)를 사용 했다면, 그 라이브러리에서(aixos, jquery) 에서 필요에 따라 알아서 변환 해줬을 것이다. 아무튼..
 - 위의 경우에서도 IE인 경우 2번 단락과, 4번단락에서 인코딩을 두번 해줬기 때문이다. 
-- 
+
+
+
+# 추가 - Fetch 의 경우 참조 : / POST / application/x-www-form-urlencoded / 
+```js
+let data = {
+	phoneType: 1,
+	phoneNumber: '01011111111',
+	mainContentsContentAlias: 'smsresend-210421'
+}
+let params = new URLSearchParams();
+
+for (let key in data) {
+  if (data.hasOwnProperty(key)) {
+    params.set(key, data[key])
+  }
+}
+
+try{
+	var a = await fetch('http://rc-lineage2m.plaync.com/preorder/smsresend/resend', {
+		method:'post', 
+		body: params,
+		headers:{
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'Accept': 'application/json'
+		}
+	})
+	var result = await a.json();
+	console.log('re', result)
+}catch(err){
+	console.log('err', err);
+}
+
+
+
+```
