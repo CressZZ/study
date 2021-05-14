@@ -118,7 +118,29 @@ Both PWAs and React Native are much cheaper to develop compared to native apps, 
     - `Service Worker`의 `fetch` 이벤트 구현 
     - `HTTPS`
 
+## scope에 대해
+- 일단 중요한건 start_url 과 scope 이다. MDN에는 start_url 이 필수가 아니라고 나오지만, 210514년 현재 크롬 기준으로 start_url 이 없으면 beforeinstallprompt 이벤트가 실행되지 않는다. 
+- scope 를 지정해 주지 않으면 start_url 이 scope 역할을 한다. 
+- beforeinstallprompt 가 실행되기 위해서는 몇가지 기준을 충족해야 하는데, 이중에는 기존에 앱이 깔려 있지 않은 경우가 포함된다. 
+- 이때 앱이 깔려 있는지 확인 하는 기준이 scope (scope 없으면 start_url) 가 된다. 
+즉, /depth1-1/index.html 과 /depth1-2/index.html 이 서로 다른 manifest.json을 임포트 하고 있고, 
+- 그 manifest.json 의 scope(start_url)이 상대경로 './' 이거나 절대경로 /depth1-1/ 과  /depth1-2/ 라고 한다면 두개는 다른 스코프를 가지고 있는것으로 인식되어 어느경우에서든 둘다 설치 가 가능하다. (여기서 설치가 가능하다는 것은 beforeinstallprompt가 실행된다는 것을 의미하며(즉, 앱설치 할껀지 물어보는 로직이 가능하다는 것), 뿐만아니라 크롬 기준으로 플러스 버튼을 이용한 pwa 형식(바로가기가 아니고)의 앱설치도 같이 퐘된다. (설치가 안되는 경우는 플러스 버튼이 나오지 않는다))
+하지만,  /depth1-1/index.html  과 /depth1-1/deipth2/index.html 은 경우가 좀다르다. 
+비슷하게 둘다 다른 manifest.json을 가지고 있고, scope(start_url) 이 상대경로 './' 라고 했을때, 
+- /depth1-1/deipth2/index.html 에서 먼저 앱설치 후 /depth1-1/index.html  에서 앱을 설치하는 것은 가능하다. 
+- 그러나 /depth1-1/index.html에서 앱을 먼저 설치했다면 /depth1-1/deipth2/index.html 에서는 앱 설치가 가능하지 않다. 
+- /depth1-1/index.html 에서 설치된 앱의 스코프가 depth2 도 포함하고 있다고 보고 이미 앱이 설치 되어 있다라고 판단 하기 때문인것 같다. 
+- 좀더 찾아 봐야 겠지만, 만약 두개의 앱설치 아이콘을 만들고자 한다면
+도메인을 새로 따는것이 좋은 방법으로 보인다. 
 
+## scope VS start_url
+- If the scope member is not present in the manifest, it defaults to the parent path of the start_url member. For example, if start_url is /pages/welcome.html, and scope is missing, the navigation scope will be /pages/ on the same origin. If start_url is /pages/ (the trailing slash is important!), the navigation scope will be /pages/.
+- Developers should take care, if they rely on the default behavior, that all of the application's page URLs begin with the parent path of the start URL. To be safe, explicitly specify scope.
+(https://www.w3.org/TR/appmanifest/)
+
+
+- 말인 즉슨 `scope`를 제대로 안적어 주면 `scope`의 디폴트 값은 `start_url`의 디폴트로 정의 해준 값의 `parent path`가 스코프로 정의 된다는 거다. 왠만하면 `scope`를 적어 주라고 하고 있다.
+- 실제로 내가 적용했을때 `satrt_url: index/?aplication=pwa` 같이 정의 했더니, `https://test.com/page1/test.html` 이 `scope`에서 벗어난것처럼 작동 되었다. 왜냐하면 여기서 `scope`는 `index/` 하위의 path가 될거고, 도메인 하위의 `/page` path는 `scope`에서 벗어난게 되기 때문이다!
 
 ## beforeinstallprompt 이벤트로 설치 배너의 표시 시기를 지연하거나 disable 가증
 ```js
