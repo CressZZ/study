@@ -1,0 +1,44 @@
+
+{
+    "name": "리니지2M 홈",
+    "gcm_sender_id": "103953800507",
+    "short_name": "리니지2M 홈",
+    "icons": [
+      {
+        "src": "/icons/price/128x.png",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/price/144x.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/price/152x.png",
+        "sizes": "152x152",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/price/192x.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/price/256x.png",
+        "sizes": "256x256",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/price/512x.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "./index.html?price",
+    "scope": "http://127.0.0.1:5500/depth1/depth2/",
+    "display": "standalone",
+    "background_color": "#242424",
+    "theme_color": "#000000"
+  }
+  
