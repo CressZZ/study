@@ -1,3 +1,23 @@
+# 아 또 햇갈림
+
+https://stackoverflow.com/questions/47255455/babel-polyfill-vs-babel-plugins/47326735
+
+Babel 변환 플러그인과 babel-polyfill / babel-runtime의 차이점은 ES5에서 오늘 기능을 다시 구현할 수 있는지 여부입니다. 예를 들어 Array.from은 ES5에서 다시 작성할 수 있지만 ES5에서 JavaScript에 화살표 함수 구문을 추가하기 위해 작성할 수있는 내용이 없습니다. 따라서 화살표 함수에는 변환이 있지만 Array.from에는 변환이 없습니다. Babel-polyfill 또는 babel-runtime과 같은 별도의 polyfill에 의해 제공되어야합니다.
+
+즉 화살표 함수는 문장 자체를 완전 바꿔야 하고, 
+메서드는 그냥 정의만 하면 문장을 바꾸는게 아니라, 메서드만 추가로 정희 한다는 이야기 인거 같다. 
+
+그니까...
+babel@preset-env 를 쓰고, 타겟을 지정하면
+기본적으로 플러그인! 즉, 문장변환을 지정한 타겟 환경에 따라 바꿔 주는 역할을 하는 것. (왜만한 플러그인이 다 들어 있다고 보면 되고 )
+
+preset-env 의 usage 옵션은 
+This option configures how @babel/preset-env handles polyfills.
+와 같이 preset-env 가 polyfills 를 어떻게 제어 하는지 (폴리필은 메서드 추가 개념)
+을 결정 하는 것이다. ?
+
+
+
 # core-js@3
 https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md
 
