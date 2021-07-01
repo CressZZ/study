@@ -53,3 +53,8 @@ export default class App extends React.Component {
 - url 등으로 파일 불러올때, 임의로 파일 위치를 지정해주고, 진짜 이미지 위치도 dist 안과 같이 옮기고 이름도 바꿔버린다. 
 - 뭐 별다른 거 하는건 아닌가?
 - url-loader 는 별다른걸 한다. 
+
+# url-loader
+- 모든 파일을 변환하는 것이 아니라 limit보다 작은 파일만을 변환하고 그 이상의 큰 파일은 file-loader를 통해서 처리해준다.
+  https://velog.io/@jeongnaehyeok/file-loader-vs-url-loader
+  https://jeonghwan-kim.github.io/js/2017/05/22/webpack-file-loader.html
