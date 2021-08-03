@@ -1,0 +1,25 @@
+{
+  "name": "study",
+  "version": "1.0.0",
+  "description": "## 2020 계획 - 해야 할거 - 함수형 프로그래밍 - Devops  - 백엔드 설정          - 서버     - DB         - nosql, graphsql - bundling     - babel 7 -> 8     - webpack 4 -> 5     - eslint? - TDD - jest - Redux",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CressZZ/study.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CressZZ/study/issues"
+  },
+  "homepage": "https://github.com/CressZZ/study#readme",
+  "devDependencies": {
+    "webpack": "^5.48.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
