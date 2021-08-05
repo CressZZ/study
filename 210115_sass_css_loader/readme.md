@@ -56,5 +56,40 @@ export default class App extends React.Component {
 
 # url-loader
 - 모든 파일을 변환하는 것이 아니라 limit보다 작은 파일만을 변환하고 그 이상의 큰 파일은 file-loader를 통해서 처리해준다.
+- url-loader 사용하려면 file-loader 도 있어야 한다.
   https://velog.io/@jeongnaehyeok/file-loader-vs-url-loader
   https://jeonghwan-kim.github.io/js/2017/05/22/webpack-file-loader.html
+
+# ㅆ비ㅣㅏㄹ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+https://github.com/webpack-contrib/css-loader/releases/tag/v6.0.0
+
+file-loader and url-loader are deprecated, please migrate on asset modules, since v6 css-loader is generating new URL(...) syntax, it enables by default built-in assets modules, i.e. type: 'asset' for all url()
+
+https://webpack.js.org/guides/asset-modules/
+
+Prior to webpack 5 it was common to use:
+
+raw-loader to import a file as a string
+url-loader to inline a file into the bundle as a data URI
+file-loader to emit a file into the output directory
+Asset Modules type replaces all of these loaders by adding 4 new module types:
+
+asset/resource emits a separate file and exports the URL. Previously achievable by using file-loader.
+asset/inline exports a data URI of the asset. Previously achievable by using url-loader.
+asset/source exports the source code of the asset. Previously achievable by using raw-loader.
+asset automatically chooses between exporting a data URI and emitting a separate file. Previously achievable by using url-loader with asset size limit.
+
+
+왜!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 디프리케이티드냐고!!!!!!!!!!!!!!!!!!!!!!!!
+어쩌라고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ㅉㅉㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ올ㄹㄹㄴㅁ나 힘들게 익혀 노면 뭐 맨날 반ㄲ/ㅟ냐고!!!ㄴ ㅁㅁㅁㄹ ㅑㅁㄴ얼 ㅁㄴ애ㅏ ㄹ먄 ㅇ랴
+
+랴 ㅁㄴ알
+
+메안 레
+레ㅏ
+ㅏㅁㄴㅇㄹ
+ㅁㄴ
+ㅁㄴㅇ
+ㄹㅁㄴ
+ㄴㅇ씨발ㄹㄹㄹㄹㄹ1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

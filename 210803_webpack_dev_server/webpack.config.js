@@ -16,13 +16,40 @@ module.exports = {
     port: 9001,
     hot: true,
     proxy: {
-      '/i18n':{
+      // '/test':{
 
-        target: 'http://wstatic-cdn.plaync.com',
+      //   target: 'http://localhost:9001',
+      //   // target: 'http://l',
+      //   changeOrigin: true
+      // },
+      // '/common':{
+      //   target: 'https://op-wstatic.ncsoft.com',
+      //   // target: 'http://l',
+      //   changeOrigin: true
+      // },
+      '*': {
+        target: 'http://opdev.lineagem.plaync.com',
         // target: 'http://l',
         changeOrigin: true
+      },
+      'https://op-wstatic.ncsoft.com': {
+        target: 'http://localhost:3000',
+        // target: 'http://l',
+        changeOrigin: true,
+        router:{
+          'localhost:9001':'http://localhost:3000'
+        }
       }
     }
+    // proxy: [
+    //   {
+    //     context:['*'],
+    //     target:'http://opdev.lineagem.plaync.com',
+    //     changeOrigin: true
+    //   }
+    // ],
+
+
   },
 
 };
