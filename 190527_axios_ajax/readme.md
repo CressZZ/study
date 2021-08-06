@@ -202,3 +202,13 @@ try{
 
 
 ```
+
+# IE9 포함 그 이하는 axios 안된다. 
+https://github.com/axios/axios/issues/265
+Thanks for logging this issue, however, I think this is now stale. I am going to close this for now as IE9 has lost official support since March 31, 2017.
+
+Json 파일 가져 오려는데 data가 undefined 로 들어와서 찾아보니 9이하는 지원 안하는...
+뭐지....
+그럼 구버전 IE 지우너 하려면 Axios 못쓰나..
+어차피 9를 누가써..
+IE 도 끝났..
