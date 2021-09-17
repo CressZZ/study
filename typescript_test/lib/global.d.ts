@@ -1,3 +1,0 @@
-interface interTest {
-    str: string;
-}
