@@ -60,7 +60,7 @@ export default class App extends React.Component {
   https://velog.io/@jeongnaehyeok/file-loader-vs-url-loader
   https://jeonghwan-kim.github.io/js/2017/05/22/webpack-file-loader.html
 
-# ㅆ비ㅣㅏㄹ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# 데헷!
 https://github.com/webpack-contrib/css-loader/releases/tag/v6.0.0
 
 file-loader and url-loader are deprecated, please migrate on asset modules, since v6 css-loader is generating new URL(...) syntax, it enables by default built-in assets modules, i.e. type: 'asset' for all url()
@@ -80,16 +80,4 @@ asset/source exports the source code of the asset. Previously achievable by usin
 asset automatically chooses between exporting a data URI and emitting a separate file. Previously achievable by using url-loader with asset size limit.
 
 
-왜!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 디프리케이티드냐고!!!!!!!!!!!!!!!!!!!!!!!!
-어쩌라고!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-ㅉㅉㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ올ㄹㄹㄴㅁ나 힘들게 익혀 노면 뭐 맨날 반ㄲ/ㅟ냐고!!!ㄴ ㅁㅁㅁㄹ ㅑㅁㄴ얼 ㅁㄴ애ㅏ ㄹ먄 ㅇ랴
-
-랴 ㅁㄴ알
-
-메안 레
-레ㅏ
-ㅏㅁㄴㅇㄹ
-ㅁㄴ
-ㅁㄴㅇ
-ㄹㅁㄴ
-ㄴㅇ씨발ㄹㄹㄹㄹㄹ1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+변경 되었다!!?
