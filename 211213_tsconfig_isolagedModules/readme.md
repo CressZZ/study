@@ -61,3 +61,11 @@ https://stackoverflow.com/questions/56577201/why-is-isolatedmodules-error-fixed-
 
 에디터에 표시되는 애러는 tsconfig를 사용하는게 맞다. 그런데 바벨로더에서 ts 파일을 처리하기 위해 자체적인 옵션을 쓴다는 이야기다. 만약 ts-loader 를 사용한다면 ts-loader 는 tsc 를 사용할것이고 , 이건 ts-config 를 사용하며, 스크립트모드도 이해할수 있을것이다. 
 
+# 실험적 기능이란
+https://github.com/eslint/eslint/blob/a675c89573836adaf108a932696b061946abf1e6/README.md#what-about-experimental-features
+
+ESLint's parser only officially supports the latest final ECMAScript standard. We will make changes to core rules in order to avoid crashes on stage 3 ECMAScript syntax proposals (as long as they are implemented using the correct experimental ESTree syntax). We may make changes to core rules to better work with language extensions (such as JSX, Flow, and TypeScript) on a case-by-case basis.
+
+In other cases (including if rules need to warn on more or fewer cases due to new syntax, rather than just not crashing), we recommend you use other parsers and/or rule plugins. If you are using Babel, you can use the babel-eslint parser and eslint-plugin-babel to use any option available in Babel.
+
+Once a language feature has been adopted into the ECMAScript standard (stage 4 according to the TC39 process), we will accept issues and pull requests related to the new feature, subject to our contributing guidelines. Until then, please use the appropriate parser and plugin(s) for your experimental feature.
