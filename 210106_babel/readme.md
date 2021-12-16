@@ -19,12 +19,15 @@
 - 즉 plugin 없으면 인풋과 아웃풋의 문법이 동일하다. 
 - Babel is a compiler (source code => output code). Like many other compilers it runs in 3 stages: parsing, transforming, and printing.
 -  Now, out of the box Babel doesn't do anything. It basically acts like const babel = code => code; by parsing the code and then generating the same code back out again. You will need to add plugins for Babel to do anything.
-  
+
+
+- 중요!! 꼭 문법 말고 폴리필도 다 포함이다. @babel/pollyfil 이 너무 다 가지고 있어서 플러그인에 넣을 필요가 없었던 것 같다
 ## polyfill (@babel/pollyfil, core-js, regenerator-runtime)
 - 플러그 인이 문법을 어떻게 변환해야하는지 알려주는 지침이라면
 - 폴리필은 메서드를 어떻게 변환할지 알려주는 지침이다. (지침이라기 보다는 그냥 그 메서드를 구현해 놓은 함수 집합체의 느낌)
 - this means you can use new built-ins like Promise or WeakMap, static methods like Array.from or Object.assign, instance methods like Array.prototype.includes, and generator functions (provided you use the regenerator plugin). The polyfill adds to the global scope as well as native prototypes like String in order to do this.
 
+[babel plugin vs polyfill](https://ui.dev/compiling-polyfills/)
 ### @babel/pollyfil
 - core-js 와 regenerator-runtime 을 둘다 가지고 있는그냥 집합체
 - core-js 와 egenerator-runtime을 항상 같이 사용할 필요가 없기때문에 deprecated 되었다. 
@@ -34,7 +37,7 @@
 
 ### regenerator-runtime
 - generator function 관련 폴리필을 가지고 있는 모듈
-- 참고로 프로미스도 generator 구현이기때문에 이게 필요하다. 
+- 참고로 async generator 구현이기때문에 이게 필요하다. 
 
 ## @babel/preset-env
 - 모든 문법 플러그인을 가지고 있고 주어진 환경에 따라 (browserlist 나 env 옵션중 target 으로 설정해야 한다.) 사용할 플러그인을 import 한다. 
@@ -51,4 +54,26 @@
 - Babel uses very small helpers for common functions such as _extend. By default this will be added to every file that requires it. This duplication is sometimes unnecessary, especially when your application is spread out over multiple files.
 - polyfill 은 기본적으로 전역을 덮어 쓴다. 
 - This is where the @babel/plugin-transform-runtime plugin comes in: all of the helpers will reference the module @babel/runtime to avoid duplication across your compiled output. The runtime will be compiled into your build.
-- 그 전역으로 덮어쓴 폴리필을 지역을로 바꿀수 있다. 
+- 그 전역으로 덮어쓴 폴리필을 지역을로 바꿀수 있다
+- 참고사항 : Instance methods such as "foobar".includes("foo") will only work when using corejs: 3.
+- 참고사항 : [The reason babel is including the polyfills is because the @babel/transform-runtime plugin doesn't have an option to specify targets, ](https://github.com/babel/babel/issues/11539)
+
+## @babel/runtime
+This is meant to be used as a runtime dependency along with the Babel plugin @babel/plugin-transform-runtime. Please check out the documentation in that package for usage.
+
+# runtime helper 란
+정확하지는 않은데,  @babel/plugin-transform-runtime 을 사용할때 전역 오염을 시키지 않고, 
+`var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/promise"));`
+처럼 변수 하나를 만들어서 사용하는데, 이때 `_promies` 등을 헬퍼라고 하는것 같다
+[여기](https://babeljs.io/docs/en/babel-plugin-transform-runtime) 에 따르면 
+
+> This option requires changing the dependency used to provide the necessary runtime helpers:
+
+라고 나오는데, 참조 하면 될거 같다. 
+
+# @babel/plugin-transform-runtime 과 @babel/preset-env 를 같이 쓰면 안된다?
+https://github.com/babel/babel/issues/9853#issuecomment-619587386
+# 참고 할만한 페이지
+https://simsimjae.medium.com/%EA%B0%9C%EB%B0%9C%EC%9D%84-%ED%95%98%EB%8B%A4%EB%B3%B4%EB%8B%88-%EC%9D%B4%EB%9F%B0-%EC%97%90%EB%9F%AC%EA%B0%80-%EC%83%9D%EA%B2%A8%EC%84%9C-%EC%9B%90%EC%9D%B8%EC%9D%84-%EC%B0%BE%EB%8B%A4%EA%B0%80-%ED%8F%B4%EB%A6%AC%ED%95%84-%EB%AC%B8%EC%A0%9C%EB%9D%BC%EB%8A%94%EA%B1%B8-%EA%B9%A8%EB%8B%AB%EA%B3%A0-%EC%A0%95%EB%A6%AC%ED%95%A9%EB%8B%88%EB%8B%A4-217a207f8181
+
+https://tech.kakao.com/2020/12/01/frontend-growth-02/
