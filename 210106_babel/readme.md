@@ -48,28 +48,18 @@
 - 그러니까 메서드를 변환하려면 core-js 와 refenrator-runtime 이 필요하다. 
 - 즉, 위에서 보면 core-js와 refenrator-runtime를 직접 넣던지, @babel/polyfill 으로 넣던지 인데, 
 - 
--  @babel/plugin-transform-runtime 을 사용하면 core-js 기반의 core-js-pure를 사용하여 전역을 오염시키지 않고 polyfill을 적용한다.  (https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md#babelruntime)
--  
-- 일반적인 문법 plugin 과 다르다
+-  core-js@3 과 함게 @babel/plugin-transform-runtime 을 사용하면 @babel/runtime 대신 @babel/runtime-corejs3 을 사용하며 이건 core-js 기반의 core-js-pure를 사용하여 전역을 오염시키지 않고 polyfill을 적용한다.  (https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md#babelruntime)
+-  corejs 옵션없이 @babel/plugin-transform-runtime 사용ㅎ면 폴리필 적용이 안된다(@baebl/runtime 은 폴리필을 가지고 있지 않으므로)
+- 폴리필은 일반적인 문법 plugin 과 다르다
 - Babel uses very small helpers for common functions such as _extend. By default this will be added to every file that requires it. This duplication is sometimes unnecessary, especially when your application is spread out over multiple files.
 - polyfill 은 기본적으로 전역을 덮어 쓴다. 
 - This is where the @babel/plugin-transform-runtime plugin comes in: all of the helpers will reference the module @babel/runtime to avoid duplication across your compiled output. The runtime will be compiled into your build.
-- 그 전역으로 덮어쓴 폴리필을 지역을로 바꿀수 있다
+- core-js@3 과 함게 @babel/plugin-transform-runtime 을 사용하면 그 전역으로 덮어쓴 폴리필을 지역을로 바꿀수 있다
 - 참고사항 : Instance methods such as "foobar".includes("foo") will only work when using corejs: 3.
 - 참고사항 : [The reason babel is including the polyfills is because the @babel/transform-runtime plugin doesn't have an option to specify targets, ](https://github.com/babel/babel/issues/11539)
 
 ## @babel/runtime
 This is meant to be used as a runtime dependency along with the Babel plugin @babel/plugin-transform-runtime. Please check out the documentation in that package for usage.
-
-# runtime helper 란
-정확하지는 않은데,  @babel/plugin-transform-runtime 을 사용할때 전역 오염을 시키지 않고, 
-`var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js-stable/promise"));`
-처럼 변수 하나를 만들어서 사용하는데, 이때 `_promies` 등을 헬퍼라고 하는것 같다
-[여기](https://babeljs.io/docs/en/babel-plugin-transform-runtime) 에 따르면 
-
-> This option requires changing the dependency used to provide the necessary runtime helpers:
-
-라고 나오는데, 참조 하면 될거 같다. 
 
 # @babel/plugin-transform-runtime 과 @babel/preset-env 를 같이 쓰면 안된다?
 https://github.com/babel/babel/issues/9853#issuecomment-619587386
