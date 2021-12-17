@@ -1,10 +1,231 @@
 # 잠깐 햇갈리니까 다시 정리해보자
 [babel plugin vs polyfill](https://ui.dev/compiling-polyfills/)
-- 플러그인은 문법
-- 폴리필은 메서드
+- 바벨은 크게 문법과 기능(메서드) 를 변환해주는 역할을 한다
 
-# 그러니까 바벨은 문법 변환기인데, 플러그인이 없으면 이것도 변환 안해준다.
-- 이때 일단 preset
+https://babeljs.io/docs/en/babel-preset-env#how-does-it-work
+> JavaScript syntax or browser feature, as well as a mapping of those syntaxes and features to Babel transform plugins and core-js polyfills.
+
+- 플러그인은 문법 을 변환시켜주고 
+- 폴리필은 메서드 를 변환(? 혹은 대체) 시켜준다.
+
+# 문법은 플러그인이 가지고 있다. 
+
+# 폴리필은 corejs 와 regenerator-runtime/runtime 이 가지고 있다. 
+- corejs 가 대부분 가지고 있는데, 
+- 유독 gernerator 관련 폴리필은 페북이 만든 regenerator-runtime/runtime 이 가지고 있다. 
+
+# regenerator-runtime/runtime 에 대해서...
+- 가령 아래의 문법이 있다고 보자
+```js
+async function f() {}
+```
+
+- preset-env 를 안쓴다고 하고 아래의 플러그인만 있다고 보자 `@babel/plugin-transform-async-to-generator`
+```json
+{
+    "plugins": [
+      "@babel/plugin-transform-async-to-generator"
+    ]
+}
+```
+
+- 그럼 아래와 같이 변환된다
+- 말그대로 async 함수를 generator 함수로 변경 하였다.
+```js
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+function f() {
+  return _f.apply(this, arguments);
+} 
+
+
+function _f() {
+  _f = _asyncToGenerator(function* () {});
+  return _f.apply(this, arguments);
+}
+
+```
+
+- 그리고 아래의 플러그인을 추가한다고 하자 `@babel/plugin-transform-regenerator`
+```json
+{
+    "plugins": [
+      "@babel/plugin-transform-async-to-generator",  "@babel/plugin-transform-regenerator"
+    ]
+}
+```
+
+```js
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+function f() {
+  return _f.apply(this, arguments);
+} 
+
+function _f() {
+  _f = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+  return _f.apply(this, arguments);
+}
+
+```
+
+- `_f = _asyncToGenerator(function* () {});` 부분이 아래와 같이 변경됬다. 
+- `regeneratorRuntime` 이 추가 된것이다
+```js
+ _f = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+
+```
+
+- 아니 그럼 regeneratorRuntime 은 어디 있는가?
+- 바로 여기가 중요한데 regeneraotrRuntime 은 `regenerator-runtime/runtime` 폴리필에 있다.
+- 그럼 `regenerator-runtime/runtime`은 어떻게 추가 하는가?
+
+## @babel/plugin-transform-runtime 플러그인 추가
+```json
+  {"plugins": [
+       ["@babel/plugin-transform-runtime"],  "@babel/plugin-transform-async-to-generator",  "@babel/plugin-transform-regenerator"
+    ]}
+
+```
+- `@babel/plugin-transform-runtime` 문서를 보면 `@babel/plugin-transform-runtime`는 `@babel/runtime` 을 디펜던시로 가지고있고 확용하는데, 
+- `@babel/runtime` 이란 문법변환 플러그인을 헬퍼 함수의 모듈로 가지고 있고, 추가로 `regenerator-runtime` 을 가지고 있다고 나온다. 
+- 플러그인(전역 오염을 방지하기 위한 핼퍼 모듈)에 더하여 `regenerator-runtime` 폴리필을 가지고 있는것이다. 
+  
+> @babel/runtime is a library that contains Babel modular runtime helpers and a version of regenerator-runtime. 
+
+- 다시 살펴보면 regenrator 폴리필을 `@babel/runtime/regenerator` 에서 가져오는 것을 볼수 있고, `@babel/plugin-transform-runtime` 의 주요 특징과 같이 전역 변수 (window)를 오염시키지 않고 `_regenerator`라는 변수로 불러오는 것을 볼수 있다.!
+
+```js
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+function _f() {
+  _f = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      //.....
+
+```
+- 일단 나중에 중요한 부분으로 언급하겠지만 `@babel/plugin-transform-runtime` 이 가지고 있는 `@babel/runtime`은 `regenerator-runtime` 밖에 가지고 있지 않지만, [@babel/runtime-corejs2](https://babeljs.io/docs/en/babel-runtime-corejs2) 와 [@babel/runtime-corejs3](https://www.npmjs.com/package/@babel/runtime-corejs3) 은 `core-js` 도 가지고 ㅇㅆ다. 
+- 위에서 말했듯이 바벨의 폴리필은 두개가 나눠 가지고 있다. `core-js` 와 `regenerator-runtime` 이다. 
+
+# 중요한 점은 왜 두개로 나누어 있을까 하는점인데
+- 바벨의 문법은 플러그인이 있어야 적용된다. 
+- 폴리필은 그냥 삽입하는거다, 전역변수 (window.Array, window.Proomise) 등을 변환하기 위해서는 문법수정이 필요하지 않고 그냥 전역 변수 오염시키는 모듈만 있으면 된다. 
+- 그런데 async 나 regenerator 의 경우에는 
+- 문법 변환도 필요하고, 폴리필도 필요하다. 
+- regenerator 를 변환 하려면 일단 `plugin-transform-regenerator` 이 있어야 한다. 
+- - plugin-transform-regenerator 만 있는경우 generator 함수가 어떻게 변환 되는지 보면 아래와 같다. 즉 1차 적으로 문법이 변경된 것이다
+
+```js
+// "@babel/plugin-transform-regenerator"
+var _marked = /*#__PURE__*/regeneratorRuntime.mark(foos);
+
+function foos() {
+  return regeneratorRuntime.wrap(function foos$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _marked);
+} 
+```
+
+- 이 상태에서 우리는 regenrator 에 대한 폴리필이 필요한 것이다. 
+- preset-env로 폴리필을 삽입해 보자 (useBuiltIns 설정)
+```js
+require("regenerator-runtime/runtime.js");
+
+var _marked = /*#__PURE__*/regeneratorRuntime.mark(foos);
+
+function foos() {
+  return regeneratorRuntime.wrap(function foos$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _marked);
+} 
+```
+
+- 혹은 `@babel/plugin-transform-runtime` 플러그인을 이용해 `@babel/runtime`으로 폴리필을 넣어 보자
+
+```js
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+var _marked = /*#__PURE__*/_regenerator.default.mark(foos);
+
+function foos() {
+  return _regenerator.default.wrap(function foos$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _marked);
+}
+```
+
+# async의 경우에는 async 를 generator로 먼저 문법 변환하고, generator 를 다시 문법 변환한후 폴리필을 넣어 줘야 한다. 
+
+# 잠깐 정리하면
+- `@babel/plugin-transform-runtime` 은 `@babel/runtime`을 가지고 있는데, `@babel/runtime` 은 주요 폴리필 중(폴리필 모음중) `regenerator-runtime`을 자체 적으로 가지고 있어서, 적절한 문법 변환이 이루어 진다면 자체적으로 폴리필을 **지역적으로** 삽입한다. 라는 이야기 이다. 
+(`@babel/runtime` 이 플러그인을 가지고 있지는 않다. `"@babel/plugin-transform-async-to-generator"`,  `"@babel/plugin-transform-regenerator"` 플러그인이 필요하다. )
+- `@babel/plugin-transform-runtime` 옵션중 `corejs` 를 수정하여 `@babel/runtime` 대신 `@babel/runtime-corejs2` 등을 활요하면 다른 폴리필 등도 `corejs` 등을 활용하여 **지역적으로** 삽입한다.
+
+# 애초에 폴리필은 플러그인이 아니다 라는것을 다시 확인하면 좋다. 
+- 폴리필은 그냥 모듈로 삽입하는거지, 문법 변환 처럼 플러그인으로 동작하는게 아니다. 
+- 그래서 babel 초반에 [`@babel/polyfill`](https://babeljs.io/docs/en/babel-polyfill) 을 (자체적으로 `core-js/stable` 과 `regenerator-runtime/runtime` 을 가지고 있음) 작성한 코드 상단에 수동으로 import 해줬던 것이다. (전역을 오염시켜도 OK 라고 보고... 뭐 지금도 그렇지만)
+
+# preset-env 는 이러한 폴리필을 
+환경에 맞게 필요한 것만 싹싹 넣어 주는 것이고
+
+# @babel/plugin-transform-runtime (corejs 옵션과 함께사용할경우) 는 사용한 모든 메서드에대한 폴리필을 !지역적으로! 넣어 버린다. 
+- 환경 설정이 없다. 타겟이 없다는 이야기이다. Promise 를 사용했으면 Promise에 대한 폴리필을 삽입한다. 
+```js
+import _Promise from "@babel/runtime-corejs3/core-js-stable/promise";
+_Promise.resolve(1); 
+```
+
+# 단 @babel/plugin-transform-runtime 은 자체적으로 문법 변환은 못한다. 플러그인이 있어야 해당 문법에 대한 처리를 일단 플러그인이 하고, 거기에 맞는 헬퍼 모듈을 가지고 오는 식이다. (엄청 중요하고 햇갈린다)
+
+# 다시말하지만 regenerator 도 @babel/plugin-transform-runtime 만 사용하면 아무것도 못한다. 
+- 최소한 `"@babel/plugin-transform-regenerator"` 을 플러그인으로 쓰던가, 
+- `preset-env`를 사용하여 (플러그인 집합체 이다.) 플러그인이 자동으로 삽입되게 해야!
+- 문법 변환후 -> 폴리필이 삽입된다. 
+- Promise 같은건 문법 변환 할게 없으니까, 플러그인이 없어도, ` @babel/plugin-transform-runtime` 이 Promise 가 감지되면 알아서 폴리필을 넣어 버린다.
+
+
+
+
+# 그러니까 바벨은 문법 변환기인데, 플러그인이 없으면 아래의 문법도 변환 안해준다.
 ```js
 // Input
 var a = 1;
@@ -85,6 +306,7 @@ console.log(b); // 2
 }
 ```
 
+# prest-env 는 그뿐만 아니라 core-js와 regenerator-runtime/runtime => 폴리필을 가지고 있어서 필요에 따라 넣어 줄수 있다. (useBuildIns 를 활용해서)
 # 여기까지도 뭐.. 다 아는 이야기 그런데 한번 class 를 트렌스파일링 한다고 생각해 보자 
 - 필요한 플러그인은 `@babel/plugin-transform-classes` 이다. 
 - 물론 `@babel/preset-env` 로 할수도 있고..
@@ -304,4 +526,33 @@ return regeneratorRuntime.wrap(function foos$(_context) {
   }, _marked);
 }
 ```
+
+
+# [https://github.com/babel/babel/issues/9853](https://github.com/babel/babel/issues/9853) 에서 말한 내용중
+
+> Babel includes helpers from @babel/runtime! These helpers can depend on some global features to be available. In this case, that feature is Promise. The code in @babel/runtime/helpers/asyncToGenerator uses Promises!. Now you may think: But with useBuiltIns: 'usage' I included polyfills for my targeted browsers?. Yes, that's true, but with that config babel includes polyfills when you use that feature in your code! And you haven't used Promise anywhere! Now you have a problem. You need a way to transpile the babel helpers, and that's not good. This is the case that @zloirock refers to, when he says that you need to transpile the helpers. You will get away here if you use Promise in your app, because then globally pollutable polyfill for Promise will be injected like this: require("core-js/modules/es6.promise"); As you can see, this is not predictable, and very difficult to configure. Note about the cases where I said that you will get away if you have @babel/runtime-corejs3 or @babel/runtime-corejs2 as dependencies instead of @babel/runtime. In this case polyfills from core-js-pure will be injected, like this: var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/asyncToGenerator")); (corejs option should be set on @babel/transform-runtime as well)
+
+내용을 살펴보자
+
+- 내가 `async` 문법을 사용하고, 
+- `@babel/plugin-transform-runtime` 을 사용하고, 
+- `corejs` 옵션 없이
+- `@babel/runtime` 을 사용한다고 했을때 
+- 아 물론 플러그인으로 `@babel/plugin-transform-async-to-generator` 을 사용하고 있거나
+- `preset-env`를 사용하여 플러그인을 자동으로 넣어준다고 했을때, 
+- 바벨은 플러그인을 통하여 `async` 문법을 `generator`로 변환 할것이고, 
+- 원래는 플러그인이 헬퍼 함수를 만들어서 코드에 직접 삽일 할것이지만,
+- `@babel/plugin-transform-runtime` 은 `generator`로 변환하는 플러그인을 헬퍼 모듈인 `require("@babel/runtime/helpers/asyncToGenerator")` 로 바꿔서 사용 할것이다. 
+- 그런데 `async` 문법을 `generator` 로 변환하는 헬퍼 함수 및 헬퍼 모듈은 내부적으로 `promise`를 사용해야 하는데, 
+- 아무리 `preset-env (useBuildIns)`를 사용했다 하더라고, 
+- 헬퍼 함수는 변경 할수 있는데 (코드에 프로미스가 있으니까?) 헬퍼 모듈안에 있는 Promise 는 감지 할수 없어서, Promise 에 대한 폴리필을 넣을수 없다는 이야기 이다. 
+- 아씨...맞나?
+  
+- 일단 위의 이야기 범위에서는 벗어난 이야기이지만, 일단 향후 프로세스를 설명하면 `generator`가 감지 되었으므로 `@babel/runtime` 은 혹은 `preset-env`는 `regenerator-runtime/runtime` 폴리필을 추가 할것이다.
+
+# 만약 preset-env corejs3 과 @babel/plugin-transform-runtime corejs3을 같이 사용하면?
+- @babel/plugin-transform-runtime  이 이긴다. (지역적으로 폴리필과) 헬퍼 함수를 넣는다는 이야기
+
+# 몰론  preset-env corejs3 과 @babel/plugin-transform-runtime 을 같이 사용하면?
+- @babel/plugin-transform-runtime 에 corejs 옵션이 생략되어 있으니까, `regenerator-runtime` 을 제외한 폴리필은 preset-env 에 의해 전역으로 들어간다. 
 
