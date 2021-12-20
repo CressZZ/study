@@ -254,3 +254,10 @@ _Promise.resolve(1);
 - 기본 `@baebl/runtime`은 `regenerator-runtime` 말고는 다른 플러그인이 없다. 
 
 # 오 이제 좀 알겠다.
+
+# 하나더
+https://github.com/facebook/regenerator
+
+- 에 보면 facebook이 generator 함수를 regenerator 로변환하는  `regenrator-transform`도 만들었고, regenrator 폴릴필인 (runtime 이라고 하는데) `regenrator-runtime` 도 만들었는데
+- 결국 `@babel/plugin-transform-regenerator` 는 `regenrator-transform` 을 끌어다 쓰는 플러그인에 지나지 않는다. 
+- `regenerator` 는 `facebook` 꺼라는 이야기 이다
