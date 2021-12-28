@@ -1,7 +1,7 @@
 # sass-loader
 - sass -> css
 - 이것만 사용하면 애러남 : You may need an additional loader to handle the result of these loaders.
-
+- 그도 그럴게 webpack은 sass 든 css 든 js로 변경해야지 말ㅇ아서 빌드를 할수 있는데, 이건 css로 떨구니까 애러가 나지!
 # css-loader
 - css -> js(?)
 - sass의 문법? 인 @import 도 사용 가능함
@@ -60,7 +60,7 @@ export default class App extends React.Component {
   https://velog.io/@jeongnaehyeok/file-loader-vs-url-loader
   https://jeonghwan-kim.github.io/js/2017/05/22/webpack-file-loader.html
 
-# 데헷!
+# 데헷 모두 디프리케이티드 되었다!
 https://github.com/webpack-contrib/css-loader/releases/tag/v6.0.0
 
 file-loader and url-loader are deprecated, please migrate on asset modules, since v6 css-loader is generating new URL(...) syntax, it enables by default built-in assets modules, i.e. type: 'asset' for all url()

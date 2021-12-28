@@ -45,6 +45,7 @@ IE11 does not support Promise. If you want to use RxJS in a application that has
 바베에서 preset-env 옵션중 useBuiltIns 을 디폴트 값인 `false` 로 놓고 바벨을 적용하려면 수동으로 `core-js` 와 `regenerator-runtime` 을 수동으로 넣어줘야 하고, 그렇게 되면 이건 전역으로 들어간다. 
 
 사실 `fasle` 고 `usage` 고 다 전역으로 들어 가니까 아무튼 이거만 쓰면 rxjs 도 폴리필이 적용된다. 
+(*추가: 200424_babelrc 쪽 보면 알겠지만, babel 이 node_module에 있는것도 트렌스 파일링 하려면 .babelrc 가 아니라 babel.config.js 파일을 사용해야 한다. (덤으로 웹펙에서 include옵션으로 node_modules/rxjs/ 도 넣어 줘야 하고) )
 
 문제는 바벨에서 `transform-runtime` 을 사용할 경우이다. 
 이건 전역변수가 아니라, 모듈을 사용하는 그곳에 polyfill 을 지역 변수로 만들어 버리니, 다른 스코프에서는 사용할수가 없다. 
