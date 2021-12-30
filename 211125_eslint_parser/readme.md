@@ -53,3 +53,52 @@ eslint 가 구문분석을 위해 parser 를 사용한다.
 파싱이 되면 이제 어느 부분이 애러인가를 정의해야 한다. 이것이 플러그인.
 플러그인을 설치했으면 이제 문장에 오류가 있을때 애러를 발생시킬지, 경고를 띄울지 결정한다. 이것이 Rule.
 그리고 Rule을 미리 정의 해놓은 것이 extends 이다 
+
+# `@babel/eslint-parser`
+- 중요! `babel-eslint` 는 디프리케이티드다! 쓰지 말자. 계속 말도 안되는 애러 남!
+
+
+# 진짜 쓸때없는거 진짜로....with VSCODE (typescript를 적용할 경우) 
+- 일단 `@babel/eslint-parser`를 사용하면 typescript 파일 파서는 가능하다. (가능은하다)
+- 중요한건 `@babel/eslint-parser` 으로 `타입스크립트` 를 파싱하려면 당연히 `.babelrc`에 `@babel/preset-typescript`가 있어야 한다!!
+- 가능은 하다는말은 파싱은 했는데, 적절한 플러그인 (`@typescript-eslint/eslint-plugin`) 이 없다면, 타입스크립트의 문법을 잘못써도, 이게 잘못인지를 모른다. 
+- 그럼 이론적으로 `@babel/eslint-parser` 로 파싱하고 `@typescript-eslint/eslint-plugin` 으로 문법 체크를 하면 되는거 아닌가 하는데, 이렇게 해도 제대로 체크가 안된다.
+
+- (파싱애러는 안나는데, 막 말도 안되는 문법 오류가 난다. 스샷을 보면 type인데 no-undef 애러가 난다) - plugin 에 있는 규칙은 잘 적용되기도 한다
+- ![screensh](./a.png)
+- 이건 플러그인의 문제라기 보다는 파싱애러가 안날 뿐이지 파싱이 잘못되서, type인데도 불구 하고 정의를 안해줬다고 애러를 밷는거 같다. 
+
+- 이것에 대한 내용은 `@babel/eslint-parser`의 [공식문서](https://github.com/babel/babel/tree/main/eslint/babel-eslint-parser#typescript)에도 나와 있다.
+ 
+> While @babel/eslint-parser can parse TypeScript, we don't currently support linting TypeScript using the rules in @babel/eslint-plugin. This is because the TypeScript community has centered around @typescript-eslint and we want to avoid duplicate work. Additionally, since @typescript-eslint uses TypeScript under the hood, its rules can be made type-aware, which is something Babel doesn't have the ability to do.
+
+
+- 그럼 `@typescript-eslint/parser` 로 파싱하고 `@typescript-eslint/eslint-plugin` 로 문법 체크 하면 완벽하게 되긴 한다. 
+- `@typescript-eslint/eslint-plugin` 에 있는 문법은 [이거와 같다](https://github.com/typescript-eslint/typescript-eslint/tree/main/packages/eslint-plugin#supported-rules)
+
+
+- 아무튼 이게 정석인데
+## eslint 를 cli 에서 실행할 경우 
+- eslintrc 옵션중 `overrides:{files:["*.ts"]}` 가 있어야 ts 파일을 린트 검사한다. (`npx eslint ./src/js/`) - 폴더를 검사할때 이다. (개별 파일은 검사한다.)
+
+## vscode 에서는
+- `overrides:{files:["*.ts"]}`  을 따라가지 않고 vscode setting 중에 ` "eslint.validate": ["javascript", "javascriptreact", "typescript"]` 를 바라 본다. 
+- 그런데 vscode의 확장프로그램인 eslint 의 공식 문서를 보면 (https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+> Improved TypeScript detection - As soon as TypeScript is correctly configured inside ESLint, you no longer need additional configuration through VS Code's eslint.validate setting. The same is true for HTML and Vue.js files.
+
+- 즉, eslintrc 를 적절하게 구성하면 validate 설정이 없어도, ts 파일을 잘 감시해서 문법 체크를 한다는 이야기이다.
+- 여기서 잘 구성이라는 건 현재로서는 `@typescript-eslint/parser` 를 eslint에서 사용한다고 잘 설정 했을때를 말한다. 
+
+# 추가로 @babel/eslint-parser 깃헙에 보면
+- https://github.com/babel/babel/issues/11995#issuecomment-708651689
+> Sorry, should have clarified - I meant in conjuction with @typescript-eslint/parser. We've left linting TypeScript to @typescript-eslint due to all the duplicated work and lack of type information that actually using tsc gives you (i.e. @typescript-eslint/parser rules can actually access type information!). The assumption is that if you're running tsc over your files, @typescript-eslint/parser will be able to lint it. If you're doing some sort of two pass transformation (transforming syntax features not supported by TypeScript with Babel and then running tsc), that's currently not a supported use case.
+
+>  죄송합니다. 명확히 했어야 했습니다. @typescript-eslint/parser와 함께 사용하려고 했습니다. 모든 중복 작업과 실제로 tsc를 사용하여 제공하는 유형 정보의 부족으로 인해 TypeScript를 @typescript-eslint에 린팅했습니다(즉, @typescript-eslint/parser 규칙은 실제로 유형 정보에 액세스할 수 있습니다!). 파일에 대해 tsc를 실행하는 경우 @typescript-eslint/parser가 파일을 린트할 수 있다고 가정합니다. 일종의 2단계 변환(TypeScript에서 지원하지 않는 구문 기능을 Babel으로 변환한 다음 tsc를 실행)을 수행하는 경우 현재 지원되지 않는 사용 사례입니다.
+
+>  @kaicataldo는 typescript의 경우 여전히 @typescript-eslint/parser를 사용해야 한다는 의미인가요? @babel/eslint-parser가 아니라
+
+> That's right!
+
+- 그러니까 typescript 쓸꺼면 @typescript-eslint/parser 를 쓰라는 이야기 이다.
+- 그럼 그냥 파싱은 가능하다는 이야기는 왜 한걸까?
