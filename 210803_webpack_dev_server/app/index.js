@@ -17,6 +17,9 @@ console.log('ddd');
   var test = await fetch('/common/js/lib/jquery-3.1.0.min.js');
   var test = await fetch('https://op-wstatic.ncsoft.com/uikit/preorder/js/preorders-5.1.0.js');
 
+  var test = await fetch('/i18n/preorder-record/en.json');
+
+
   console.log(await test.json());
   window.console.log('aa')
 })();

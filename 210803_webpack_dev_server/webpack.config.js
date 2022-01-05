@@ -18,6 +18,9 @@ module.exports = {
     proxy: {
       // '/test':{
 
+
+
+        target: 'http://localhost:3000',
       //   target: 'http://localhost:9001',
       //   // target: 'http://l',
       //   changeOrigin: true
@@ -29,6 +32,7 @@ module.exports = {
       // },
       '*': {
         target: 'http://opdev.lineagem.plaync.com',
+
         // target: 'http://l',
         changeOrigin: true
       },
