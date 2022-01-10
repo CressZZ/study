@@ -9,6 +9,7 @@
 - `libsass`는 C++ 로 만들었다. 
 - npm package `dart-sass` 보다 빠르다.
 - https://sass-lang.com/libsass#node
+- 수명을 다했다.
 
 # Rubby sass
 - 루비로 만들어진 sass 

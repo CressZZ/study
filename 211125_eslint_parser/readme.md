@@ -79,7 +79,8 @@ eslint 가 구문분석을 위해 parser 를 사용한다.
 
 - 아무튼 이게 정석인데
 ## eslint 를 cli 에서 실행할 경우 
-- eslintrc 옵션중 `overrides:{files:["*.ts"]}` 가 있어야 ts 파일을 린트 검사한다. (`npx eslint ./src/js/`) - 폴더를 검사할때 이다. (개별 파일은 검사한다.)
+- ~~eslintrc 옵션중 `overrides:{files:["*.ts"]}` 가 있어야 ts 파일을 린트 검사한다. (`npx eslint ./src/js/`) - 폴더를 검사할때 이다. (개별 파일은 검사한다.)~~
+- 그냥 `@babel/eslint-parser` 든 `@typescript-eslint/parser` 든 있으면, (`npx eslint ./src/js/`) 로 하면 ts 파일도 체크 해준다.
 
 ## vscode 에서는
 - `overrides:{files:["*.ts"]}`  을 따라가지 않고 vscode setting 중에 ` "eslint.validate": ["javascript", "javascriptreact", "typescript"]` 를 바라 본다. 

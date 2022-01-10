@@ -47,7 +47,7 @@ https://stackoverflow.com/questions/56577201/why-is-isolatedmodules-error-fixed-
 
 바벨로더는 @babel/preset-typescript 가 있어야 하며
 
-@babel/preset-typescript 는 [babel-plugin-transform-typescirpt](https://babeljs.io/docs/en/babel-plugin-transform-typescript) 가 있어야 한다.
+@babel/preset-typescript 는 [babel-plugin-transform-typescirpt](https://babeljs.io/docs/en/babel-plugin-transform-typescript) 를 포함하고 있다.
 
 이때, [babel-plugin-transform-typescirpt](https://babeljs.io/docs/en/babel-plugin-transform-typescript) 문서를 보면 이런 문구가 있는데, 
 
