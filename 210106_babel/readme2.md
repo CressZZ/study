@@ -142,14 +142,15 @@ This package implements a fully-functional source transformation that takes the 
 ## @babel/runtime with corejs2/corejs3
 - with corejs2/corejs3 이 굉장히 중요하다. 
 - @babel/runtime 은 regenerator-runtime 폴리필만 가지고 있으나,
+  - [@babel/runtime is a library that contains Babel modular runtime helpers and a version of regenerator-runtime.](https://babeljs.io/docs/en/babel-runtime)
 - @babel/runtime-corejs2, @babel/runtime-corejs3 는 corejs 도 가지고 있다. 
+  - [@babel/runtime-corejs2 is a library that contain's Babel modular runtime helpers and a version of regenerator-runtime as well as core-js.](https://babeljs.io/docs/en/babel-runtime-corejs2)
 
 # 그런데 generator 함수의 폴리필을 삽입하려면 (폴리필을 regenerator-runtime) 반드시 문법 변환 부터 해야줘야 한다. 
 - generator 함수의 독특한 점인데, 
-- generator 함수는 우선 `@babel/plugin-transform-regenerator` 이 있거나, `@babel/env` 을 통해 문법변환을 하여야
-- 전역 혹은 지역(`@babel/plugin-transform-runtime`을 사용하여 `@babel/runtime` 을 사용한경우)적으로 `regeneratorRuntime`을 정의할것이고, 
-- 이 `regeneratorRuntime`이 정의 되면 이제 이거에 대한 폴리필이 필요한데!
-- 여기서 `regenerator-runtime` 폴리필이 필요해진다.
+- generator 함수는 우선 `@babel/plugin-transform-regenerator` 이 있거나, `@babel/env` 을 통해 문법변환을 하여야 `regeneratorRuntime` generator를 사용한 문법으로 변환
+- 이 `regeneratorRuntime`을 사용하기 위해서  `regeneratorRuntime`를 정의한 폴리필이 필요한데!
+- 여기서 `regenerator-runtime` 폴리필이 필요해진다. (`@babel/runtime`은 ₩`regenerator-runtime` 을 가지고 있다.)
 
 - 잘보면 아래 helper 는 말그대로 문법 헬퍼이고 나머지는 폴리필이다
 ```js
@@ -195,11 +196,11 @@ corejs: 3 also supports instance properties (e.g. [].includes).
 function* foos() {}
 ```
 ```js
-// Otput - "@babel/transform-runtime" 이 있고 "@babel/plugin-transform-regenerator" 이 없으면 
+// Otput - "[[@babel/transform-runtime]]" 이 있고 "@babel/plugin-transform-regenerator" 이 없으면 
 function* foos() {}
 ```
 ```js
-// Otput - "@babel/transform-runtime" 이 없고 "@babel/plugin-transform-regenerator" 이 있으면 
+// Otput - "@babel/transform-runtime" 이 없고 "[[@babel/plugin-transform-regenerator]]" 이 있으면 
 // regeneratorRuntime 의 정의가 없다.
 var _marked = /*#__PURE__*/regeneratorRuntime.mark(foos);
 
@@ -215,7 +216,7 @@ return regeneratorRuntime.wrap(function foos$(_context) {
 }
 ```
 ```js
-// Otput - "@babel/transform-runtime" 이 있고 "@babel/plugin-transform-regenerator" 이 있으면 
+// Otput - "[[@babel/transform-runtime]]" 이 있고 "[[@babel/plugin-transform-regenerator"]] 이 있으면 
 import _regeneratorRuntime from "@babel/runtime/regenerator";
 
 var _marked = /*#__PURE__*/_regeneratorRuntime.mark(foos);
@@ -249,7 +250,7 @@ return regeneratorRuntime.wrap(function foos$(_context) {
 ```
 ```js
 // Otput - "@babel/env"가 있고, useBuiltIns 있고, "@babel/plugin-transform-regenerator" 이 있으면 
-
+// 전역으로 선언
 require("regenerator-runtime/runtime.js");
 var _marked = /*#__PURE__*/regeneratorRuntime.mark(foos);
 
@@ -264,26 +265,10 @@ return regeneratorRuntime.wrap(function foos$(_context) {
   }, _marked);
 }
 ```
-```js
-// Otput - "@babel/env"가 있고, useBuiltIns 없고, "@babel/plugin-transform-regenerator" 이 있으면 
-// regeneratorRuntime 의 정의가 없다.
-var _marked = /*#__PURE__*/regeneratorRuntime.mark(foos);
-
-return regeneratorRuntime.wrap(function foos$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-        case "end":
-          return _context.stop();
-      }
-    }
-  }, _marked);
-}
-```
-
 
 # [https://github.com/babel/babel/issues/9853](https://github.com/babel/babel/issues/9853) 에서 말한 내용중
-
+> Babel에는 @babel/runtime의 도우미가 포함되어 있습니다! 이러한 도우미는 사용 가능한 일부 전역 기능에 의존할 수 있습니다. 이 경우 그 기능은 약속입니다. @babel/runtime/helpers/asyncToGenerator의 코드는 Promises!를 사용합니다. 이제 다음과 같이 생각할 수 있습니다. 하지만 useBuiltIns: 'usage'를 사용하여 대상 브라우저에 대한 폴리필을 포함시켰습니까? 네, 맞습니다. 하지만 그 구성을 사용하면 코드에서 해당 기능을 사용할 때 babel에 폴리필이 포함됩니다! 그리고 어디에서도 Promise를 사용하지 않았습니다! 이제 문제가 생겼습니다. babel 도우미를 변환하는 방법이 필요하지만 좋지 않습니다. 이것은 @zloirock이 헬퍼를 트랜스파일해야 한다고 말할 때 언급한 경우입니다. 앱에서 Promise를 사용하면 여기에서 벗어날 수 있습니다. 왜냐하면 Promise에 대한 전역적으로 오염 가능한 폴리필이 다음과 같이 주입되기 때문입니다: require("core-js/modules/es6.promise"); 보시다시피 이것은 예측할 수 없으며 구성하기가 매우 어렵습니다. @babel/runtime 대신 @babel/runtime-corejs3 또는 @babel/runtime-corejs2를 종속성으로 사용하는 경우 도망친다고 말한 경우에 유의하십시오. 이 경우 core-js-pure의 폴리필이 다음과 같이 주입됩니다. var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/asyncToGenerator")); (corejs 옵션은 @babel/transform-runtime에서도 설정되어야 함)
+> 
 > Babel includes helpers from @babel/runtime! These helpers can depend on some global features to be available. In this case, that feature is Promise. The code in @babel/runtime/helpers/asyncToGenerator uses Promises!. Now you may think: But with useBuiltIns: 'usage' I included polyfills for my targeted browsers?. Yes, that's true, but with that config babel includes polyfills when you use that feature in your code! And you haven't used Promise anywhere! Now you have a problem. You need a way to transpile the babel helpers, and that's not good. This is the case that @zloirock refers to, when he says that you need to transpile the helpers. You will get away here if you use Promise in your app, because then globally pollutable polyfill for Promise will be injected like this: require("core-js/modules/es6.promise"); As you can see, this is not predictable, and very difficult to configure. Note about the cases where I said that you will get away if you have @babel/runtime-corejs3 or @babel/runtime-corejs2 as dependencies instead of @babel/runtime. In this case polyfills from core-js-pure will be injected, like this: var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/asyncToGenerator")); (corejs option should be set on @babel/transform-runtime as well)
 
 내용을 살펴보자
@@ -293,7 +278,7 @@ return regeneratorRuntime.wrap(function foos$(_context) {
 - `corejs` 옵션 없이
 - `@babel/runtime` 을 사용한다고 했을때 
 - 아 물론 플러그인으로 `@babel/plugin-transform-async-to-generator` 을 사용하고 있거나
-- `preset-env`를 사용하여 플러그인을 자동으로 넣어준다고 했을때, 
+- `preset-env`를 사용하여 플러그인을 자동으로 넣어준다고 했을때, (async 문법을 getnerator 문법으로 변환)
 - 바벨은 플러그인을 통하여 `async` 문법을 `generator`로 변환 할것이고, 
 - 원래는 플러그인이 헬퍼 함수를 만들어서 코드에 직접 삽일 할것이지만,
 - `@babel/plugin-transform-runtime` 은 `generator`로 변환하는 플러그인을 헬퍼 모듈인 `require("@babel/runtime/helpers/asyncToGenerator")` 로 바꿔서 사용 할것이다. 

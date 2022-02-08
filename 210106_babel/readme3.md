@@ -56,7 +56,8 @@ function _f() {
 ```json
 {
     "plugins": [
-      "@babel/plugin-transform-async-to-generator",  "@babel/plugin-transform-regenerator"
+      "@babel/plugin-transform-async-to-generator",  
+      "@babel/plugin-transform-regenerator"
     ]
 }
 ```
@@ -108,11 +109,13 @@ function _f() {
 ## @babel/plugin-transform-runtime 플러그인을 통해 `regenerator-runtime/runtime` 폴리필 삽입
 ```json
   {"plugins": [
-       ["@babel/plugin-transform-runtime"],  "@babel/plugin-transform-async-to-generator",  "@babel/plugin-transform-regenerator"
+       ["@babel/plugin-transform-runtime"],  
+       "@babel/plugin-transform-async-to-generator",  
+       "@babel/plugin-transform-regenerator"
     ]}
 
 ```
-- `@babel/plugin-transform-runtime` 문서를 보면 `@babel/plugin-transform-runtime`는 `@babel/runtime` 을 디펜던시로 가지고있고 확용하는데, 
+- `@babel/plugin-transform-runtime` 문서를 보면 `@babel/plugin-transform-runtime`는 `@babel/runtime` 을 디펜던시로 가지고있고 활용 하는데, 
 - `@babel/runtime` 이란 문법변환 플러그인이 가지고있는 헬퍼 함수를 => 헬퍼 모듈로(함수는 파일마다 삽입해야 하는데, 모듈은 파일마다 import 해도 실질적으로 삽입되는 코든 모듈안에 있는 코드 하나이다.) 가지고 있고, 추가로 `regenerator-runtime` 폴리필 을 가지고 있다고 나온다. 
 - `문법변환 핼퍼 모듈`(전역 오염을 방지하기 위한 핼퍼 모듈)에 더하여 `regenerator-runtime` `폴리필`을 가지고 있는것이다. 
   
@@ -129,7 +132,7 @@ function _f() {
 
 ```
 
-- 위에서 @bable/runtime 이 가져온 @babel/runtime/regenerator 에는 어떤 내용이 있을까
+- 위에서 `@bable/runtime` 이 가져온 `@babel/runtime/regenerator` 에는 어떤 내용이 있을까
 ```js
  
 // node_modules/@babel/runtime/regenerator/index.js
@@ -147,7 +150,7 @@ module.exports = require("regenerator-runtime");
 - 전역변수 (window.Array, window.Proomise) 등을 변환하기 위해서는 문법수정이 필요하지 않고 그냥 전역 변수 오염시키는 모듈만 있으면 된다. 
 - 그런데  `generator` 함수 의 경우에는 (`async`는 `generator` 로 문법 변환이 먼저되어야 한다.)
 - `regeneratorRuntime`으로 문법 변환도 필요하고, `regeneratorRuntime`에 대한 폴리필도 필요하다. 
-- `generator` 함수 fmf `regeneratorRuntime` 으ㄹ 변환 하려면 일단 문법변환 플러그인인 `plugin-transform-regenerator` 이 있어야 한다. 
+- `generator` 함수를 `regeneratorRuntime` 으로 변환 하려면 일단 문법변환 플러그인인 `plugin-transform-regenerator` 이 있어야 한다. 
 - 폴리필인 `regenerator-runtime` 없이 문법변환 플러그인인 `plugin-transform-regenerator`만 있는경우 `generator` 함수가 어떻게 변환 되는지 보면 아래와 같다. 즉 1차 적으로 문법이 변경된 것이다
 
 ```js
@@ -246,7 +249,7 @@ _Promise.resolve(1);
 # 단 @babel/plugin-transform-runtime 은 자체적으로 문법 변환은 못한다. 플러그인이 있어야 해당 문법에 대한 처리를 일단 플러그인이 하고 (헬퍼 함수를 삽입하고), 그 헬퍼 함수에 맞는 헬퍼 모듈을 가지고 와서 함수대신 import 하는 식이다. (엄청 중요하고 햇갈린다)
 
 # 다시말하지만 generator 함수를 사용했다고 하더라도(혹은 async 를 사용했다고 하더라도 -> async는 generator 함수로 변환되어야 한다) @babel/plugin-transform-runtime 만 사용하면 아무것도 못한다. 
-- 최소한 `"@babel/plugin-transform-regenerator"` 을 문법변환 플러그인으로 쓰던가 (`generator` 함수를 `regeneratorRuntime`  객체를 사용하는 형태로 으로 문법변환)
+- 최소한 `"@babel/plugin-transform-regenerator"` 을 문법변환 플러그인과 함께 쓰던가 (`generator` 함수를 `regeneratorRuntime`  객체를 사용하는 형태로 으로 문법변환)
 - `preset-env`를 사용하여 플러그인이 자동으로 삽입되게 해야한다. (`preset-env`는 플러그인 집합체 이다.)
 - `generator`함수에서 `regeneratorRuntime`으로 문법 변환후 -> `regeneratorRuntime` 에 대한 폴리필인 `regenarot-runtime`이 삽입된다. 
 - `Promise` 같은건 문법 변환 할게 없으니까, 플러그인이 없어도, `@babel/plugin-transform-runtime` 이 Promise 가 감지되면 알아서 폴리필을 넣어 버린다.
