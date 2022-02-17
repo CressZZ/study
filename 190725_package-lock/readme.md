@@ -65,6 +65,8 @@ package.json 파일에 버전을 "react-native-router-flux": "4.0.0-beta.24" 지
 - `dependencies는`는 버전 문제대문에 최상위 node_modules에서 가져다 쓸수 없는 package를 해당 (여기서는 `gulp`) 페이지 안에 node_modules를 만들어서 별도로 설치하는 것을 말함
 - `dependencies`인 `requires` 경로 : `/Users/yjpark/Documents/static/lineagem-preorder/node_modules/gulp/node_modules/semver/`
 - `dependencies`가 아닌 `requires` 경로 : /Users/yjpark/Documents/static/lineagem-preorder/node_modules/archy/  
+- 한번더 정리하면, `a` 라는 모듈이 여러군데에서 `package.json`에 `dependency` 로 정의 되어 있는데, 버전이 다르다면, 현재 내 프로젝트 즉, `lineagem-preorder/node_modules` 에는 필요롤 하는 `a` 패키지중 제일 낮은 버전이 깔린다. 
+
 
 ## 참고
 https://stackoverflow.com/questions/52926922/package-lock-json-requires-vs-dependencies
