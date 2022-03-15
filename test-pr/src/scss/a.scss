@@ -1,4 +1,39 @@
 body {
   // background-color: red;
+  .date-picker {
+    display: none;
+  }
+
+  .picked-date-wrap{
+    width: 300px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    padding: 0 10px;
+    .picked-tit{
+
+    }
+    .picked-date{
+      min-width: 10px;
+      // display: flex;
+    }
+  }
+
+  .calc-price-wrap {
+    width: 300px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;;
+    align-items: center;
+    border: 1px solid black;
+    padding: 0 10px;
+
+    .calc-price{
+      min-width: 10px;
+
+    }
+  }
 
 }
