@@ -27,7 +27,7 @@ module.exports = {
         type:'asset',
         parser: {
           dataUrlCondition: {
-            maxsize: 0 * 1024, // 0kb
+            maxSize: 4 * 1024, // 0kb
           }
         },
         generator: {
@@ -94,5 +94,5 @@ module.exports = {
     hot: true,
     port: 3005,
   },
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
 };

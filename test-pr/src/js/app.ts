@@ -1,60 +1,135 @@
-import flatpickr from 'flatpickr';
+import {setFlatpickr, selectedDatesForApi, selectedPriceForAPi} from './setFlatpickr';
 
-const pickedDate = <HTMLElement> document.querySelector('.picked-date');
-const caclPrice = <HTMLElement> document.querySelector('.calc-price');
+window.addEventListener('DOMContentLoaded', ()=>{
 
-flatpickr('.date-picker', {
-  dateFormat: 'm j, Y',
-  monthSelectorType: 'static',
-  inline: true,
-  mode:'range',
-  locale: {
-    firstDayOfWeek: 0,
-    months: {
-      shorthand: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-      longhand: [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-    },
-    weekdays: {
-      shorthand: ['SUN', 'MON', 'THU', 'WED', 'THU', 'FRI', 'SAT'],
-      longhand: ['SUN', 'MON', 'THU', 'WED', 'THU', 'FRI', 'SAT'],
+
+  // date picker
+  let datePicker = setFlatpickr();
+
+  window.openPurchaseLayer = openPurchaseLayer;
+  window.datePicker = datePicker;
+
+  window.openPurchaseLayer();
+  console.log(window.openPurchaseLayer);
+
+  document.querySelector('.open-layer')!.addEventListener('click', openPurchaseLayer);
+
+  // 레이어 오픈
+  function openPurchaseLayer(){
+    let ElPurchaseBannerLayer = document.querySelector('.purchase-banner-layer');
+    if(ElPurchaseBannerLayer instanceof HTMLElement){
+      ElPurchaseBannerLayer.style.display = 'block';
     }
-  },
-  onChange: function(selectedDates, dateStr, instance) {
-    console.log(selectedDates[0]);
-    console.log(selectedDates[1]);
-    setMinMaxDate(selectedDates, dateStr, instance);
-    setPickedDateInfo(selectedDates, dateStr, instance);
-    setCalculatedPrice(selectedDates, dateStr, instance);
+  }
 
-  },
+
+  function clasePurchaseLayer(){
+    let ElPurchaseBannerLayer = document.querySelector('.purchase-banner-layer');
+
+    if(ElPurchaseBannerLayer instanceof HTMLElement){
+      ElPurchaseBannerLayer.style.display = 'none';
+    }
+  }
+
+  // 닫기 버튼
+  let ElBtnClose = document.querySelector('.purchase-banner-section-top .close');
+  if(ElBtnClose instanceof HTMLElement){
+    ElBtnClose.addEventListener('click', clasePurchaseLayer);
+  }
+
+  // 서버 선택 셀렉트 박스
+  let ElInfoServer =  document.querySelector('#infoServer');
+  if(ElInfoServer instanceof HTMLElement){
+    ElInfoServer.addEventListener('change', (e)=>{
+      console.log(e.currentTarget);
+      if (e.currentTarget instanceof HTMLElement){
+        e.currentTarget.style.color = 'black';
+      }
+    });
+  }
+
+  let ElBtnPurchase = document.querySelector('.btn-purchase');
+  if(ElInfoServer instanceof HTMLElement){
+    ElBtnPurchase?.addEventListener('click', ()=>{
+
+      let data: Record<string, unknown> = {
+        price : selectedPriceForAPi,
+        date: selectedDatesForApi,
+        type: getBannerType(),
+        server: getSelectedServer(),
+        name: getGuildName(),
+        desc: getGuildDesc(),
+        url: getGuildUrl()
+      };
+
+      if(!isValid(data)){
+
+        return false;
+      }
+
+      console.log('Call API ', data);
+    });
+
+  }
+  function isValid(data: Record<string, unknown>){
+    let isValid = true;
+
+    for (const key in data){
+      console.log(key, ':', data[key]);
+      if(!data[key]){
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
+  function getBannerType(){
+    let ElInfoBannerType = document.querySelector('input[name="bannertype"]:checked');
+    if(ElInfoBannerType instanceof HTMLInputElement){
+      return ElInfoBannerType.value;
+    }else{
+      return null;
+    }
+  }
+  function getSelectedServer(){
+    let ElInfoServer = document.querySelector('#infoServer');
+    if(ElInfoServer instanceof HTMLSelectElement){
+      return ElInfoServer.value;
+    }else{
+      return null;
+    }
+  }
+
+  function getGuildName(){
+    let ElInfoName = document.querySelector('#infoName');
+    console.log(typeof ElInfoName);
+    if(ElInfoName instanceof HTMLInputElement){
+      return ElInfoName.value;
+    }else{
+      return null;
+    }
+  }
+
+  function getGuildDesc(){
+    let ElInfoDesc = document.querySelector('#infoDesc');
+    console.log(typeof ElInfoDesc);
+    if(ElInfoDesc instanceof HTMLTextAreaElement){
+      return ElInfoDesc.value;
+    }else{
+      return null;
+    }
+  }
+
+  function getGuildUrl(){
+    let ElInfoUrl = document.querySelector('#guildUrl');
+    if(ElInfoUrl instanceof HTMLInputElement){
+      return ElInfoUrl.value;
+    }else{
+      return null;
+    }
+  }
 });
-
-function setCalculatedPrice(selectedDates: Date[], dateStr: string, instance: flatpickr.Instance, data?: any){
-  if(selectedDates[1]){
-    let diffDate = (selectedDates[1].getTime() - selectedDates[0].getTime())/ (3600 * 1000 * 24);
-    caclPrice.innerHTML = `${(diffDate + 1) * 8} CT`;
-  }
-}
-
-function setPickedDateInfo(selectedDates: Date[], dateStr: string, instance: flatpickr.Instance, data?: any){
-  if(!selectedDates[1]){
-    pickedDate.innerHTML = '';
-  }else if(flatpickr.formatDate(selectedDates[0], 'Y-m-d') == flatpickr.formatDate(selectedDates[1], 'Y-m-d')){
-    pickedDate.innerHTML = `${selectedDates[0].getFullYear()}년 ${selectedDates[0].getMonth() + 1}월 ${selectedDates[0].getDate()}일`;
-  }else{
-    pickedDate.innerHTML = `${selectedDates[0].getFullYear()}년 ${selectedDates[0].getMonth() + 1}월 ${selectedDates[0].getDate()}일 ~ ${selectedDates[1].getMonth() + 1}월 ${selectedDates[1].getDate()}일`;
-  }
-}
-
-function setMinMaxDate(selectedDates: Date[], dateStr: string, instance: flatpickr.Instance, data?: any) {
-  if(!selectedDates[1]){
-    instance.set('minDate', selectedDates[0].getTime() - (1000 * 3600 * 24 * 2));
-    instance.set('maxDate', selectedDates[0].getTime() + (1000 * 3600 * 24 * 2));
-  }else{
-    instance.set('minDate', null);
-    instance.set('maxDate', null);
-  }
-}
 
 
 if (module.hot) {

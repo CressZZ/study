@@ -1,7 +1,7 @@
 /*!
  * Project : flatpickr_test
  * Author  :
- * Update  : 2022-3-15 18:48:22
+ * Update  : 2022-3-18 12:07:39
  */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -90,6 +90,89 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/array-iteration.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/core-js/internals/array-iteration.js ***!
+  \***********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var bind = __webpack_require__(/*! ../internals/function-bind-context */ "./node_modules/core-js/internals/function-bind-context.js");
+var uncurryThis = __webpack_require__(/*! ../internals/function-uncurry-this */ "./node_modules/core-js/internals/function-uncurry-this.js");
+var IndexedObject = __webpack_require__(/*! ../internals/indexed-object */ "./node_modules/core-js/internals/indexed-object.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "./node_modules/core-js/internals/to-object.js");
+var lengthOfArrayLike = __webpack_require__(/*! ../internals/length-of-array-like */ "./node_modules/core-js/internals/length-of-array-like.js");
+var arraySpeciesCreate = __webpack_require__(/*! ../internals/array-species-create */ "./node_modules/core-js/internals/array-species-create.js");
+
+var push = uncurryThis([].push);
+
+// `Array.prototype.{ forEach, map, filter, some, every, find, findIndex, filterReject }` methods implementation
+var createMethod = function (TYPE) {
+  var IS_MAP = TYPE == 1;
+  var IS_FILTER = TYPE == 2;
+  var IS_SOME = TYPE == 3;
+  var IS_EVERY = TYPE == 4;
+  var IS_FIND_INDEX = TYPE == 6;
+  var IS_FILTER_REJECT = TYPE == 7;
+  var NO_HOLES = TYPE == 5 || IS_FIND_INDEX;
+  return function ($this, callbackfn, that, specificCreate) {
+    var O = toObject($this);
+    var self = IndexedObject(O);
+    var boundFunction = bind(callbackfn, that);
+    var length = lengthOfArrayLike(self);
+    var index = 0;
+    var create = specificCreate || arraySpeciesCreate;
+    var target = IS_MAP ? create($this, length) : IS_FILTER || IS_FILTER_REJECT ? create($this, 0) : undefined;
+    var value, result;
+    for (;length > index; index++) if (NO_HOLES || index in self) {
+      value = self[index];
+      result = boundFunction(value, index, O);
+      if (TYPE) {
+        if (IS_MAP) target[index] = result; // map
+        else if (result) switch (TYPE) {
+          case 3: return true;              // some
+          case 5: return value;             // find
+          case 6: return index;             // findIndex
+          case 2: push(target, value);      // filter
+        } else switch (TYPE) {
+          case 4: return false;             // every
+          case 7: push(target, value);      // filterReject
+        }
+      }
+    }
+    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : target;
+  };
+};
+
+module.exports = {
+  // `Array.prototype.forEach` method
+  // https://tc39.es/ecma262/#sec-array.prototype.foreach
+  forEach: createMethod(0),
+  // `Array.prototype.map` method
+  // https://tc39.es/ecma262/#sec-array.prototype.map
+  map: createMethod(1),
+  // `Array.prototype.filter` method
+  // https://tc39.es/ecma262/#sec-array.prototype.filter
+  filter: createMethod(2),
+  // `Array.prototype.some` method
+  // https://tc39.es/ecma262/#sec-array.prototype.some
+  some: createMethod(3),
+  // `Array.prototype.every` method
+  // https://tc39.es/ecma262/#sec-array.prototype.every
+  every: createMethod(4),
+  // `Array.prototype.find` method
+  // https://tc39.es/ecma262/#sec-array.prototype.find
+  find: createMethod(5),
+  // `Array.prototype.findIndex` method
+  // https://tc39.es/ecma262/#sec-array.prototype.findIndex
+  findIndex: createMethod(6),
+  // `Array.prototype.filterReject` method
+  // https://github.com/tc39/proposal-array-filtering
+  filterReject: createMethod(7)
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/array-method-has-species-support.js":
 /*!****************************************************************************!*\
   !*** ./node_modules/core-js/internals/array-method-has-species-support.js ***!
@@ -115,6 +198,108 @@ module.exports = function (METHOD_NAME) {
     return array[METHOD_NAME](Boolean).foo !== 1;
   });
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/array-method-is-strict.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/core-js/internals/array-method-is-strict.js ***!
+  \******************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+var fails = __webpack_require__(/*! ../internals/fails */ "./node_modules/core-js/internals/fails.js");
+
+module.exports = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call -- required for testing
+    method.call(null, argument || function () { return 1; }, 1);
+  });
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/array-slice-simple.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/core-js/internals/array-slice-simple.js ***!
+  \**************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var global = __webpack_require__(/*! ../internals/global */ "./node_modules/core-js/internals/global.js");
+var toAbsoluteIndex = __webpack_require__(/*! ../internals/to-absolute-index */ "./node_modules/core-js/internals/to-absolute-index.js");
+var lengthOfArrayLike = __webpack_require__(/*! ../internals/length-of-array-like */ "./node_modules/core-js/internals/length-of-array-like.js");
+var createProperty = __webpack_require__(/*! ../internals/create-property */ "./node_modules/core-js/internals/create-property.js");
+
+var Array = global.Array;
+var max = Math.max;
+
+module.exports = function (O, start, end) {
+  var length = lengthOfArrayLike(O);
+  var k = toAbsoluteIndex(start, length);
+  var fin = toAbsoluteIndex(end === undefined ? length : end, length);
+  var result = Array(max(fin - k, 0));
+  for (var n = 0; k < fin; k++, n++) createProperty(result, n, O[k]);
+  result.length = n;
+  return result;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/array-sort.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/internals/array-sort.js ***!
+  \******************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var arraySlice = __webpack_require__(/*! ../internals/array-slice-simple */ "./node_modules/core-js/internals/array-slice-simple.js");
+
+var floor = Math.floor;
+
+var mergeSort = function (array, comparefn) {
+  var length = array.length;
+  var middle = floor(length / 2);
+  return length < 8 ? insertionSort(array, comparefn) : merge(
+    array,
+    mergeSort(arraySlice(array, 0, middle), comparefn),
+    mergeSort(arraySlice(array, middle), comparefn),
+    comparefn
+  );
+};
+
+var insertionSort = function (array, comparefn) {
+  var length = array.length;
+  var i = 1;
+  var element, j;
+
+  while (i < length) {
+    j = i;
+    element = array[i];
+    while (j && comparefn(array[j - 1], element) > 0) {
+      array[j] = array[--j];
+    }
+    if (j !== i++) array[j] = element;
+  } return array;
+};
+
+var merge = function (array, left, right, comparefn) {
+  var llength = left.length;
+  var rlength = right.length;
+  var lindex = 0;
+  var rindex = 0;
+
+  while (lindex < llength || rindex < rlength) {
+    array[lindex + rindex] = (lindex < llength && rindex < rlength)
+      ? comparefn(left[lindex], right[rindex]) <= 0 ? left[lindex++] : right[rindex++]
+      : lindex < llength ? left[lindex++] : right[rindex++];
+  } return array;
+};
+
+module.exports = mergeSort;
 
 
 /***/ }),
@@ -349,6 +534,34 @@ module.exports = function (it) {
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/engine-ff-version.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/core-js/internals/engine-ff-version.js ***!
+  \*************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var userAgent = __webpack_require__(/*! ../internals/engine-user-agent */ "./node_modules/core-js/internals/engine-user-agent.js");
+
+var firefox = userAgent.match(/firefox\/(\d+)/i);
+
+module.exports = !!firefox && +firefox[1];
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/engine-is-ie-or-edge.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/core-js/internals/engine-is-ie-or-edge.js ***!
+  \****************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var UA = __webpack_require__(/*! ../internals/engine-user-agent */ "./node_modules/core-js/internals/engine-user-agent.js");
+
+module.exports = /MSIE|Trident/.test(UA);
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/engine-user-agent.js":
 /*!*************************************************************!*\
   !*** ./node_modules/core-js/internals/engine-user-agent.js ***!
@@ -395,6 +608,21 @@ if (!version && userAgent) {
 }
 
 module.exports = version;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/engine-webkit-version.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/core-js/internals/engine-webkit-version.js ***!
+  \*****************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var userAgent = __webpack_require__(/*! ../internals/engine-user-agent */ "./node_modules/core-js/internals/engine-user-agent.js");
+
+var webkit = userAgent.match(/AppleWebKit\/(\d+)\./);
+
+module.exports = !!webkit && +webkit[1];
 
 
 /***/ }),
@@ -496,6 +724,29 @@ module.exports = function (exec) {
   } catch (error) {
     return true;
   }
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/internals/function-bind-context.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/core-js/internals/function-bind-context.js ***!
+  \*****************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var uncurryThis = __webpack_require__(/*! ../internals/function-uncurry-this */ "./node_modules/core-js/internals/function-uncurry-this.js");
+var aCallable = __webpack_require__(/*! ../internals/a-callable */ "./node_modules/core-js/internals/a-callable.js");
+var NATIVE_BIND = __webpack_require__(/*! ../internals/function-bind-native */ "./node_modules/core-js/internals/function-bind-native.js");
+
+var bind = uncurryThis(uncurryThis.bind);
+
+// optional / simple context binding
+module.exports = function (fn, that) {
+  aCallable(fn);
+  return that === undefined ? fn : NATIVE_BIND ? bind(fn, that) : function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
 };
 
 
@@ -1250,6 +1501,26 @@ exports.f = NASHORN_BUG ? function propertyIsEnumerable(V) {
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/object-to-string.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/internals/object-to-string.js ***!
+  \************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+var TO_STRING_TAG_SUPPORT = __webpack_require__(/*! ../internals/to-string-tag-support */ "./node_modules/core-js/internals/to-string-tag-support.js");
+var classof = __webpack_require__(/*! ../internals/classof */ "./node_modules/core-js/internals/classof.js");
+
+// `Object.prototype.toString` method implementation
+// https://tc39.es/ecma262/#sec-object.prototype.tostring
+module.exports = TO_STRING_TAG_SUPPORT ? {}.toString : function toString() {
+  return '[object ' + classof(this) + ']';
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/ordinary-to-primitive.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/core-js/internals/ordinary-to-primitive.js ***!
@@ -1626,6 +1897,25 @@ module.exports = String(test) === '[object z]';
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/to-string.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/core-js/internals/to-string.js ***!
+  \*****************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var global = __webpack_require__(/*! ../internals/global */ "./node_modules/core-js/internals/global.js");
+var classof = __webpack_require__(/*! ../internals/classof */ "./node_modules/core-js/internals/classof.js");
+
+var String = global.String;
+
+module.exports = function (argument) {
+  if (classof(argument) === 'Symbol') throw TypeError('Cannot convert a Symbol value to a string');
+  return String(argument);
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/try-to-string.js":
 /*!*********************************************************!*\
   !*** ./node_modules/core-js/internals/try-to-string.js ***!
@@ -1808,6 +2098,251 @@ $({ target: 'Array', proto: true, forced: FORCED }, {
     return A;
   }
 });
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.array.filter.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/core-js/modules/es.array.filter.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "./node_modules/core-js/internals/export.js");
+var $filter = (__webpack_require__(/*! ../internals/array-iteration */ "./node_modules/core-js/internals/array-iteration.js").filter);
+var arrayMethodHasSpeciesSupport = __webpack_require__(/*! ../internals/array-method-has-species-support */ "./node_modules/core-js/internals/array-method-has-species-support.js");
+
+var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('filter');
+
+// `Array.prototype.filter` method
+// https://tc39.es/ecma262/#sec-array.prototype.filter
+// with adding support of @@species
+$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT }, {
+  filter: function filter(callbackfn /* , thisArg */) {
+    return $filter(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.array.map.js":
+/*!******************************************************!*\
+  !*** ./node_modules/core-js/modules/es.array.map.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "./node_modules/core-js/internals/export.js");
+var $map = (__webpack_require__(/*! ../internals/array-iteration */ "./node_modules/core-js/internals/array-iteration.js").map);
+var arrayMethodHasSpeciesSupport = __webpack_require__(/*! ../internals/array-method-has-species-support */ "./node_modules/core-js/internals/array-method-has-species-support.js");
+
+var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('map');
+
+// `Array.prototype.map` method
+// https://tc39.es/ecma262/#sec-array.prototype.map
+// with adding support of @@species
+$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT }, {
+  map: function map(callbackfn /* , thisArg */) {
+    return $map(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.array.reverse.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/core-js/modules/es.array.reverse.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "./node_modules/core-js/internals/export.js");
+var uncurryThis = __webpack_require__(/*! ../internals/function-uncurry-this */ "./node_modules/core-js/internals/function-uncurry-this.js");
+var isArray = __webpack_require__(/*! ../internals/is-array */ "./node_modules/core-js/internals/is-array.js");
+
+var un$Reverse = uncurryThis([].reverse);
+var test = [1, 2];
+
+// `Array.prototype.reverse` method
+// https://tc39.es/ecma262/#sec-array.prototype.reverse
+// fix for Safari 12.0 bug
+// https://bugs.webkit.org/show_bug.cgi?id=188794
+$({ target: 'Array', proto: true, forced: String(test) === String(test.reverse()) }, {
+  reverse: function reverse() {
+    // eslint-disable-next-line no-self-assign -- dirty hack
+    if (isArray(this)) this.length = this.length;
+    return un$Reverse(this);
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.array.sort.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/core-js/modules/es.array.sort.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+var $ = __webpack_require__(/*! ../internals/export */ "./node_modules/core-js/internals/export.js");
+var uncurryThis = __webpack_require__(/*! ../internals/function-uncurry-this */ "./node_modules/core-js/internals/function-uncurry-this.js");
+var aCallable = __webpack_require__(/*! ../internals/a-callable */ "./node_modules/core-js/internals/a-callable.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "./node_modules/core-js/internals/to-object.js");
+var lengthOfArrayLike = __webpack_require__(/*! ../internals/length-of-array-like */ "./node_modules/core-js/internals/length-of-array-like.js");
+var toString = __webpack_require__(/*! ../internals/to-string */ "./node_modules/core-js/internals/to-string.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "./node_modules/core-js/internals/fails.js");
+var internalSort = __webpack_require__(/*! ../internals/array-sort */ "./node_modules/core-js/internals/array-sort.js");
+var arrayMethodIsStrict = __webpack_require__(/*! ../internals/array-method-is-strict */ "./node_modules/core-js/internals/array-method-is-strict.js");
+var FF = __webpack_require__(/*! ../internals/engine-ff-version */ "./node_modules/core-js/internals/engine-ff-version.js");
+var IE_OR_EDGE = __webpack_require__(/*! ../internals/engine-is-ie-or-edge */ "./node_modules/core-js/internals/engine-is-ie-or-edge.js");
+var V8 = __webpack_require__(/*! ../internals/engine-v8-version */ "./node_modules/core-js/internals/engine-v8-version.js");
+var WEBKIT = __webpack_require__(/*! ../internals/engine-webkit-version */ "./node_modules/core-js/internals/engine-webkit-version.js");
+
+var test = [];
+var un$Sort = uncurryThis(test.sort);
+var push = uncurryThis(test.push);
+
+// IE8-
+var FAILS_ON_UNDEFINED = fails(function () {
+  test.sort(undefined);
+});
+// V8 bug
+var FAILS_ON_NULL = fails(function () {
+  test.sort(null);
+});
+// Old WebKit
+var STRICT_METHOD = arrayMethodIsStrict('sort');
+
+var STABLE_SORT = !fails(function () {
+  // feature detection can be too slow, so check engines versions
+  if (V8) return V8 < 70;
+  if (FF && FF > 3) return;
+  if (IE_OR_EDGE) return true;
+  if (WEBKIT) return WEBKIT < 603;
+
+  var result = '';
+  var code, chr, value, index;
+
+  // generate an array with more 512 elements (Chakra and old V8 fails only in this case)
+  for (code = 65; code < 76; code++) {
+    chr = String.fromCharCode(code);
+
+    switch (code) {
+      case 66: case 69: case 70: case 72: value = 3; break;
+      case 68: case 71: value = 4; break;
+      default: value = 2;
+    }
+
+    for (index = 0; index < 47; index++) {
+      test.push({ k: chr + index, v: value });
+    }
+  }
+
+  test.sort(function (a, b) { return b.v - a.v; });
+
+  for (index = 0; index < test.length; index++) {
+    chr = test[index].k.charAt(0);
+    if (result.charAt(result.length - 1) !== chr) result += chr;
+  }
+
+  return result !== 'DGBEFHACIJK';
+});
+
+var FORCED = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD || !STABLE_SORT;
+
+var getSortCompare = function (comparefn) {
+  return function (x, y) {
+    if (y === undefined) return -1;
+    if (x === undefined) return 1;
+    if (comparefn !== undefined) return +comparefn(x, y) || 0;
+    return toString(x) > toString(y) ? 1 : -1;
+  };
+};
+
+// `Array.prototype.sort` method
+// https://tc39.es/ecma262/#sec-array.prototype.sort
+$({ target: 'Array', proto: true, forced: FORCED }, {
+  sort: function sort(comparefn) {
+    if (comparefn !== undefined) aCallable(comparefn);
+
+    var array = toObject(this);
+
+    if (STABLE_SORT) return comparefn === undefined ? un$Sort(array) : un$Sort(array, comparefn);
+
+    var items = [];
+    var arrayLength = lengthOfArrayLike(array);
+    var itemsLength, index;
+
+    for (index = 0; index < arrayLength; index++) {
+      if (index in array) push(items, array[index]);
+    }
+
+    internalSort(items, getSortCompare(comparefn));
+
+    itemsLength = items.length;
+    index = 0;
+
+    while (index < itemsLength) array[index] = items[index++];
+    while (index < arrayLength) delete array[index++];
+
+    return array;
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.date.to-string.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/core-js/modules/es.date.to-string.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var uncurryThis = __webpack_require__(/*! ../internals/function-uncurry-this */ "./node_modules/core-js/internals/function-uncurry-this.js");
+var redefine = __webpack_require__(/*! ../internals/redefine */ "./node_modules/core-js/internals/redefine.js");
+
+var DatePrototype = Date.prototype;
+var INVALID_DATE = 'Invalid Date';
+var TO_STRING = 'toString';
+var un$DateToString = uncurryThis(DatePrototype[TO_STRING]);
+var getTime = uncurryThis(DatePrototype.getTime);
+
+// `Date.prototype.toString` method
+// https://tc39.es/ecma262/#sec-date.prototype.tostring
+if (String(new Date(NaN)) != INVALID_DATE) {
+  redefine(DatePrototype, TO_STRING, function toString() {
+    var value = getTime(this);
+    // eslint-disable-next-line no-self-compare -- NaN check
+    return value === value ? un$DateToString(this) : INVALID_DATE;
+  });
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.object.to-string.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/core-js/modules/es.object.to-string.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var TO_STRING_TAG_SUPPORT = __webpack_require__(/*! ../internals/to-string-tag-support */ "./node_modules/core-js/internals/to-string-tag-support.js");
+var redefine = __webpack_require__(/*! ../internals/redefine */ "./node_modules/core-js/internals/redefine.js");
+var toString = __webpack_require__(/*! ../internals/object-to-string */ "./node_modules/core-js/internals/object-to-string.js");
+
+// `Object.prototype.toString` method
+// https://tc39.es/ecma262/#sec-object.prototype.tostring
+if (!TO_STRING_TAG_SUPPORT) {
+  redefine(Object.prototype, 'toString', toString, { unsafe: true });
+}
 
 
 /***/ }),
@@ -4626,18 +5161,43 @@ var __webpack_exports__ = {};
   !*** ./src/js/app.ts ***!
   \***********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ "./node_modules/core-js/modules/es.array.concat.js");
-/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
+/* harmony import */ var core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.date.to-string.js */ "./node_modules/core-js/modules/es.date.to-string.js");
+/* harmony import */ var core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_date_to_string_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.array.concat.js */ "./node_modules/core-js/modules/es.array.concat.js");
+/* harmony import */ var core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_concat_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.array.map.js */ "./node_modules/core-js/modules/es.array.map.js");
+/* harmony import */ var core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_map_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_es_array_sort_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.array.sort.js */ "./node_modules/core-js/modules/es.array.sort.js");
+/* harmony import */ var core_js_modules_es_array_sort_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_sort_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var core_js_modules_es_array_filter_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.array.filter.js */ "./node_modules/core-js/modules/es.array.filter.js");
+/* harmony import */ var core_js_modules_es_array_filter_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_filter_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! core-js/modules/es.object.to-string.js */ "./node_modules/core-js/modules/es.object.to-string.js");
+/* harmony import */ var core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var core_js_modules_es_array_reverse_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! core-js/modules/es.array.reverse.js */ "./node_modules/core-js/modules/es.array.reverse.js");
+/* harmony import */ var core_js_modules_es_array_reverse_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_reverse_js__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var flatpickr__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! flatpickr */ "./node_modules/flatpickr/dist/esm/index.js");
 
 
-var pickedDate = document.querySelector('.picked-date');
-var caclPrice = document.querySelector('.calc-price');
-(0,flatpickr__WEBPACK_IMPORTED_MODULE_1__["default"])('.date-picker', {
-  dateFormat: 'm j, Y',
+
+
+
+
+
+
+var pickedDate = document.querySelector('.picked-result-date .picked-result-cont');
+var caclPrice = document.querySelector('.picked-result-price .picked-result-cont');
+var maxRangeDate = 2;
+var ctPerDay = 8;
+var defaultMinDate = new Date(2022, 2, 2);
+var defaultMaxDate = new Date(2022, 4, 28);
+var defaultDisable = ['2022-03-20', '2022-03-23', '2022-03-22'];
+(0,flatpickr__WEBPACK_IMPORTED_MODULE_7__["default"])('.date-picker', {
+  dateFormat: 'Y-m-d',
   monthSelectorType: 'static',
   inline: true,
   mode: 'range',
+  minDate: defaultMinDate,
+  maxDate: defaultMaxDate,
   locale: {
     firstDayOfWeek: 0,
     months: {
@@ -4649,26 +5209,28 @@ var caclPrice = document.querySelector('.calc-price');
       longhand: ['SUN', 'MON', 'THU', 'WED', 'THU', 'FRI', 'SAT']
     }
   },
+  disable: defaultDisable,
   onChange: function onChange(selectedDates, dateStr, instance) {
     console.log(selectedDates[0]);
     console.log(selectedDates[1]);
     setMinMaxDate(selectedDates, dateStr, instance);
     setPickedDateInfo(selectedDates, dateStr, instance);
     setCalculatedPrice(selectedDates, dateStr, instance);
+    console.log(instance.selectedDates);
   }
 });
 
 function setCalculatedPrice(selectedDates, dateStr, instance, data) {
   if (selectedDates[1]) {
     var diffDate = (selectedDates[1].getTime() - selectedDates[0].getTime()) / (3600 * 1000 * 24);
-    caclPrice.innerHTML = "".concat((diffDate + 1) * 8, " CT");
+    caclPrice.innerHTML = "".concat((diffDate + 1) * ctPerDay, " CT");
   }
 }
 
 function setPickedDateInfo(selectedDates, dateStr, instance, data) {
   if (!selectedDates[1]) {
     pickedDate.innerHTML = '';
-  } else if (flatpickr__WEBPACK_IMPORTED_MODULE_1__["default"].formatDate(selectedDates[0], 'Y-m-d') == flatpickr__WEBPACK_IMPORTED_MODULE_1__["default"].formatDate(selectedDates[1], 'Y-m-d')) {
+  } else if (flatpickr__WEBPACK_IMPORTED_MODULE_7__["default"].formatDate(selectedDates[0], 'Y-m-d') == flatpickr__WEBPACK_IMPORTED_MODULE_7__["default"].formatDate(selectedDates[1], 'Y-m-d')) {
     pickedDate.innerHTML = "".concat(selectedDates[0].getFullYear(), "\uB144 ").concat(selectedDates[0].getMonth() + 1, "\uC6D4 ").concat(selectedDates[0].getDate(), "\uC77C");
   } else {
     pickedDate.innerHTML = "".concat(selectedDates[0].getFullYear(), "\uB144 ").concat(selectedDates[0].getMonth() + 1, "\uC6D4 ").concat(selectedDates[0].getDate(), "\uC77C ~ ").concat(selectedDates[1].getMonth() + 1, "\uC6D4 ").concat(selectedDates[1].getDate(), "\uC77C");
@@ -4677,11 +5239,43 @@ function setPickedDateInfo(selectedDates, dateStr, instance, data) {
 
 function setMinMaxDate(selectedDates, dateStr, instance, data) {
   if (!selectedDates[1]) {
-    instance.set('minDate', selectedDates[0].getTime() - 1000 * 3600 * 24 * 2);
-    instance.set('maxDate', selectedDates[0].getTime() + 1000 * 3600 * 24 * 2);
+    var _selectDateTime = selectedDates[0].getTime();
+
+    var _minDateTime = _selectDateTime - 1000 * 3600 * 24 * maxRangeDate;
+
+    var _maxDateTime = _selectDateTime + 1000 * 3600 * 24 * maxRangeDate;
+
+    _minDateTime = Math.max(_minDateTime, defaultMinDate.getTime());
+    _maxDateTime = Math.min(_maxDateTime, defaultMaxDate.getTime());
+    instance.set('minDate', _minDateTime);
+    instance.set('maxDate', _maxDateTime);
+    console.log('min', new Date(_minDateTime));
+    console.log('max', new Date(_maxDateTime));
+    var defaultDisableTime = defaultDisable.map(function (date) {
+      var _flatpickr$parseDate;
+
+      return (_flatpickr$parseDate = flatpickr__WEBPACK_IMPORTED_MODULE_7__["default"].parseDate(date, 'Y-m-d')) === null || _flatpickr$parseDate === void 0 ? void 0 : _flatpickr$parseDate.getTime();
+    });
+    var _newMinDateTime = defaultDisableTime.filter(function (date) {
+      if (date) {
+        return date > _minDateTime && date < _selectDateTime;
+      }
+    }).sort()[0];
+    _minDateTime = _newMinDateTime || _minDateTime;
+    var _newMaxdateTime = defaultDisableTime.filter(function (date) {
+      if (date) {
+        return date < _maxDateTime && date > _selectDateTime;
+      }
+    }).sort().reverse()[0];
+    _maxDateTime = _newMaxdateTime || _maxDateTime;
+    console.log('min', new Date(_minDateTime));
+    console.log('max', new Date(_maxDateTime));
+    instance.set('minDate', _minDateTime);
+    instance.set('maxDate', _maxDateTime);
   } else {
-    instance.set('minDate', null);
-    instance.set('maxDate', null);
+    instance.set('minDate', defaultMinDate);
+    instance.set('maxDate', defaultMaxDate);
+    instance.set('disable', defaultDisable);
   }
 }
 

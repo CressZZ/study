@@ -1,4 +1,12 @@
-@import "./a.scss";
+// base
+// ===============================
+@import
+"base/_normalize.4.0.0",
+"base/_reset";
+
+@import "./layer-purchase.scss";
+@import "./flatpickr.scss";
 
 body {
+
 }

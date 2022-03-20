@@ -10,17 +10,82 @@
     <body>
         <header></header>
         <main>
-            <div class="content">
-                <input class="date-picker" >
-                <div class="picked-date-wrap">
-                    <div class="picked-date-tit">선택 날짜</div>
-                    <div class="picked-date"></div>
-                </div>
-                <div class="calc-price-wrap">
-                    <div class="calc-price-tit">결제 코인</div>
-                    <div class="calc-price"></div>
-                </div>
+            <div class="open-layer">
+                레이어 열기
+            </div>
+            <div class="purchase-banner-layer">
+                <section class="purchase-banner-section-top">
+                    <div class="section-top-top">
+                        <div class="close"></div>
+                        <div class="btn-purchase">구매</div>
+                    </div>
+                </section>
+                <section class="purchase-banner-section-date">
+                    <div class="section-title">
+                        <h1>배너 게시일을 선택해주세요.</h1>
+                        <h3 class="section-title-desc">(최대 3일)</h3>
+                    </div>
+                    <div class="date-picker-wrap">
+                        <input class="date-picker" >
+                    </div>
+                    <div class="picked-result picked-result-date">
+                        <div class="picked-result-tit">선택 날짜</div>
+                        <div class="picked-result-cont"></div>
+                    </div>
+                    <div class="picked-result picked-result-price">
+                        <div class="picked-result-tit">결제 코인</div>
+                        <div class="picked-result-cont"></div>
+                    </div>
+                </section>
+                <section class="purchase-banner-section-bannertype">
+                    <div class="section-title">
+                        <h1>특징을 선택해 주세요</h1>
+                    </div>
+                    <div class="bannertype-wrap">
+                        <div class="bannertype bannertype-war">
+                            <input checked value="1" type="radio" name="bannertype" id="BannertypeWar" class="ui-radio">
+                            <label for="BannertypeWar">전쟁, 투쟁, 공성전</label>
+                        </div>
+                        <div class="bannertype bannertype-friendly">
+                            <input value="2" type="radio" name="bannertype" id="BannertypeFriendly"  class="ui-radio">
+                            <label for="BannertypeFriendly">친목, 농사, 평화, 중립</label>
+                        </div>
+                        <div class="bannertype bannertype-notice" >
+                            <input value="3" type="radio" name="bannertype" id="BannertypeNotice" class="ui-radio">
+                            <label for="BannertypeNotice">공지, 통제</label>
+                        </div>
+                    </div>
+                </section>
+                <section class="purchase-banner-section-info">
+                    <div class="section-title">
+                        <h1>배너 정보를 입력해주세요.</h1>
+                    </div>
+                    <div class="info-wrap">
+                        <div class="info-server-wrap">
+
+                            <select class="info-server" name="" id="infoServer">
+                                <option value="" disabled selected hidden>서버 선택</option>
+                                <option value="1">test1</option>
+                                <option value="2">test2</option>
+                            </select>
+                        </div>
+                        <input class="info-name" type="text" name="infoName" id="infoName" placeholder="혈맹 이름">
+                        <textarea  class="info-desc" name="infoDesc" id="infoDesc" cols="30" rows="10" placeholder="광고  문구를  최대 20자로 작성해주세요."></textarea>
+                    </div>
+                </section>
+                <section class="purchase-banner-section-guildurl">
+                    <div class="section-title">
+                        <h1>혈맹모집 게시판<br>URL을 입력해주세요.</h1>
+                    </div>
+                    <div class="guildurl-wrap">
+                        <input class="guildurl" type="text" name="" id="guildUrl" placeholder="URL 입력">
+                    </div>
+                </section>
             </div>
         </main>
     </body>
+
+    <script>
+
+    </script>
 </html>
