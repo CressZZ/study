@@ -1,0 +1,170 @@
+body {
+
+}
+
+ul{
+  margin:0;
+  list-style: none;
+  padding:0;
+}
+
+.page-purchase-wrap{
+  background-color: rgba(246, 246, 246, 1);
+}
+
+.tab-purchase-wrap{
+  display: flex;
+  height: 48px;
+  align-items: center;
+  padding: 0 16px;
+  margin-bottom: 6px;
+  background-color: #fff;
+  .tab-purchase{
+    // height: 28px;
+    padding: 5px 12px;
+    margin-right: 20px;
+    border-radius: 100px;
+    width: 83px;
+    font-size: 16px;
+    &.tab-active{
+      background-color: #b09067;
+      color: white;
+    }
+  }
+}
+
+
+.cont-purchase{
+  background-color: #fff;
+  display: none;
+  &.cont-active{
+    display: block;
+  }
+  .purchase-order-list{
+    .purchase-order-item{
+      height: 114px;
+      border-bottom: 1px solid rgba(34, 34, 34, 0.08);
+      display: flex;
+      justify-content: space-between;
+      padding:16px;
+      .purchase-order-item-left{
+        width: 82px;
+        height: 82px;
+        img {
+          width: 100%;
+        }
+      }
+      .purchase-order-item-right{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 16px;
+        .purchase-order-item-tit{
+          font-size: 18px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+        }
+        .purchase-order-item-desc{
+          font-size: 14px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          margin-top:3px;
+        }
+        .purchase-order-item-info{
+          font-size: 14px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          text-align: left;
+          color: #b09067;
+          margin-top:10px;
+
+        }
+      }
+    }
+  }
+  .purchase-history-list {
+    .purchase-history-item{
+      display: flex;
+      flex-flow: column;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(34, 34, 34, 0.08);
+      .purchase-history-item-top{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        font-size: 14px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        text-align: left;
+        color: rgba(0, 0, 0, 0.45);
+        .purchase-history-item-remain{
+          display: flex;
+          align-items: center;
+          &::before{
+            display: block;
+            content: '';
+            width: 14px;
+            height: 14px;
+            margin-right: 5px;
+            background: url('../img/Vector.svg') no-repeat center;
+          }
+
+        }
+      }
+      .purchase-history-item-bottom{
+        display: flex;
+        justify-content: space-between;
+        // padding: 14px 16px;
+        .purchase-history-item-left{
+          width: 58px;
+          height: 58px;
+          img {
+            width: 100%;
+          }
+        }
+        .purchase-history-item-right {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: 0 16px;
+          .purchase-history-item-tit{
+            font-size: 18px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: normal;
+            text-align: left;
+            color: rgba(0, 0, 0, 0.93);
+            margin-bottom: 4px;
+          }
+          .purchase-history-item-info{
+            font-size: 14px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: normal;
+            text-align: left;
+            color: #b09067;
+          }
+        }
+      }
+    }
+  }
+}
