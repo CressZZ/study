@@ -54,6 +54,8 @@ eslint 가 구문분석을 위해 parser 를 사용한다.
 플러그인을 설치했으면 이제 문장에 오류가 있을때 애러를 발생시킬지, 경고를 띄울지 결정한다. 이것이 Rule.
 그리고 Rule을 미리 정의 해놓은 것이 extends 이다 
 
+[추가] extends 에 plugin: 을 사용하면 plugin 도 같이 지정해 주는 식이 되서 plugin 을 따로 지정해 주지 않아도 된다. (90% 확실한 추측...)
+
 # `@babel/eslint-parser`
 - 중요! `babel-eslint` 는 디프리케이티드다! 쓰지 말자. 계속 말도 안되는 애러 남!
 
@@ -67,8 +69,9 @@ eslint 가 구문분석을 위해 parser 를 사용한다.
 - (파싱애러는 안나는데, 막 말도 안되는 문법 오류가 난다. 스샷을 보면 type인데 no-undef 애러가 난다) - plugin 에 있는 규칙은 잘 적용되기도 한다
 - ![screensh](./a.png)
 - 이건 플러그인의 문제라기 보다는 파싱애러가 안날 뿐이지 파싱이 잘못되서, type인데도 불구 하고 정의를 안해줬다고 애러를 밷는거 같다. 
+- [추가] 이거.....음... `@typescript-eslint/parser` 사용할때에도 `no-undef` 에러 나는거 같다. `@typescript-eslint/parser` 문서에 `no-undef` 옵션 끄는걸 추천한다고 나온다. (https://typescript-eslint-armano.netlify.app/docs/getting-started/linting/troubleshooting/). `@typescript-eslint/recommended` 에서 자동으로 꺼주는 것이었다.
 
-- 이것에 대한 내용은 `@babel/eslint-parser`의 [공식문서](https://github.com/babel/babel/tree/main/eslint/babel-eslint-parser#typescript)에도 나와 있다.
+-  `no-undef` 와 별개로, 타입스크립트에 `@babel/eslint-parser` 을 쓰지 말라고 하는 이것에 대한 내용은 `@babel/eslint-parser`의 [공식문서](https://github.com/babel/babel/tree/main/eslint/babel-eslint-parser#typescript)에도 나와 있다.
  
 > While @babel/eslint-parser can parse TypeScript, we don't currently support linting TypeScript using the rules in @babel/eslint-plugin. This is because the TypeScript community has centered around @typescript-eslint and we want to avoid duplicate work. Additionally, since @typescript-eslint uses TypeScript under the hood, its rules can be made type-aware, which is something Babel doesn't have the ability to do.
 
