@@ -1,5 +1,7 @@
 # 아 또 햇갈림
 
+https://ui.toast.com/weekly-pick/ko_20190418/ (ESM 이랑 commonjs 혼재)
+
 https://stackoverflow.com/questions/47255455/babel-polyfill-vs-babel-plugins/47326735
 
 Babel 변환 플러그인과 babel-polyfill / babel-runtime의 차이점은 ES5에서 오늘 기능을 다시 구현할 수 있는지 여부입니다. 예를 들어 Array.from은 ES5에서 다시 작성할 수 있지만 ES5에서 JavaScript에 화살표 함수 구문을 추가하기 위해 작성할 수있는 내용이 없습니다. 따라서 화살표 함수에는 변환이 있지만 Array.from에는 변환이 없습니다. Babel-polyfill 또는 babel-runtime과 같은 별도의 polyfill에 의해 제공되어야합니다.
