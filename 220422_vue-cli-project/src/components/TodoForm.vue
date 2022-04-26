@@ -56,25 +56,20 @@
         @click = "moveToTodoListPage"
       >취소</button>
   </form>
-  <transition name="fade">
-    <Toast :message="toastMessage" :type="toastAlertyType"  v-if="showToast" />
-  
-  </transition>
   <div id="cress"></div>
 </template>
 
 <script>
   import {useRoute, useRouter} from 'vue-router';
   import {ref, computed, onBeforeMount, onMounted, onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted} from 'vue';
-  import axios from 'axios';
+  import axios from '@/axios';
   import _ from 'lodash';
-  import Toast from '@/components/Toast.vue'
-import useToast from '@/composables/toast'
-import Input from '@/components/Input.vue'
+  import useToast from '@/composables/toast'
+  import Input from '@/components/Input.vue'
 
   export default {
     components: {
-      Toast,Input
+      Input
     },
     props: {
       editing:{
@@ -83,6 +78,8 @@ import Input from '@/components/Input.vue'
       }
     },
     setup(props){
+
+
       onBeforeMount(()=>{
         // console.log('onBeforeMount', document.querySelector('#cress'));
       })
@@ -119,11 +116,11 @@ import Input from '@/components/Input.vue'
       const originaTodo = ref('');
       const loading = ref(false);
       const todoId = route.params.id;
-      const {  toastMessage, toastAlertyType, showToast, triggerToast} = useToast(); // const showToast = ref(false);
+      const {  triggerToast} = useToast(); // const showToast = ref(false);
       const subjectError = ref('');
       const getTodo = async() => {
         try{
-          let res = await axios.get(`http://localhost:3000/todos/${todoId}`);
+          let res = await axios.get(`todos/${todoId}`);
           
           todo.value = {...res.data};
           originaTodo.value = {...res.data}
@@ -173,16 +170,22 @@ import Input from '@/components/Input.vue'
               body: todo.value.body
            };
           if(props.editing){
-            res =  await axios.put(`http://localhost:3000/todos/${todoId}`, data)
+            res =  await axios.put(`/todos/${todoId}`, data)
             originaTodo.value = {...res.data}
           }else{
-            res =  await axios.post(`http://localhost:3000/todos`, data);
+            res =  await axios.post(`/todos`, data);
             todo.value.subject = '',
             todo.value.body = ''
           }  
           const message = `${props.editing ? '수정 성공'  : '생성 성공'}`
-          triggerToast(message, 'success')
+          triggerToast(message, 'success');
 
+          if(!props.editing){
+            router.push({
+              name:'Todos'
+            })
+          }
+          
         }catch(err){
           const message = `${props.editing ? '수정 실패'  : '생성 실패'}`
           triggerToast(message, 'danger')
@@ -196,9 +199,7 @@ import Input from '@/components/Input.vue'
         moveToTodoListPage,
         onSave,
         todoUpdated,
-        showToast,
-        toastMessage,
-        toastAlertyType,
+
         subjectError,
   
       }
@@ -211,20 +212,5 @@ import Input from '@/components/Input.vue'
   .text-red{
     color:red;
   }
-.fade-enter-active, 
-  .fade-leave-active {
-    transition: all 0.5s ease;
-  }
 
-  .fade-enter-from,
-  .fade-leave-to {
-    opacity: 0;
-    transform: translateY(-30px)
-  }
-  .fade-enter-to,
-  .fade-leave-from {
-    opacity: 1;
-    transform: translateY(0px)
-
-  }
 </style>

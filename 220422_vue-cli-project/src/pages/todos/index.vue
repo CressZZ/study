@@ -28,35 +28,22 @@
     />
 
     <hr/>
+  <Pagination v-if="todos.length" :currentPage="currentPage" :numberOfPages = "numberOfPages" @click="getTodos" />
 
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li v-if="currentPage !== 1" class="page-item"><a style="cursor:pointer" @click="getTodos(currentPage - 1)" class="page-link" href="#">Previous</a></li>
-        <li 
-          v-for = "page in numberOfPages"
-          :key="page"
-          class="page-item"
-          :class ="currentPage === page ? 'active':''"
-        ><a style="cursor:pointer" @click="getTodos(page)" class="page-link" href="#">{{page}}</a></li>
-
-        <li v-if="currentPage !== numberOfPages" class="page-item"><a style="cursor:pointer" @click="getTodos(currentPage + 1)" class="page-link" href="#">Next</a></li>
-      </ul>
-    </nav>
   </div>
-  <Toast :message="toastMessage" :type="toastAlertyType"  v-if="showToast"  />
 </template>
 
 <script>
 import {ref, computed, watch} from 'vue';
 import TodoList from '@/components/TodoList.vue'
-import axios from 'axios';
-import Toast from '@/components/Toast.vue'
+import axios from '@/axios';
 import useToast from '@/composables/toast'
 import {useRouter} from 'vue-router'
+import Pagination from '@/components/Pagination.vue'
 export default {
   components: {
     TodoList,
-    Toast
+    Pagination
   },
   setup() {
     const todoStyle = {
@@ -70,30 +57,8 @@ export default {
     const limit = 5;
     const currentPage = ref(1);
     const router = useRouter()
-    const {  toastMessage, toastAlertyType, showToast, triggerToast} = useToast(); // const showToast = ref(false);
-    // const toastMessage = ref('')
-    // const toastAlertyType = ref('')
-    // let toastTimeout = setTimeout(()=>{
-
-    // },0);
-    // const triggerToast = (message, type) => {
-    //   toastMessage.value = message;
-    //   toastAlertyType.value = type;
-
-    //   showToast.value = true;
-
-    //   toastTimeout.value = setTimeout(() => {
-    //     toastMessage.value = '';
-    //     showToast.value = false;
-    //   }, 1000);
-    // }
-
-
-    // watch([currentPage, numberOfTodos], (currentPage, prev)=>{
-    //     console.log('hello', currentPage, prev)
-    // })
-
-
+    const {  triggerToast} = useToast(); // const showToast = ref(false);
+   
 
     const numberOfPages = computed(()=> {
       return Math.ceil(numberOfTodos.value/ limit);
@@ -115,7 +80,7 @@ export default {
       currentPage.value = page;
 
       try{
-        const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`)
+        const res = await axios.get(`todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`)
 
         numberOfTodos.value = res.headers['x-total-count']
         todos.value = res.data;
@@ -133,7 +98,7 @@ export default {
     const addTodo = async (todo)=>{
       // 데이터 베이스에 투두를 저장
       try{
-        await axios.post('http://localhost:3000/todos', {
+        await axios.post('todos', {
           subject: todo.subject,
           completed: todo.completed
         });
@@ -154,7 +119,7 @@ export default {
       error.value = '';
       // const id = todos.value[index].id;
       try{
-        await axios.delete('http://localhost:3000/todos/' + id);
+        await axios.delete('todos/' + id);
         getTodos();
         return true
       }catch(err){
@@ -171,7 +136,7 @@ export default {
       const id = todos.value[index].id;
       console.log(id, !todos.value[index].completed)
       try{
-        await axios.patch('http://localhost:3000/todos/' + id , {
+        await axios.patch('todos/' + id , {
           completed: checked
         });
 
@@ -233,9 +198,7 @@ export default {
       currentPage,
       getTodos,
       searchTodo,
-      showToast,
-      toastMessage,
-      toastAlertyType,
+
       moveToCreatPage
     };
   },
