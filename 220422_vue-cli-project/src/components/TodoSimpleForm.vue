@@ -26,7 +26,7 @@
   import {ref} from 'vue';
 
   export default {
-    emits : ['eadd-todo'],
+    emits : ['add-todo'],
 
     setup(props, {emit}){
       const todo = ref('');
