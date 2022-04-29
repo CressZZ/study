@@ -10,3 +10,7 @@ Take Over Mode(https://github.com/johnsoncodehk/volar/discussions/471) 를 실�
 내시간
 
 왜 아무도 언급을 안함?
+
+
+#추가
+0.3.11 버전에서는 해결됬네.;;; 우아 왜죠 나의 시간은 뭐죠?
