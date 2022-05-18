@@ -119,9 +119,9 @@ let myVar3: Mytype = 'string'; // 애러: .d.ts 파일의 최상위 수준 선�
 ---
 ----------------------[추가]--------------------
 # 으으으음...... typeRoots 와 types 옵션에 대해
-공식문서 : https://www.typescriptlang.org/tsconfig#typeRoots
-한글 문서 : https://typescript-kr.github.io/pages/tsconfig.json.html
-관련해서 혼라스러운 세계인들 : https://github.com/microsoft/TypeScript/issues/22217
+- 공식문서 : https://www.typescriptlang.org/tsconfig#typeRoots
+- 한글 문서 : https://typescript-kr.github.io/pages/tsconfig.json.html
+- 관련해서 혼라스러운 세계인들 : https://github.com/microsoft/TypeScript/issues/22217
 
 # 확실치 않은 이해로 정리를 하자면, 이건 공식문서 + 각종 교육자료 + 블로그등이 명확히 이게 뭔지 설명을 안해서 발생하나 문제로 보인다. 
 - typeRoots 에 대해 이렇게 설명한다. 
