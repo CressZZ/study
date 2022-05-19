@@ -113,3 +113,95 @@ let myVar3: Mytype = 'string'; // 애러: .d.ts 파일의 최상위 수준 선�
 - 왜냐하면 일반적으로라면 `import`  를 통해 3자가 만든 모듈을 가져오는 순간 이 파일은 `스크립트 모드`가 아닌 `모듈모드` 가 되어 버리기 때문에 
 - 다른 나의 파일에서는 `import` 없이 이것 사용할수 없기 때문이다.
 
+
+
+
+---
+----------------------[추가]--------------------
+# 으으으음...... typeRoots 와 types 옵션에 대해
+- 공식문서 : https://www.typescriptlang.org/tsconfig#typeRoots
+- 한글 문서 : https://typescript-kr.github.io/pages/tsconfig.json.html
+- 관련해서 혼라스러운 세계인들 : https://github.com/microsoft/TypeScript/issues/22217
+
+# 확실치 않은 이해로 정리를 하자면, 이건 공식문서 + 각종 교육자료 + 블로그등이 명확히 이게 뭔지 설명을 안해서 발생하나 문제로 보인다. 
+- typeRoots 에 대해 이렇게 설명한다. 
+- 기본적으로 `node_modules/@types` 에 있는 package 가 포함될거다. (어디에? 뭐가?)
+- 중요한건 typeRoots 를 정의 해버리면 디폴트 값인 `node_modules/@types` 가 빠져 버리기 때문에 수동으로 정의 해줘야 한다는것과, 
+- types를 정의해버리면 types에 정의 된 모듈만 tsc 가 인식 가능하다는 식으로
+
+# 글쎄 지금 나의 이해 수준으로는 말도 안되는 소리들 (나중에 더 깊이 이해하면 저말이 맞겠지라고 생각하겠지 - 공식문서니까)
+- 타입스크립트에서 `import name from 'name'` 처럼 상대경로 없이 불러오는건 기본 module resolution을 따른다. 
+- 그러니까 tsc 가 `node_modules`도 찾아보고, tsconfig 의 `path` 옵션도 보고 
+- 기본적으로 tsconfig 의 `include`, `exclude` 도 본다는 이야기 
+- 하나 중요한건 `declare module 'name'` 과 같은 모듈 타입 선언은 `export declare module 'name'` 으로 사용할수 없다는 점이다. (무조건 스크립트 모드로 동작)
+- 아무튼 각종 교육 자료 보면 커스텀 모듈을 정의하고 싶을때 (타입 선언이 없는 npm package) `src/types/name/index.d.ts` 를 만들어서 
+- `module 'name'` 을 `index.d.ts` 파일에 써주고, tsconfig 에 `typeRoots:['./src/types/', 'node_modules/@types']`  를 정의 하라고 나오는데
+- 완전 헛소리인게 (지금 나의 이해도로는 헛소리임)
+- `declare module 'name'` 과 같이 스크립트 모드 + 타입선언을 해버리면 사실 아무대서나 가져다 쓸수 있다는 말이다. 
+- 이게 `typeRoots:['./src/types/', 'node_modules/@types']`  에 정의 되어 있지 않아도 사용 할수 있다. 
+- 왜냐하면 `include` 옵션에 자동으로 모든 파일이 들어가므로 typescript 는 모든 파일을 감시하고 있을것이고 
+- `src/types/name/index.d.ts` 안에 글로벌 하게 선언된(스크립트 모드) `declare module 'name'` 도 가져 올것이라는 이야기
+
+# 그럼 typeRoots는 언제 쓰는가?
+- 첫번째로 `include`를 `./src/**/*` 로 정의하고
+- `src/types/name/index.d.ts`  을 `/types/name/index.d.ts` 옮기면 
+- 타입 선언 파일이 짠 include 에서 빠지게 된다. 
+- 이렇게 되면 `/types/name/index.d.ts` 에 스크립트 모드로 선언된 얘들을 tsc 가 인식을 못한다. 
+- 이때 사용하는게 `typeRoots`
+-  `typeRoots:['./types/']` 로 정의하면 `declare module 'name'` 뿐 아니라 `type A = string` 과 같이 스크립트 모드로 전역 선언한 얘들이 모두 인식된다. 
+-  중요한건 `types/name/index.d.ts` 처럼 `types/` 밑에 1depth 폴더가 있고 그안에 파일이 있어야 한다는것. 
+-  암튼 그럼 자 봐보자 `typeRoots`에 `'./types/` 만 넣었으니 그럼 `node_modules/@types/name2/index.d.ts` 의 모둘을 `import name from 'name2'`로 불러오면 인식을 못할까?
+-  아니다.! 인식한다. 
+
+# 왜죠?
+- typeRoots 는 스크립트 모드 글로벌 선언만 관련이 있다. 
+- `import name from 'name2'` 는 순전히 moduleResoution 절차만 따르고 있으며 당연히 `node_modules` 를 탐색한다. 
+- moduleResoution 은 `import` 옵션과 `export` 옵션과도 무관하다. 
+- `import name from 'name2'`와 같이 명시적으로 모듈을 `import` 하면 그냥 `node_modules/` 찾다가 없은면 `node_modules/@types` 도 찾고 위로 쭉쭉 올라간다.
+- 만약 `node_modlules/@types/foo/index.d.ts` 에 스크립트 모드로 전역 `type Foo = string` 이 있다고 하자 
+- 그럼 `src/index.ts` 에서 `Foo` 타입을 쓸수 있을까?
+- 쓸수 없다. 왜냐 하면   `typeRoots:['./types/']` 는 `node_modules/@types`를 포함하고 있지 않기 때문이다. 
+- 그럼 tsconfig 는 그대로 놔두고 `node_modlules/@types/foo/index.d.ts` 파일이 스크립트 모드가 아니라 모듈 모드로서  `type Foo = string` 는 고대로 놔두고 `export default Foo;` 를 추가 해보자 
+- 그리고  `src/index.ts` 에서 `import Foo from 'foo'` 는 문제가 없을까?
+- 문제가 없다!
+
+# 왜죠? 왜 모듈을 가져오죠?
+- 말했다 시피 `typeRoots` 는 스크립트 모드에만 적용되는 옵션이고, 
+- `foo/index.d.ts`를 모듈모드로 바꾸고 (export 추가) 명시적으로 다른곳에서 `import` 를 할때에는 `moduleResolution`을 따르기 때문이다. 
+
+# 그럼 types 옵션은 뭐냐?
+- 진짜 햇갈리는데 간단히 말하면 `typeRoots`에 정의된 폴더의 `하위 폴더명` 이라고 생각하자
+- 공식문서나 각종 교육자료만 보면 마치 모듈 그자체를 의미 하는 듯 한데 (`declare modue name`) 처럼
+- 그게 아니라, 스크립트 모드 동작할 파일명을 어떤거 사용할지 골라내는거다. 
+- 예를 들면 `node_modlules/@types/foo/index.d.ts`, `node_modlules/@types/bar/index.d.ts` 이라는 두파일과 옵션으로  `types:['foo']` 가 있다고 생각해보자  (`typeRoots` 는 기본값 (`node_modules/@types` 포함이다.))
+- `types` 옵션에 `bar` 가 없다. 
+- 마치 `import bar from 'bar'` 가 동작 하지 않을것 같다. 
+- 노노노 동작한다. 이건 명시적으로 불러온거니까 `typeRoots`나 `types` 옵션따위에 구애받지 않는다. 
+- 물론 중요한건  `node_modlules/@types/bar/index.d.ts` 에 명시적으로 `export {}` 처럼  `export` 가 존재하는 모듈 모드여야 한다. (없으면 모듈을 못찾겠다고 애러난다.)
+- 자자자자 그럼 `node_modlules/@types/bar/index.d.ts`  이 스크립트 모드라고 생각해 보자. `type Bar = string` 같은 문구만 있을뿐 `export` 가 없다고 해보자 
+
+# 그럼 어떻게 되죠?
+-  `src/index.ts` 에서 `let a : Bar = 'bar'` 라는 문장이 애러가 난다. 
+-  왜냐하면  `types:['foo']` 만 있을뿐 `Bar` 가 없기때문이다. 
+-  스크립트 모드의 전역 선언을 인식 할수 없다. 
+-  그럼  `types:['foo', 'bar']` 로 바꿔보자 
+-  짠! 인식한다. 
+-  우리의 스크립트 모드 파일은 `node_modlules/@types/bar/index.d.ts` 에 존재 하기 때문이다. 
+
+# 결론은
+- 커스텀 모듈 사용하고 싶으면 그냥 아무대나 `declare modeul 'name';` 선언하면 잘가져 온다. (`스크립트 모드` 이며 `include`에 포함되기 때문이다 (`include` 중요!)
+- 스크립트 모드를 이해할수 없는 애들은 `exclude`로 빠진 애들이거나, `include` 에 속해 있지 않은 애들이며
+- 그런 애들은 인식하기 위해 `typeRoots`와 `types` 옵션이 필요하고, 
+- 명식적 모듈 import는 `moduleResolution` 을 따른다. 
+
+# 번외 - ./types/Foo/index.d.ts 에서 명시적으로 export 하고 명시적으로 import 하고 싶습니다.!
+- `import Foo from 'Foo'` 를 사용하고 싶을때
+- path 옵션을 사용합시다. 
+- 마치 `./types/Foo/index.d.ts` 에 `declare const a: string; export default a;` 가 있으면 import 가 될것 같이 보이지만, 
+- `typesRoots`도 세팅해줬고, `types` 세팅 해줘도 안된다. 
+- 이건 `모듈` 이기 때문이다. 아래와 같이 써주자.
+```json
+   "paths": {
+      "bar": ["./types/bar"]
+    },  
+```
