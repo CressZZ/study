@@ -39,6 +39,15 @@ https://stackoverflow.com/questions/56577201/why-is-isolatedmodules-error-fixed-
 이 모드를 켰을때 사용할수 없는 상황은 아래와 같다. 
 
 #### 1) 값이 아닌 타입의 export - Exports of Non-Value Identifiers
+- 음 정확히 말하면 값으로 내보내는게 안되는 것이다.
+- export 의 경우 `export type A = string` 은 되는데, `type A = string; export {A}` 라고 사용하면, `isolateModule`이 켜진 상태에서는 음 안된다. 
+- 왜일까?
+- 음 왜냐 하면, tsc 의 경우 혹은 tsc 를 사용하는 ts-loader 의 경우 타입을 값으로 export하고 사용해도 알아서 잘 사용하는거 같은데
+- 그 이유는 일단 `export type A = string`과 같이 type을 export 했다고 보자. 그럼 이건 babel이든 tsc든 이게 타입이라는걸 잘 알것이고, 개별 파일로 트렌스 파일할때, export 한 파일에서는 A는 타입이야! 라고 말해줄거고 import 한 파일에서는 만약 import 한게 type이면 runtime 에서 사용하지 말고 제거 하던지 해라 라고 할것이다. 
+- 그런데... `type A = string;  export {A}` 이라고 해보자. 한파일씩 한줄씩 파싱하는 바벨은 이 A가 타입인지 뭔지 모르고, 일단 export 를 하고(이건 타입이라고 표시를 못하는듯) import 를 하게되면 그냥 값으로 가져오는 수밖에 없는 것이다. 
+- tsc 는? ts-loader 는 그럼 어떻게 되는걸까
+- 얘네는 전체를 보는 얘들이기 때문에 대충 슥 보고 A를 import 할때 이게 type 인지 아닌지 체크 하는게 아닐까?
+  
 #### 2) 모듈 모드가 아닌 스크립트 모듈의 파일 (.d.ts 파일 제외) - Non-Module Files
 #### 3) const enum 사용 - References to const enum members
 
