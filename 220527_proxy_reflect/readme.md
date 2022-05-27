@@ -219,6 +219,7 @@ const parent = {
   }
 };
 
+// 이부분
 const reactivityParent = reactive(parent);
 child.__proto__ = reactivityParent;
 
