@@ -223,4 +223,16 @@ const parent = {
 const reactivityParent = reactive(parent);
 child.__proto__ = reactivityParent;
 
+
+child.age; // (2021년 기준)
+// 2
+child.job = 'unemployed';
+child.hasOwnProperty('job');
+// true
+reactivityParent.hasOwnProperty('job');
+// false
+child.job;
+// 'unemployed'
+reactivityParent.job;
+// undefined
 ```
