@@ -4,6 +4,42 @@ https://vitejs.dev/guide/features.html#typescript
 esbuild는 타입 정보 없이 타입스크립트를 자바스크립트로 변환하는 업무만 수행하기 때문에 const enum 및 암시적 유형 전용 가져오기와 같은 특정 기능을 지원하지 않습니다.
 
 
+# comomnjs에 대해
+
+나의 결론은 그냥 쓰지 말아라 
+
+## 빌드 할때 (데브 서버 말고, 프리뷰 등)
+@rollup/plugin-commonjs 을 vite가 내장 하고 있다.  https://vite-rollup-plugins.patak.dev/
+그래서 그냥 config 옵션중에 `build.commonjsOptions` 에 옵션을 넣어주면 알아서 설정된다. 
+중요한건 `include` 옵션인데, `/src/*` 등으로 설정 해주자
+```js
+  build:{
+    commonjsOptions: {include:['/src/*']}
+  }
+```
+암튼 이렇게 하면, module.exports 던 rquire 던 잘 변환해준다. 
+
+## 데브 서버
+문제는 이건데...데브서버에서 rquire를 사용할 방법을 못찾겠다.
+일단 여라가지 테스트를 통해서 @rollup/plugin-commonjs 은 데브서버에서는 소용 없다는 걸 알았다. 
+근데 그럼 어쩌지?
+https://github.com/vite-plugin/vite-plugin-commonjs 이런걸 쓰라고 나오는데, 이건 개인이 만든거고
+동작도 안한다. !!!!!!
+여튼 해당문서에 
+📦 Out of the box
+🔨 Work only in the vite serve phase
+🚚 In the vite build phase, CommonJs syntax will be supported by builtin @rollup/plugin-commonjs
+이렇게 나오는데, 음 그니까 데브 서버 돌릴때는 이거 쓰고 , 빌드 할때는 rollup/plugi-commonjs 쓰라는 건데
+안된다니까!
+
+## 데브서버 다른 플러그인
+이거 작성하는 도중에 vite 플러그인 모음 https://github.com/vitejs/awesome-vite#plugins 에서 commonjs  로 검색하니까
+https://github.com/originjs/vite-plugins/tree/main/packages/vite-plugin-commonjs 이 나왔다!
+
+젠장 이건 잘된다.
+아무튼 그냥 vite 나 기타 esm 을 바탕으로 하는 빌드 툴에서는 그냥 commonjs 쓰지말자 
+사실 쓸 이유도 별로 없잖아
+
 
 # dev, preview, build
 ## dev
