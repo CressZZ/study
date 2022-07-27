@@ -97,6 +97,8 @@ Note: This option will not affect parsing of .mjs files, as they are currently h
 
 - 결론은 문법을 섞어서 쓰지 맙시다!
 
+- [UPDATE] : 220721 - 근데 지금 다시 테스트 해보니까, 일단 바벨로더 없이는 import 구문을 esm 이랑 commonjs 랑 섞어서 써도 애러 없는데?
+
 # babel.config.js 에서 preset-env 설정중 module 옵션에 관하여
 
 https://babeljs.io/docs/en/babel-preset-env#modules
