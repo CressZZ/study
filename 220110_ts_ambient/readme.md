@@ -113,6 +113,16 @@ let myVar3: Mytype = 'string'; // 애러: .d.ts 파일의 최상위 수준 선�
 - 왜냐하면 일반적으로라면 `import`  를 통해 3자가 만든 모듈을 가져오는 순간 이 파일은 `스크립트 모드`가 아닌 `모듈모드` 가 되어 버리기 때문에 
 - 다른 나의 파일에서는 `import` 없이 이것 사용할수 없기 때문이다.
 
+# declare global 정리 해준다.(220728)
+- import, export 가 있으면 모듈 모드가 된다. 
+- 이때 스크립트 모드처럼 전역에서 사용하려면 dclare global이 필요하다. 
+- 엥... 위에 다 써놨네...
+- 스크립트 모드에서는 declare global 쓰면 애러 난다. 
+## interface Window{}
+- window 객체 확장이다. 
+- 스크립트 모드에서 interface Window{}를 사용하면 전역에서 확장된 window 객체를 사용할수 있고, 
+- 모듈 모드에서는 declare global {interface Winodw{} } 를 써줘야 한다. ㅋㅋㅋㅋㅋㅋㅋ
+
 
 
 
