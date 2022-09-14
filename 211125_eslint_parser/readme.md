@@ -56,6 +56,113 @@ eslint 가 구문분석을 위해 parser 를 사용한다.
 
 [추가] extends 에 plugin: 을 사용하면 plugin 도 같이 지정해 주는 식이 되서 plugin 을 따로 지정해 주지 않아도 된다. (90% 확실한 추측...)
 
+** [추가] 위에말은 거의 다 틀린말.. **
+아.... 근데 이걸 파악하는게 정말나에게 도움이 되는건지 잘 모르겠다. 
+https://eslint.org/docs/latest/user-guide/configuring/configuration-files#extending-configuration-files
+
+extends 에는 모든게 다 들어갈수 있다. 말 그대로 컨피그 파일을 extends 하는 내용인데
+plugin 을 포함해서 어떤거든 들어갈수 있다. 
+즉, extends에 적용한 내용에 따라, plugin 을 넣을지, 아니면 룰만 넣을지 결정 된다는 이야기
+
+예를 들면 https://eslint.vuejs.org/user-guide/#usage 에 보면 vuejs를 위한 eslint-plugin의 사용법이 나와 있는데, 
+extends에 어떤걸 적용하느냐에 따라 적용 되는 내용이 달라 진다는 이야기 이다. 
+`plugin:vue/base` 혹은 `plugin:vue/vue3-essential`을 extends에 적용하면 `parser`까지 적용 되지만, 
+다른 것들은 `rule` 만 적용 되는 경우도 있는 것이다. 
+
+```
+Bundle Configurations
+This plugin provides some predefined configs. You can use the following configs by adding them to extends.
+
+"plugin:vue/base" ... Settings and rules to enable correct ESLint parsing.
+Configurations for using Vue.js 3.x.
+"plugin:vue/vue3-essential" ... base, plus rules to prevent errors or unintended behavior.
+"plugin:vue/vue3-strongly-recommended" ... Above, plus rules to considerably improve code readability and/or dev experience.
+"plugin:vue/vue3-recommended" ... Above, plus rules to enforce subjective community defaults to ensure consistency.
+Configurations for using Vue.js 2.x.
+"plugin:vue/essential" ... base, plus rules to prevent errors or unintended behavior.
+"plugin:vue/strongly-recommended" ... Above, plus rules to considerably improve code readability and/or dev experience.
+"plugin:vue/reco
+```
+
+** [추가] `eslint-plugin-vue` 에 대해 좀더 알아보면 ** 
+https://eslint.vuejs.org/
+https://github.com/vuejs/vue-eslint-parser#readme
+
+바로 위에 쓴것처럼 extends에 `plugin:vue/vue3-essential` 을 사용하면 `parser` 도 `vue-eslint-parser` 를 사용하도록 `extends!` 된다. 
+그런데 eslint-plugin-vue 에서는 이 파서의 목적은 .vue 파일 안에 있는 <template> 구문을 파싱 하기 위한 것이라고 설명 하고 있다. 
+
+```
+This parser allows us to lint the <template> of .vue files. We can make mistakes easily on <template> if we use complex directives and expressions in the template. This parser and the rules of eslint-plugin-vue would catch some of the mistakes.
+```
+
+그럼 .vue 파일 안에 있는 `<script>` 안의 내용은 어떻게 파싱을 해야 하는가?
+```
+You can use parserOptions.parser property to specify a custom parser to parse <script> tags. Other properties than parser would be given to the specified parser. For example:
+{
+    "parser": "vue-eslint-parser",
+    "parserOptions": {
+        "parser": "@babel/eslint-parser",
+        "sourceType": "module"
+    }
+}
+```
+
+`parserOptions` 옵션 안에 `parser`의 옵션을 통해 정의 하라고 나온다. 
+
+실제로 `.vue` 파일에 `<script lang="ts">` 가 있는데, eslint 에 `vue-eslint-parser` 만 있고 `@babel/eslint-parser` 게 없으면 타입스크립트 구문 자체를 인식하지 못한다. (eslint 가 해당 구문을 애러로 판단한다.)
+
+이제 조금 햇갈리는 부분인데, 
+실제로는 `parserOptions` 옵션 안에 `parser`의 옵션에 아무것도 없는데, 타입스크립트 구문을 애러 없이 표현 하는 부분이 있다. 
+
+여기서 `extends`의 역할을 또 한번 살펴 봐야 하는데, `extends`에 분명히 다른게 적혀 있을 것이다. 
+```
+  "extends": [
+    "plugin:vue/vue3-essential",
+    "eslint:recommended",
+    "@vue/typescript/recommended"
+  ],
+```
+
+위 extends중 `@vue/typescript/recommended`는 https://www.npmjs.com/package/@vue/eslint-config-typescript 인데, 
+햇갈림 중 하나가 eslint config 파일안에서는 `eslint-config` 라는 prefix를 빼고 적어도 `eslint-config` 가 있다고 판단한다는 것이다. 
+
+```
+https://eslint.org/docs/latest/user-guide/configuring/configuration-files#extending-configuration-files
+
+The eslint-config- prefix can be omitted from the configuration name. For example, airbnb resolves as eslint-config-airbnb.
+
+```
+
+아무튼 하나씩 살펴 보면, 
+`plugin:vue/vue3-essential` 는 위에 설명 했듯이 `vue-eslint-parser` 를 사용하도록 `extends!` 된다.
+그리고 `@vue/typescript/recommended` 즉, `@vue/eslint-config-typescript/recommended` 는 아래의 코드를 가지고 있다.
+parserOptions를 덮어 쓰고 있다. 
+
+중요한점 하나..! recommended 라고 해서 rule만 가지고 있는건 아니라는 거다.
+
+```
+parserOptions: {
+    parser: {
+      'js': 'espree',
+      'jsx': 'espree',
+
+      'ts': require.resolve('@typescript-eslint/parser'),
+      'tsx': require.resolve('@typescript-eslint/parser'),
+
+      // Leave the template parser unspecified, so that it could be determined by `<script lang="...">`
+    },
+    extraFileExtensions: ['.vue'],
+    ecmaFeatures: {
+      jsx: true
+    }
+  },
+
+```
+
+거지 같다.
+
+왜 난 이딴걸 보고 있지?
+
 # `@babel/eslint-parser`
 - 중요! `babel-eslint` 는 디프리케이티드다! 쓰지 말자. 계속 말도 안되는 애러 남!
 
