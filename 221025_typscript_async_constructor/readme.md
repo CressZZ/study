@@ -1,0 +1,1 @@
+https://velog.io/@towozy/Typescript-%EC%83%9D%EC%84%B1%EC%9E%90%ED%95%A8%EC%88%98%EC%97%90-asyncawait-%EC%82%AC%EC%9A%A9%EC%9D%B4-%EA%B0%80%EB%8A%A5%ED%95%9C%EA%B0%80
