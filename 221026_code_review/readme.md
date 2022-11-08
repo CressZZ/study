@@ -1,3 +1,20 @@
+# 기능 
+- 쿠키 동의 레이어
+- 쿠키 설정 레이어
+
+# 서드파티 쿠키 / GDPR
+https://ko.javascript.info/cookie
+
+# 구조
+## AbsGlobalCookie
+- 이게 왜 Abs?
+- 
+## ConfirmToast
+
+## SettingLayer
+
+
+
 # async constructor class
 - 비동기 생성자를 가지고 있는 class가 필요한가?
 https://velog.io/@towozy/Typescript-%EC%83%9D%EC%84%B1%EC%9E%90%ED%95%A8%EC%88%98%EC%97%90-asyncawait-%EC%82%AC%EC%9A%A9%EC%9D%B4-%EA%B0%80%EB%8A%A5%ED%95%9C%EA%B0%80
@@ -22,11 +39,6 @@ export  {default as SettingLayerIndex}  from './feature/settingLayer';
 //     }
 // }
 ```
-
-
-
-
-
 
 
 
