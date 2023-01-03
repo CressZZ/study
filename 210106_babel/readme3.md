@@ -132,7 +132,7 @@ function _f() {
 
 ```
 
-- 위에서 `@bable/runtime` 이 가져온 `@babel/runtime/regenerator` 에는 어떤 내용이 있을까
+- 위에서 `@babel/runtime` 이 가져온 `@babel/runtime/regenerator` 에는 어떤 내용이 있을까
 ```js
  
 // node_modules/@babel/runtime/regenerator/index.js
