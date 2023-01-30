@@ -126,7 +126,7 @@ You can use parserOptions.parser property to specify a custom parser to parse <s
 위 extends중 `@vue/typescript/recommended`는 https://www.npmjs.com/package/@vue/eslint-config-typescript 인데, 
 햇갈림 중 하나가 eslint config 파일안에서는 `eslint-config` 라는 prefix를 빼고 적어도 `eslint-config` 가 있다고 판단한다는 것이다. 
 
-```
+```text
 https://eslint.org/docs/latest/user-guide/configuring/configuration-files#extending-configuration-files
 
 The eslint-config- prefix can be omitted from the configuration name. For example, airbnb resolves as eslint-config-airbnb.
@@ -140,7 +140,7 @@ parserOptions를 덮어 쓰고 있다.
 
 중요한점 하나..! recommended 라고 해서 rule만 가지고 있는건 아니라는 거다.
 
-```
+```json
 parserOptions: {
     parser: {
       'js': 'espree',

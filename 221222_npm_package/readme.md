@@ -39,6 +39,7 @@
 main이 설정되지 않은 경우 기본적으로 패키지의 루트 폴더에 있는 index.js로 설정됩니다.
 # browser
 - 이 browser필드는 모듈 작성자가 클라이언트 측 사용을 위해 모듈을 패키징할 때 javascript 번들러 또는 구성 요소 도구에 대한 힌트로 제공됩니다. 이 필드는 일반적으로 프로젝트 소스 트리의 루트에 있는 package.json파일( 여기 에 설명됨)에서 찾을 수 있습니다.
+- 필드에 대해 단일 문자열을 지정하면 해당 문자열 browser이 대체 main되고 모듈 진입점이 됩니다. 이 main필드는 모듈에 대한 진입점을 지정하므로 모듈을 교체하면 브라우저 사용을 위해 번들러가 모듈을 패키징할 때 진입점을 교체할 수 있습니다.
 - https://github.com/webpack/webpack/issues/4674
 - https://github.com/defunctzombie/package-browser-field-spec
 - https://github.com/TheLarkInn/compare-webpack-target-bundles
