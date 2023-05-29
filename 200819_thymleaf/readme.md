@@ -58,3 +58,4 @@ th:with 등으로 한번이라도 정의 된 변수를 사용할때
 ```html
 <button type="button" th:utext="#{ ${ '{{type}}' == 'BASIC' || '{{type}}' == 'SMS' || '{{type}}' == 'COUPON'  } ? type.btn.certify : type.btn.sendEmail }">
 ```
+

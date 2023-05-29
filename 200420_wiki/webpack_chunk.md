@@ -125,10 +125,5 @@ async, all, initial 값을 설정 해줄수 있다.
 그리고 웹팩 문서는 별로다.
 
 
-
-
-
-
-
-
-
+#
+https://simsimjae.medium.com/webpack4-splitchunksplugin-%EC%98%B5%EC%85%98-%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0-19f5de32425a

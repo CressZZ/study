@@ -140,10 +140,10 @@ let myVar3: Mytype = 'string'; // 애러: .d.ts 파일의 최상위 수준 선�
 - types를 정의해버리면 types에 정의 된 모듈만 tsc 가 인식 가능하다는 식으로
 
 # 글쎄 지금 나의 이해 수준으로는 말도 안되는 소리들 (나중에 더 깊이 이해하면 저말이 맞겠지라고 생각하겠지 - 공식문서니까)
-- 타입스크립트에서 `import name from 'name'` 처럼 상대경로 없이 불러오는건 기본 module resolution을 따른다. 
+- 타입스크립트에서 `import name from 'name'` 처럼 상대경로 없이 불러오는건 기본 module resolution을 따른다. (https://www.typescriptlang.org/docs/handbook/module-resolution.html#how-typescript-resolves-modules)
 - 그러니까 tsc 가 `node_modules`도 찾아보고, tsconfig 의 `path` 옵션도 보고 
 - 기본적으로 tsconfig 의 `include`, `exclude` 도 본다는 이야기 
-- 하나 중요한건 `declare module 'name'` 과 같은 모듈 타입 선언은 `export declare module 'name'` 으로 사용할수 없다는 점이다. (무조건 스크립트 모드로 동작)
+- **하나 중요한건 `declare module 'name'` 과 같은 모듈 타입 선언은 `export declare module 'name'` 으로 사용할수 없다는 점이다. (무조건 스크립트 모드로 동작)**
 - 아무튼 각종 교육 자료 보면 커스텀 모듈을 정의하고 싶을때 (타입 선언이 없는 npm package) `src/types/name/index.d.ts` 를 만들어서 
 - `module 'name'` 을 `index.d.ts` 파일에 써주고, tsconfig 에 `typeRoots:['./src/types/', 'node_modules/@types']`  를 정의 하라고 나오는데
 - 완전 헛소리인게 (지금 나의 이해도로는 헛소리임)
@@ -165,7 +165,7 @@ let myVar3: Mytype = 'string'; // 애러: .d.ts 파일의 최상위 수준 선�
 
 # 왜죠?
 - typeRoots 는 스크립트 모드 글로벌 선언만 관련이 있다. 
-- `import name from 'name2'` 는 순전히 moduleResoution 절차만 따르고 있으며 당연히 `node_modules` 를 탐색한다. 
+- `import name from 'name2'` 는 순전히 moduleResoution 절차만 따르고 있으며 당연히 `node_modules` 를 탐색한다.  (https://www.typescriptlang.org/docs/handbook/module-resolution.html#how-typescript-resolves-modules)
 - moduleResoution 은 `import` 옵션과 `export` 옵션과도 무관하다. 
 - `import name from 'name2'`와 같이 명시적으로 모듈을 `import` 하면 그냥 `node_modules/` 찾다가 없은면 `node_modules/@types` 도 찾고 위로 쭉쭉 올라간다.
 - 만약 `node_modlules/@types/foo/index.d.ts` 에 스크립트 모드로 전역 `type Foo = string` 이 있다고 하자 

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<!-- <img src="https://fizz-download.playnccdn.com/download/v2/buckets/preorder/files/183e94d971b-a1058c9d-bbd4-4b53-ba66-0c3cd1233d65" alt=""> -->
+
+<script src="https://assets.playnccdn.com/uikit/preorder/client/0.1.0/js/index.js?1"></script>
+
+<body>
+    
+<script>
+    console.log('start');
+    
+    function createImageTag(){
+        // let img = document.createElement('img');
+        // img.src = 'https://fizz-download.playnccdn.com/download/v2/buckets/preorder/files/183e94d971b-a1058c9d-bbd4-4b53-ba66-0c3cd1233d65';
+        // document.body.append(img);
+        // img.onload = (async ()=>{
+        //     console.log('image on loaded');
+        //     await test();
+        //     let img = document.createElement('img');
+        //     img.src = 'https://fizz-download.playnccdn.com/download/v2/buckets/preorder/files/183e94d971b-a1058c9d-bbd4-4b53-ba66-0c3cd1233d65';
+        //     document.body.append(img);
+        // })
+    }
+
+    function createJsTag(){
+        let script = document.createElement('script');
+        script.src = './index.js';
+        script.async = true
+        document.body.append(script);
+        script.onload = ()=>{
+            console.log('script on loaded')
+        }
+    }
+    
+    window.onload = ()=>{
+        console.log('window load')
+    }
+    
+    async function test(){
+        await promiseFn();
+        console.log('ajax finish')
+    };
+    
+    function promiseFn(){
+        return new Promise((res)=>{
+            setTimeout(()=>{
+                res('resolve!');
+            }, 1000)
+        })
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=> {
+        console.log('document ready')
+    })
+    
+    createImageTag();
+    createJsTag();
+    </script>
+</body>
+</html>

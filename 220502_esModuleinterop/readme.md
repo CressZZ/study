@@ -2,6 +2,10 @@
 https://stackoverflow.com/questions/56238356/understanding-esmoduleinterop-in-tsconfig-file
 https://www.typescriptlang.org/tsconfig#allowSyntheticDefaultImports
 https://pcconsoleoraksil.tistory.com/323
+https://toss.tech/article/commonjs-esm-exports-field
+https://ui.toast.com/weekly-pick/ko_20190418/
+https://it-eldorado.tistory.com/128
+https://pencilflip.medium.com/using-es-modules-with-commonjs-modules-in-node-js-1015786dab03
 
 # 타입스크립트에서 ESM 이랑 commonjs 를 함께 쓸대 발생하는 문제?
 - 일단 `esModuleInterop 꺼져` 있고, `allowSyntheticDefaultImports 도 꺼져` 있을때!
