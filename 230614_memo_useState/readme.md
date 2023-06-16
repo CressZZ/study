@@ -23,3 +23,31 @@ useState와 useEffect: useState는 컴포넌트의 로컬 상태를 관리하기
 
 ## 결국
 동기와 비동기의 차이인거 같다! 
+
+
+# 추가 reselct
+
+
+```js
+
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
+
+// reselect를 사용한 선택자 함수
+const selectExpensiveData = createSelector(
+  (state) => state.data,
+  (data) => {
+    // 비용이 많이 드는 계산이나 데이터 변형
+    // ...
+    return transformedData;
+  }
+);
+
+const MyComponent = () => {
+  const data = useSelector(selectExpensiveData);
+
+  // ...
+};
+
+```
