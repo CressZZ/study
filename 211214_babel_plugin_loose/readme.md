@@ -137,3 +137,28 @@ Babel 구성의 "플러그인" 섹션으로 이동합니다.
 
 # 결론
 위 문구는 애러 문구가 아니라 그냥 경고? 문구이다. 바벨이 알아서 해주니까 상관 없다아~
+
+
+# 새로운 loose 옵션 관련 애러 2023.08
+
+# 이슈
+
+```js
+
+const matches = [...msg.matchAll(/\${([\s]*[^;\s{]+[\s]*)\}/g)];
+
+// 이거를 .ts 파일에서 실행하면, matches 가 string[] 타입이  아니라 RegExpStringIterator[] 타입으로 리턴되고 있어. 왜그럴까?
+
+```
+- 위 코드에서 String.prototype.matchAll 은 `RegExpStringIterator` 타입을 리턴하는게 맞다
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/matchAll
+- 그런데 위 MDN 에서 나와 있듯이 `[...RegExpStringIterator]` interator 를 spread 문법으로 풀었으니까, `[...RegExpStringIterator]` 의 타입은 `string[]` 가 되어야 하는게 맞다. 
+- 근데 loose 옵션을 키면, 이게 `string[]` 이 아니라 `RegExpStringIterator[]` 타입으로 나온다. 
+- loose 옵션을 끄면 괜찮아 진다. 
+- 이때 `[...RegExpStringIterator]` 대신 `Array.from(RegExpStringIterator)` 을 쓰면 애러는 안난다.
+
+# GPT 의 답변
+- Babel의 loose 옵션은 Babel의 트랜스파일링 과정에서 일부 ES6+ 기능에 대해 최신 스펙을 정확히 따르지 않고, 더 느슨하게 변환하는 것을 말합니다. 이로 인해 변환된 코드가 좀 더 간결하고, 실행 속도가 빠르며, 구형 브라우저 호환성이 더 좋아질 수 있습니다.
+- 하지만 이 loose 옵션은 이런 이점 외에도 주의해야할 점이 있습니다. loose 모드를 사용하면 최신 JavaScript 스펙의 일부 세부 사항을 따르지 않게 되므로, 일부 코드가 예상대로 동작하지 않을 수 있습니다. 이는 특히 클래스와 관련된 기능, 스프레드 연산자와 같은 ES6+ 기능에서 특히 그렇습니다.
+- 따라서, 당신이 겪고 있는 문제가 Babel의 loose 옵션 때문에 발생하는 것일 가능성도 있습니다. loose 옵션을 끄고 코드가 정상적으로 동작하는지 확인해보는 것이 좋을 것 같습니다.
+- 그러나, 아래와 같이 Array.from()을 사용하는 방식으로 문제를 해결할 수 있을 것 같습니다. 이는 loose 옵션이나 다른 Babel 설정에 관계 없이 안정적으로 동작하는 방법입니다:
