@@ -26,6 +26,7 @@
 - ADC에 사용자 인증 정보를 제공하려면 Google Cloud CLI를 사용합니다.?
 - 아래에서 통합 API 키를 생성하고, 사용할수 있는데, 사용할 제품과 ip, url 등을 제한 할수 있고, 최소 번역의 경우 cors 설정이 되어 있다. 
 - https://console.cloud.google.com/apis/credentials?hl=ko&project=translate-test-388202 
+- API 키 사용 주의 사항: https://cloud.google.com/docs/authentication/api-keys?hl=ko
 
 ## 인증 방법중 셋. HTTP 직접 호출 + REST를 사용하여 인증 (직접인증 )
 - https://cloud.google.com/docs/authentication/rest?hl=ko#before_you_begin
