@@ -3,7 +3,7 @@ const https = require('https');
 
 const options = {
   hostname: 'translation.googleapis.com',
-  path: '/language/translate/v2?key=AIzaSyD5Zdz6a4CLWR-QI3mbwUg2f7n6qzPT79c',
+  path: '/language/translate/v2?key=',
   method: 'POST',
   headers: {
     'Content-Type': 'application/json; charset=utf-8',

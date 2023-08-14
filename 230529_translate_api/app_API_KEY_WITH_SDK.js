@@ -11,7 +11,7 @@ const {Translate} = require('@google-cloud/translate').v2;
 // Creates a client
 const translate = new Translate({
   // projectId:'translate-test-388202',
-  key: 'AIzaSyD5Zdz6a4CLWR-QI3mbwUg2f7n6qzPT79c',
+  key: '',
 });
 
 /**
