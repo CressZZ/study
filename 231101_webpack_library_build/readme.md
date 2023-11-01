@@ -134,3 +134,4 @@ __webpack_exports__ = __webpack_exports__["default"];
 - 모듈 만들거면 
 - entry 는 하나만 쓰던가
 - 롤업으로 넘어가던가
+- mini 를 써도  entry 는 .js 파일 하나에, 그 .js 안에서 css 를 임포트 하면 문제 없음
