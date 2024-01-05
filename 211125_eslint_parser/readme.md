@@ -213,3 +213,12 @@ parserOptions: {
 
 - 그러니까 typescript 쓸꺼면 @typescript-eslint/parser 를 쓰라는 이야기 이다.
 - 그럼 그냥 파싱은 가능하다는 이야기는 왜 한걸까?
+
+# 추가! extends와 env 사이의 직접적인 충돌이 발생하는 경우, extends에 정의된 구체적인 규칙이 일반적으로 env에 의해 제공되는 일반 설정보다 우선시 된다. (오랫만에 eslint...)
+- extends와 env 사이의 직접적인 충돌이 발생하는 경우, extends에 정의된 구체적인 규칙이 일반적으로 env에 의해 제공되는 일반 설정보다 우선시 된다.
+- 즉, extends 에 airbnb-base 가 있는데, 내가 env 에 es2024: true 라고 한다면 
+- airbnb-base 에는 parserOptions 에 ecmaVersion 이 2018 되어 있어서 https://github.com/airbnb/javascript/blob/master/packages/eslint-config-airbnb-base/index.js
+- 옵셔널 체이닝에 애러가 난다 (이건  es2020 버전)
+- 그럼 해당 내용에 대한 공식문서는 어디 있는가?
+- GPT 도 찾기 어렵다고 함
+- 공식 ESLint 문서에서 extends와 env 설정의 우선 순위나 상호 작용에 대해 명확하게 언급한 부분을 직접 찾아내기는 어려워. ESLint 문서에서는 일반적인 설정 규칙, 설정 파일의 계층 구조, 그리고 설정 방법에 대한 자세한 정보는 제공하지만, 특정 설정 간의 우선 순위나 충돌 해결에 대한 명시적인 설명은 제한적이야.
