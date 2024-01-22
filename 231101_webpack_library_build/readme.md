@@ -33,10 +33,10 @@ module.exports = {
 ## mini-css-extract-plugin 썼을때 빌드 결과 
 ```js
 
-	var __webpack_exports__ = {};
+var __webpack_exports__ = {};
 
-	(() => {
-    /** 문제 코드 */
+(() => {
+	/** 문제 코드 */
 	var __webpack_exports__ = {};
 	__webpack_require__.r(__webpack_exports__);
 	__webpack_require__.d(__webpack_exports__, {
@@ -44,17 +44,17 @@ module.exports = {
 	});
 	const __WEBPACK_DEFAULT_EXPORT__ = ({name: 'test'});
 
-	})();
+})();
 
 /** 문제 코드 */
-	(() => {
+(() => {
 	__webpack_require__.r(__webpack_exports__);
-	})();
+})();
 
-	__webpack_exports__ = __webpack_exports__["default"];
+__webpack_exports__ = __webpack_exports__["default"];
 /** // 문제 코드 */
 
-	return __webpack_exports__;
+return __webpack_exports__;
 })()
 
 ```
@@ -65,13 +65,13 @@ module.exports = {
 	var __webpack_exports__ = {};
 
 	(() => {
-	__webpack_require__.r(__webpack_exports__);
-	__webpack_require__.d(__webpack_exports__, {
-		"default": () => (__WEBPACK_DEFAULT_EXPORT__)
-	});
-	const __WEBPACK_DEFAULT_EXPORT__ = ({name: 'test'});
+		__webpack_require__.r(__webpack_exports__);
+		__webpack_require__.d(__webpack_exports__, {
+			"default": () => (__WEBPACK_DEFAULT_EXPORT__)
+		});
+		const __WEBPACK_DEFAULT_EXPORT__ = ({name: 'test'});
 
-	__webpack_exports__ = __webpack_exports__["default"];
+		__webpack_exports__ = __webpack_exports__["default"];
 	})();
 
 	return __webpack_exports__;
@@ -135,3 +135,94 @@ __webpack_exports__ = __webpack_exports__["default"];
 - entry 는 하나만 쓰던가
 - 롤업으로 넘어가던가
 - mini 를 써도  entry 는 .js 파일 하나에, 그 .js 안에서 css 를 임포트 하면 문제 없음
+
+# 추가!
+- entry 에 여러 진입점을 넣는다는 것은 (css 포함 + mini ) 웹펙이 빌드를 할때, 
+- 웹팩의 디폴트 템플릿에 
+- 두개의 진입점에 대한 (진입점이 두개니까 서로의 진입점 간의 의존성이 없다고 가정하고 (import/export))
+- 내용이 하나의 빌드에 들어가야한다. 
+- 이때, 웹팩은 두개의 진입점을 별도의 모듈로 생각하고, 
+- GPT 의 말에 따르면 
+- 만약 entry가 배열로 설정되어 여러 파일이 포함되어 있다면, 
+- 각 파일은 독립적인 모듈로 취급되며, 각각의 __webpack_exports__ 변수가 생성되어 해당 모듈의 내보내기를 관리한다. 
+- 이 경우, Webpack은 `배열의 마지막 항목`을 `최종적인 내보내기`로 취급하는 경향이 있다. 
+- 결과적으로, 첫 번째 파일의 내보내기가 덮어쓰여지거나 무시될 수 있어, 이는 default export가 undefined로 되는 원인이 될 수 있어.
+- 여기서 `배열의 마지막 항목`과 `최종적인 내보내기` 라는 단어가 중요한데,
+- 내가 보통 mini 를 쓸때, entry 포인트의 마지막 배열에 css 를 쓰기때문에, 
+- 웹팩은 최종적인 내보내기가 css 라고 판단하고, 이걸 export 시켜 버리는데, 
+- mini로 뺐으니 아무것도 남아 있지 않았던 것이다. 
+- 그래서 undefined 나온건데, 
+- entry 포인트의 배열순서를 바꿔주면 해결 되긴 한다. ( [css, ts] 순서로 )
+
+
+# vscode 내부 설정에서 (tsconfig 없을때)
+- moduleResolution 설정하는 곳은 없다
+- tsconfig 만들던가
+
+
+# tsconfig moduleResolution
+- 아 자꾸 햇갈리는데
+- tsconfig 에 있는건 허상이고
+- webpack 은 알아서 잘한다. 
+- 즉, webpack 은 그냥 5버전 기준으로 node에서 package.json 의 exports 필드 지원한다면 잘 빌드 하는데 (subpath 까지 해줄거 같은데, webpack 이 몇버전부터 멀 지원해주는지는 확실히 모르겠다)
+- tsconfig 에 moduleResolution이 node 로 되어 있으면 (node16 말고) vscode 에서 애러나는데,
+- vscode 에서 애러나는건 typescript 애러인거고, 실제 빌드 할때는 이슈 없이 빌드 된다. 
+- tsconfig 에 moduleResolution이 node16으로 되면 vscode 에서 애러도 없고,
+- 타입힌트도 잘준다
+- 아 맨날 햇갈림
+
+# 스크립트 모드
+- 타입은 전역타입 그러니까 스크립트 모드 타입을 안써야 한다
+- 젠장! 왜냐하면 ts 를 프로젝트 내에서 사용할땐 상관없는데, 
+- A 라는 프로젝트에서 d.ts 를 스크립트 모드로 전역으로 쓰고 있다고 해보자
+- A 라는 프로젝트 내에서는 상관없다. 하지만, 이게 B라는 프로젝트에 설치형으로 설치 되고, B 프로젝트 node_modules 에 들어가게 되면, 
+- 자동으로 프로젝트 범위에서 빠져 버리기때문에 스크립트 모드로 선언한 전역 타입을 쓸수 없다. 
+- typeRoots 설정에 해당 node_modules/A/ 를 포함 시키지 않는한...
+
+## 스크립트 모드 - GPT 답변
+- "프로젝트 전체"라는 범위에 대해 명확히 설명하자면, 이는 tsconfig.json 파일이 적용되는 범위 내에서 TypeScript 코드에 대한 설정과 규칙을 정의하는 것을 말해. 이 범위는 일반적으로 tsconfig.json 파일이 위치한 디렉토리와 그 하위 디렉토리들을 포함하지만, exclude 옵션으로 제외된 파일이나 폴더는 제외돼.
+- node_modules 폴더의 경우, TypeScript 프로젝트에서 기본적으로 제외되는 경로 중 하나야. 이 폴더 내의 파일들은 프로젝트의 코드와 직접적으로 연관되지 않은 종속성을 관리하는 데 사용되기 때문에, TypeScript 컴파일러는 일반적으로 이 폴더를 무시해. 그렇기 때문에 node_modules 내에 있는 전역 타입 설정들은 typeRoots 또는 다른 명시적인 구성 없이는 프로젝트에서 기본적으로 사용되지 않아.
+- 결론적으로, tsconfig.json의 범위 내에서 선언된 전역 타입들은 해당 설정 파일이 적용되는 모든 파일에 영향을 미치지만, node_modules와 같이 기본적으로 제외되는 경로에 있는 타입 선언들은 별도의 설정이 없으면 적용되지 않아.
+
+## 그럼 전역 선언 타입은 어떻게 하지?
+- /// <reference path="./interface/IShare.d.ts" />
+- 을 사용하자. 각종 라이브러리에  triple-slash-directives 쓰는 이유다
+- https://www.typescriptlang.org/ko/docs/handbook/triple-slash-directives.html
+
+
+# css-loader 에서 
+- 우리는 scss-loader 에서 resolve-url-loader 가 필요하다는 것을 안다. 
+- 근데, node_modules 의 css를 import 할때
+- 그 css 안에서 참조하는 node_modules안의 이미지는 잘 빌드 한다. 
+- css-loader 의 url 옵션이 알아서 url경로를 해석하고, 해당하는 파일을 모듈화 시키며
+- asset-module 이 (구버전의 경우 url-loader 가) 모듈화된 파일을 개별 파일로 뽑아 내는 식이기 때문이다. 
+- sass 는 css-loader 동작하기전에 파일을 하나로 합치게 될텐데, 이때 resolve-url-loader가 없으면 무지성으로 상대경로 같은 패스를 그냥 그대로 합쳐 버린다. 
+- 하위 폴더에있는걸 상위 폴에서에서 합쳐버리니, 애러가 나는거고 그래서 resolve-url-loader 을 쓰는건데, 
+- css-loader 까지 경로만 잘 물고 있으면 (scss 의 경우 resolve-url-loader 가 css파일이 기준으로 변환해준 경로이며, node_module의 경우 그냥 그대로 css파일이 참조한 이미지가 있는 경로)
+- 알잘딱 파일 경로를 잘 뽑아내어서 
+- asset-module이 그 경로의 이미지를 dist 폴더에 파일로 뽑아 내준다.!!!!!!!
+
+# webpack 의 output.library.type 에 대해서
+- https://webpack.kr/configuration/output/#outputlibrarytarget
+- 이 옵션은 엔트리 포인트의 반환 값(export한 엔트리 포인트에 관계없이)을 output.library에 정의된 이름으로 특정 객체에 할당합니다.
+- output.library에 빈 문자열이 할당된 경우 기본 동작은 엔트리 포인트에서 반환된 모든 프로퍼티가 다음 코드를 통해 output.libraryTarget에 정의된 대로 객체에 할당되는 것입니다.
+- 그러니까 이게 뭔소리냐 하면, 
+- 
+
+
+# webpack5 의 ㅡmode 에 대하여
+- production 은 필요 없는걸 싹 날린다.
+- 
+
+
+
+# 
+User
+esm 모듈에서 cjs를 import 한 파일을 webpack 이 번들링할꺼야.
+
+근데, 하나는 node_modules에 있는 cjs 파일이고, 
+하나는 같은 프로젝트에 있는 cjs 파일이야. 
+
+이때, 아래와 같은 애러 메시지는 하나의 같은 프로젝트에 있는 cjs파일을 import 할때 만 발생하더라고. 왜그런거야?
+export 'default' (imported as 'ncui') was not found in '../../dist/bb.js' (module has no exports)
+

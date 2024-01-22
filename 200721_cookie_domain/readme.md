@@ -43,3 +43,17 @@ document.cookie = 'test4=4; path=/; domain="";exipires=90'
 ```
 
 위의 예시는 domain 이 "" 로 지정되어, 원하는 도메인에 쿠키가 생성되지 않는다.
+
+
+# 서버에서 set-cookie 해줄때, 
+- 프론트에서 ajax 로 api를 호출 하는 방법과
+- img 태그에 src를 추가 하는방법 두개가 있는데, 
+- 두개의 차이점은 CORS 이슈에 대한 차이가 있고, (당연히..!)
+- 다른건 별로 없는데 
+- ajax로 요청하는게 좋아 보인다. (정석 같으니까)
+- 이슈는 프론트에서 ajax로 요청할때 credential: 'include' 를 해줘야 한다는 것이고 (fetch api 사용시 옵션)
+- 이때, 서버는 set-cookie에 꼭 SameSite=None 과 Secure 옵션을 해줘야 한다 
+- 둘중 하나만 빠져도 크로스 사이트에서 쿠키가 생성 안된다. 
+- 프론트에서 credential: 'include' 요청시 서버는 Access-Control-Allow-Origin 은 와일드 카드 * 를 쓰면 안되고 하나씩 설정 해줘야 한다.  (https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#sending_a_request_with_credentials_included)
+- Note: Access-Control-Allow-Origin is prohibited from using a wildcard for requests with credentials: 'include'. In such cases, the exact origin must be provided; even if you are using a CORS unblocker extension, the requests will still fail.
+

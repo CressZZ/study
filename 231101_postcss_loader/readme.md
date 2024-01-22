@@ -39,6 +39,19 @@ module.exports = {
 - scss 파일에 css 파일을 import 한상태에서 
 - js 파일에 scss 파일을 import 하면 postcss 에서 발생한 warning 문구가 (css 파일에서 찾아낸 warning) 발생하는데, 
 - `css 파일을` ( scss 말고 문제있는 css 파일) 그대로 entry 로 넣어서 빌드 돌리면, warning 문구가 안나왔기 때문이다. 
-- 왜냐 하면 scss 파일을 그대로 entry 로 넣어서 빌드 돌리면, postcss-loader 시점에서는 css 파일이 import 되기 이전 상태이기 때문이다.
-- `scss` 파일을 js 에 넣으면 warning 안나옴
+- 왜냐 하면 css 파일을 그대로 entry 로 넣어서 빌드 돌리면, postcss-loader 가 개입할 타이밍이 없다.
+- postcss-loader 는 sass-loader 다음에 나와야하는데, 이건 바로 css-loader 부터 동작 했기 때문이다.
+- `scss` 파일을 js 에 넣으면 warning  (추가: 엥? 나온는거 아닌가?)
 - 뭔소린지 모르겠지? ㅠㅠㅠㅠㅠ
+
+
+# 부연설명
+- 일반적으로 entry 에 sass 파일이 들어간다.
+- 그럼 sass-loader -> postcss-loader -> css-loader 순으로 다 적용 된다
+- 그럼 css-loader 의  importLoaders 옵션은 css 파일을 직접 entry에 포함시켰을때와 관련이 있는 옵션인거다.
+- 왜냐하면  sass 파일에  import 가 있고 정삭적으로 sass-loader가 동작했다면, sass-loader 가 컨버트한 css 파일에 import 구문이 살아 있지 않기 때문이다.
+
+# 즉,
+- Sass 파일을 엔트리로 사용하는 경우: sass-loader -> postcss-loader -> css-loader 순서로 로더가 적용돼. 여기서 sass-loader는 Sass의 @import를 처리하고, 결과적으로 생성된 CSS 파일은 @import 구문을 포함하지 않는다.
+- CSS 파일을 엔트리로 사용하거나 CSS 내부에서 @import를 사용하는 경우: css-loader의 importLoaders 설정이 중요하다. 이 설정은 @import된 CSS 파일들에 적용될 추가 로더의 수를 정의한다.. 예를 들어, importLoaders=1이면 css-loader 앞에 있는 한 개의 로더가 @import된 CSS 파일에 적용되는 거야.
+
