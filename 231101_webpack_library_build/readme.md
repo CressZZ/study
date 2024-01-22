@@ -226,3 +226,63 @@ esm 모듈에서 cjs를 import 한 파일을 webpack 이 번들링할꺼야.
 이때, 아래와 같은 애러 메시지는 하나의 같은 프로젝트에 있는 cjs파일을 import 할때 만 발생하더라고. 왜그런거야?
 export 'default' (imported as 'ncui') was not found in '../../dist/bb.js' (module has no exports)
 
+
+
+# 중요한거, webpack, babel 그리고 node_modules
+- 자자자
+- 내가 A 라는 프로젝트를 webpack 으로 library.type = 'commonjs2' 로 해서 빌드를 했는데, 
+- node_modules 에 안 넣고, B 프로젝트 src 폴더에 넣고, B의 index.js 에서 import 로 불러와서, 
+- webpack 으로 돌렸는데, 아래와 같은 애러가 났다. 
+- `export 'default' (imported as 'ncui') was not found in './ncui.js' (module has no exports)`
+- 왜 났을까?
+- node_modules/A/dist/index.js 에 있는걸 import 하면 애러가 안난다. 
+- 이상하지 않은가?
+- A 에서 빌드된 파일을 동시에 썼고, A는 웹팩에서 빌드 해줬기 때문에, 그것도 commonjs 로 빌드 해줬기 때문에
+- module.exports 도 잘 가지고 있고, 
+- webpack 은 cjs를 esm에서 import 해줘도 잘 처리 해줘야 하는데 애러가 생긴다!
+- 그것도 src 폴더에서.!
+- 정답은 바로 babel 이다. 
+- bable-loader 는 webpack 설정할때 node_modules 를 exclude해버리기 때문에, 
+- 일단 src 에 있는 A를 import 하는 것과, node_modules 에 있는 A를 import 하는 것은 다를 것이다. 라고
+- 이제 감이 잡히는데, 그럼 구체적으로 뭐가 어떻게 다르지?
+- 정답은 babelrc 의 @babel/preset-env의 옵션중 modules 옵션이다. 
+- 이걸 false로 넣으면 src 폴더에 있는 A를 import 할때 해당 애러가 나오고, 'coommonjs' 로 하면 해당 애러가 안나온다,
+- 왜?
+- modules 은 타겟 js 파일의 esm을 cjs로 바꾸는거 뿐 아니라, 
+- 지가 들어갈때, 그니까 core-js 가 들어갈때도 바꿀지 안바꿀지 결정하는 것으로 보인다. 
+- 그러니까, 원래 A 라는 프로젝트가 cjs였으니까, modules를 false로 넣고, A 프로젝트 안에 promise 같은게 있으면 core-js를 import 하게 된다 
+- 근데, modules 가 commonjs 라면 croe-js를 require로 불러온다.!!!
+- 그리도, 생각해보면 A는 이미 빌드 된거라서, core-js 가 이미 들어가 있다고 생각되어 지는데, 만약 node_modules 에 있었다면, babel-loader가 exclude 되서 개입을 안하지만, 이렇게 src 에 있다면, 그냥 그 빌드된 코드를 보고, promise가 있네? 하면 또 babel이 넣어주는 거다. 
+- 그래서 결국, modules가 false B 프로젝트에서 import 로 A 프로젝트를 불러오는 건 그냥 import 로 두고, A 프로젝트 자체는 cjs 니까 이 코드도 그대로 두는데, cjs인 A 프로젝트 안에 바벨이 import 로 들어가 버리면서, (아직 웹펙이 파일을 하나로 모드기 전이다.)
+- A 프로젝트 파일안에 cjs와 esm이 공존 하게 된것이다. 
+- 이제 이걸 B에서 import 할때는 A 프로젝트의 module.exports 를 잘 해석해서 알아서 잘 가져 오지만, 
+- 가져온 파일안에 import 가 살아 있게 된다.
+- 만약 babel 이 없었다면, bebel 이 import 문법으로 드어가지 않았다면, 
+- 이슈는 없었을 것이다.
+
+- 우아, 내용이 190430_babel_preset_env 에 그대로 있다. (심지어 해결책까지)
+```
+important!!!!!!!!! 바벨에서 ESModule 과 Commonjs 모듈을 혼용하고 + preset 설정중 useBuiltIns를 usage로 하고 modules를 auto(babel-loader 사용시) 및 false로 하면 애러가 생긴다. 
+해결책은 babel 옵션중 `sourceType` 을 `unambiguous`로 설정함 )
+```
+
+# 아씨 알았다!
+- A프로젝트가 cjs임에도 불구하고 왜 위에서 바벨이 cores-js를 import 구문으로 가져 왔냐 하면 
+- 바벨은 기본적으로 모든 파일을 esm으로 판단하고 죄다 import 로 때려 넣기 때문이다. 
+## 1번
+- 그럼 preset 옵션중 modules를  'commonjs' 했을때 애러가 안나는 이유는
+- 일단 A프로젝트(cjs) 안에 import 로 core-js를 때려 놓고 (혼용상태)
+- 그 다음 modules 옵션에 따라 core-js를 import 한 esm 구문을 cjs 로 바꾸고, 
+- 그 다음 웹펙이 말아 버리는데, 
+## 2번
+- 바벨 옵션 sourceType 을 unambiguous로 설정하면
+- 바벨한테 '아 무조건 import 로 core-js 때려 넣지 말고, 파일을 좀 보고 module.exports 같은거 있으면 require로 넣으라고!' 라고 말해줘서
+- core-js를 require로 넣고, 
+- modules 옵션이 뭐든 아무튼 변화 없고 (modules 옵션은 esm 문법으 바꿀지 말지 결정하는 거니까)
+- 웹펙이 말면 이상이 없다. 
+## 3번
+- 바벨 옵션 sourceType 없이 modules를 false 로 하면
+- 바벨이 죄다 import 로 core-js 때려 넣은뒤
+- modules 옵션에 따라 그 import 구문을 건드리지 않고, 
+- 웹팩은 이렇게 cjs와esm 이 혼용되어 있는 파일을 빌드 하려다
+- 애러남...! ㅋㅋㅋ
