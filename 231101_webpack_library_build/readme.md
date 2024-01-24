@@ -249,7 +249,7 @@ export 'default' (imported as 'ncui') was not found in '../../dist/bb.js' (modul
 - 이걸 false로 넣으면 src 폴더에 있는 A를 import 할때 해당 애러가 나오고, 'coommonjs' 로 하면 해당 애러가 안나온다,
 - 왜?
 - modules 은 타겟 js 파일의 esm을 cjs로 바꾸는거 뿐 아니라, 
-- 지가 들어갈때, 그니까 core-js 가 들어갈때도 바꿀지 안바꿀지 결정하는 것으로 보인다. 
+- 지가 들어갈때, 그니까 core-js 가 들어갈때도 바꿀지 안바꿀지 결정하는 것으로 보인다. ( !이거 아님, 뒤에 추가로 넣었음.! 바벨은 그냥 죄다 import 로 때려 넣고 본다. sourceType 옵션을 unambiguous 로 바꿔 줘야 한다.)
 - 그러니까, 원래 A 라는 프로젝트가 cjs였으니까, modules를 false로 넣고, A 프로젝트 안에 promise 같은게 있으면 core-js를 import 하게 된다 
 - 근데, modules 가 commonjs 라면 croe-js를 require로 불러온다.!!!
 - 그리도, 생각해보면 A는 이미 빌드 된거라서, core-js 가 이미 들어가 있다고 생각되어 지는데, 만약 node_modules 에 있었다면, babel-loader가 exclude 되서 개입을 안하지만, 이렇게 src 에 있다면, 그냥 그 빌드된 코드를 보고, promise가 있네? 하면 또 babel이 넣어주는 거다. 
