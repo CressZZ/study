@@ -13,8 +13,8 @@ min-height: auto
 
 아래와 같이 오버라이드 해줘야 함
 
-min-width: 0
-min-height: 0
+min-width: 0;
+min-height: 0;
 
  
 
