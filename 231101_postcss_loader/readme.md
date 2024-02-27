@@ -55,3 +55,10 @@ module.exports = {
 - Sass 파일을 엔트리로 사용하는 경우: sass-loader -> postcss-loader -> css-loader 순서로 로더가 적용돼. 여기서 sass-loader는 Sass의 @import를 처리하고, 결과적으로 생성된 CSS 파일은 @import 구문을 포함하지 않는다.
 - CSS 파일을 엔트리로 사용하거나 CSS 내부에서 @import를 사용하는 경우: css-loader의 importLoaders 설정이 중요하다. 이 설정은 @import된 CSS 파일들에 적용될 추가 로더의 수를 정의한다.. 예를 들어, importLoaders=1이면 css-loader 앞에 있는 한 개의 로더가 @import된 CSS 파일에 적용되는 거야.
 
+# importLoaders 는 css-loader 까지 왔는데, 아직 처리 되지 않은 @import 구문이 있을때 영향을 미친다.
+https://stackoverflow.com/questions/52544620/what-is-exactly-the-importloaders-option-of-css-loader-in-webpack-4
+importLoaders only has effect on unresolved @imports. So when using postCSS with nextCSS (no @import resolver) you'll want to set importLoaders. This way nextCSS will also be applied to imported .css files. But when using sass, it already handles the @import statements, so no importLoaders is required.
+So, this only happens when css-loader finds an unresolved @import. When using sass-loader for example; All imports are resolved (and concatenated) before css-loader even gets the chance to look for an @import.
+
+importLoaders는 해결되지 않은 @imports에만 영향을 미칩니다. 따라서 nextCSS(@import 해석기 없음)와 함께 postCSS를 사용할 때 importLoaders를 설정하는 것이 좋습니다. 이렇게 하면 가져온 .css 파일에도 nextCSS가 적용됩니다. 그러나 sass를 사용하면 이미 @import 문을 처리하므로 importLoaders가 필요하지 않습니다.
+따라서 이는 CSS-loader가 해결되지 않은 @import를 발견한 경우에만 발생합니다. 예를 들어 sass-loader를 사용할 때; CSS-loader가 @import를 찾을 기회를 얻기 전에 모든 가져오기가 해결(및 연결)됩니다.
