@@ -2,6 +2,7 @@
 https://support.google.com/analytics/answer/14275483#next-steps
 ![](./1.png)
 ![](./4.png)
+![](./5.png)
 
 - [태그관리자] 유럽 경제 지역(EEA)의 트래픽에 대한 동의 모드 업데이트
 https://support.google.com/tagmanager/answer/13695607
