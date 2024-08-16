@@ -31,7 +31,7 @@ background-image: url("@/img/official/board/btn_arrow.png");
 - 하지만 resolve-url-loaderd는 일단 바꾸고 본다. 
 - 근데 우리는 @ 알리아스가 제일 먼저 있지 안흔ㄴ가?
 - 상관없다. 바꿔 버린다. ./@/ 으로 바꾸는 것이다. 
-- 그래서 css-loader 에 갈때 쯤이면 _src/scss/index.scss/_src/img/official.... 이런식으로 바뀌어 버리는 것이다. 
+- 그래서 css-loader 에 갈때 쯤이면 _src/scss/index/./scss/_src/img/official.... 이런식으로 바뀌어 버리는 것이다. 
 
 # 해결책이라고 생각했던것 첫번째 normalizeUrl
 - 오키 그럼 post-css의 normalizeUrl 을 사용해볼까? (https://cssnano.github.io/cssnano/docs/optimisations/normalizeurl/)
@@ -42,11 +42,14 @@ background-image: url("@/img/official/board/btn_arrow.png");
 - 2depth 이상 들어가게 되면 소용없다. 
 - 예를 들면 scss/index.scss 에서 scss/test/test.scss 를 @import 하는데, test.scss 안에 알리아스를 써서 이미지 하나를 참조 한다고 하자.
 - 그럼 test.scss 에는 `url('@/img/test.jpeg')` 이렇게 될거고
-- resolve-url-loader 는 `url('./test/img/test.jpeg')` 로 바꿀꺼다.
+- resolve-url-loader 는 `url('./test/@/img/test.jpeg')` 로 바꿀꺼다. 
+- 왜냐하면 test.scss 는 ./test/ 안에 있고, 거기정의된 url이 슬래쉬 없이 @ 로 시작되면 현재 폴더를 의미하는데,
+- 이게 루트 기준의 현재 폴더를 표현해야 하니까. `./test/@/img/test.jpeg`로 된다. 
 - 왜냐하면 최상위 파일의 위치를 기준으로 나머지 파일들의 모든 url 을 상태경로로 바꾸는 것이 resolve-url-loader 의 역할이기때문이다. 
 - 첫번째 예시에서는 변환한 파일이 루트에 있읐으니가  `./@/img/test.jpeg`이렇게 바뀐건데,
 - 두뎁스 안에 있으면  `url('./test/@/img/test.jpeg')` 이렇게 바뀐다. 
 - 즉 `url('./test/@/img/test.jpeg')`이거는 normalizeUrl가 동작해도  `url('test/@/img/test.jpeg')` 이렇게 밖에 안바뀐다. 
+- 그럼 alias인 @ 도 처리가 안된다. 알리아스 처리하려면 맨 앞에 있어야 하는거 같다. (요건 추측)
 
 # 결국 꽝 (그런데 다른 프로젝트에서는 위 처럼 쓰고 있다. 애러가 안난 이유는, scss가 루트에 있는 경우에만 알리아스를 썼고, 아닌건 상대경로 썼기 때문)
 
