@@ -124,6 +124,60 @@ async, all, initial 값을 설정 해줄수 있다.
 
 그리고 웹팩 문서는 별로다.
 
+### 오랫만?
+그럼 초기 청크는 chunkFilename 이 아니라 filename 과 연동 되어 있다는건데 왜그런거야?
+
+8초 동안 Thought
+맞습니다. 초기 청크는 output.chunkFilename이 아니라 output.filename 설정과 연동됩니다. 그 이유는 Webpack이 청크를 두 가지 유형으로 분류하기 때문입니다:
+
+초기 청크(Initial Chunks): 애플리케이션이 로드될 때 즉시 필요한 청크들입니다. 엔트리 포인트와 splitChunks 옵션에서 chunks: 'initial'로 생성된 청크들이 여기에 속합니다.
+
+비동기 청크(Async Chunks): 동적 임포트(dynamic import)나 splitChunks에서 chunks: 'async'로 생성된 청크들로, 필요할 때 로드됩니다.
+
+Webpack의 파일명 규칙은 다음과 같습니다:
+
+output.filename: 초기 청크의 파일 이름을 지정합니다.
+output.chunkFilename: 비동기 청크의 파일 이름을 지정합니다.
+따라서, splitChunks를 사용하여 초기 청크를 분할하면 해당 청크들은 output.filename 설정을 따라갑니다. 이것이 바로 vendor.bundle.js로 파일이 생성되는 이유입니다.
+
+예를 들어, 다음과 같은 설정을 보면:
+
+// webpack.config.js
+output: {
+  filename: '[name].bundle.js',
+  chunkFilename: '[name].chunk.js',
+},
+optimization: {
+  splitChunks: {
+    cacheGroups: {
+      vendors: {
+        test: /node_modules/,
+        name: 'vendor',
+        chunks: 'initial', // 초기 청크로 분류
+        priority: -10,
+      },
+    },
+  },
+},
+cacheGroups.vendors에서 chunks: 'initial'로 설정했기 때문에, 생성된 vendor 청크는 초기 청크로 간주됩니다. 따라서 output.filename의 [name] 플레이스홀더에 vendor가 대체되어 vendor.bundle.js가 생성됩니다.
+
+반대로, 비동기 청크의 경우:
+
+동적 임포트 구문(import())을 사용하거나
+splitChunks에서 chunks: 'async'로 설정하면,
+해당 청크들은 비동기 청크로 분류되어 output.chunkFilename 설정을 따르게 됩니다.
+
+정리하면:
+
+초기 청크 (chunks: 'initial'): output.filename 사용
+비동기 청크 (chunks: 'async' 또는 동적 임포트): output.chunkFilename 사용
+Webpack은 이렇게 초기 청크와 비동기 청크를 구분하여 각기 다른 파일명 패턴을 적용함으로써 효율적인 번들링과 로딩을 지원합니다.
+
+왜 이런 구분이 있나요?
+
+초기 청크는 애플리케이션 로드 시 즉시 필요하기 때문에, 메인 번들링 파일들과 동일한 규칙을 따르는 것이 합리적입니다.
+비동기 청크는 사용자의 인터랙션이나 특정 조건에서 로드되므로, 별도의 네이밍 규칙을 적용하여 관리하기 쉽도록 합니다.
+따라서, splitChunks를 통해 분할된 청크가 초기 청크인지 비동기 청크인지에 따라 파일명 설정이 달라지는 것입니다.
 
 #
 https://simsimjae.medium.com/webpack4-splitchunksplugin-%EC%98%B5%EC%85%98-%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0-19f5de32425a
