@@ -156,10 +156,10 @@ let myVar3: Mytype = 'string'; // 애러: .d.ts 파일의 최상위 수준 선�
 - 첫번째로 `include`를 `./src/**/*` 로 정의하고
 - `src/types/name/index.d.ts`  을 `/types/name/index.d.ts` 옮기면 
 - 타입 선언 파일이 짠 include 에서 빠지게 된다. 
-- 이렇게 되면 `/types/name/index.d.ts` 에 스크립트 모드로 선언된 얘들을 tsc 가 인식을 못한다. 
+- 이렇게 되면 `/types/name/index.d.ts` 에 스크립트 모드로 선언된 얘들을 tsc 가 인식을 못한다. a
 - 이때 사용하는게 `typeRoots`
 -  `typeRoots:['./types/']` 로 정의하면 `declare module 'name'` 뿐 아니라 `type A = string` 과 같이 스크립트 모드로 전역 선언한 얘들이 모두 인식된다. 
--  중요한건 `types/name/index.d.ts` 처럼 `types/` 밑에 1depth 폴더가 있고 그안에 파일이 있어야 한다는것. 
+-  완전! 진짜! 너무!!!! 중요한건 `types/name/index.d.ts` 처럼 `types/` 밑에 *1depth* 폴더가 있고 그안에 파일이 있어야 한다는것. 
 -  암튼 그럼 자 봐보자 `typeRoots`에 `'./types/` 만 넣었으니 그럼 `node_modules/@types/name2/index.d.ts` 의 모둘을 `import name from 'name2'`로 불러오면 인식을 못할까?
 -  아니다.! 인식한다. 
 
