@@ -267,22 +267,44 @@ important!!!!!!!!! 바벨에서 ESModule 과 Commonjs 모듈을 혼용하고 + p
 ```
 
 # 아씨 알았다!
+- 일단 바벨을 **개별 파일**을 트렌스 파일링하는거고, 
+- 웹팩이 **말아 올린**다는 개념을 꼭 유념해야 함....!
+
 - A프로젝트가 cjs임에도 불구하고 왜 위에서 바벨이 cores-js를 import 구문으로 가져 왔냐 하면 
 - 바벨은 기본적으로 모든 파일을 esm으로 판단하고 죄다 import 로 때려 넣기 때문이다. 
+- 이유는 sourceType 설정을 안하면 디폴트로 module이 들어가는데 이건 import 구문이 있는 esm 이라고 생각하기 때문
+- 만약 sourceType 이 script 였으면 Commonjs로 생각하고 require로 넣었겠지
+
 ## 1번
 - 그럼 preset 옵션중 modules를  'commonjs' 했을때 애러가 안나는 이유는
 - 일단 A프로젝트(cjs) 안에 import 로 core-js를 때려 놓고 (혼용상태)
 - 그 다음 modules 옵션에 따라 core-js를 import 한 esm 구문을 cjs 로 바꾸고, 
 - 그 다음 웹펙이 말아 버리는데, 
+- 기존의 A프로젝트 (cjs)는 변하는것 없고...
+- 그래서 파일은 cjs로 통일된 상태이다. 그래서 이슈가 없는데
+
 ## 2번
 - 바벨 옵션 sourceType 을 unambiguous로 설정하면
 - 바벨한테 '아 무조건 import 로 core-js 때려 넣지 말고, 파일을 좀 보고 module.exports 같은거 있으면 require로 넣으라고!' 라고 말해줘서
-- core-js를 require로 넣고, 
-- modules 옵션이 뭐든 아무튼 변화 없고 (modules 옵션은 esm 문법으 바꿀지 말지 결정하는 거니까)
+- A프로젝트(cjs) 가 cjs니까 딱 보니, core-js를 require로 넣고, 
+- modules 옵션이 뭐든 아무튼 변화 없고 (modules 옵션은 esm 문법으 바꿀지 말지 결정하는 거니까. 지금은 cjs 형태임)
 - 웹펙이 말면 이상이 없다. 
+
 ## 3번
-- 바벨 옵션 sourceType 없이 modules를 false 로 하면
-- 바벨이 죄다 import 로 core-js 때려 넣은뒤
+- 바벨 옵션 sourceType 없이 modules를 false 로 하면 (sourceType은 모듈임)
+- 바벨이 죄다 import 로 core-js 때려 넣은뒤 (sourceType이 모듈이니까)
 - modules 옵션에 따라 그 import 구문을 건드리지 않고, 
-- 웹팩은 이렇게 cjs와esm 이 혼용되어 있는 파일을 빌드 하려다
-- 애러남...! ㅋㅋㅋ
+- 웹팩은 이렇게 기존의 A프로젝트(cjs)와esm 이 혼용되어 있는 파일을 빌드 하려다
+- 일단 파일에 import 있으니까 아 이거 esm 이네? 하면서 export찾아 다니다가,
+- 기존의 A프로젝트(cjs)에는 export 없으니까. 어? export없는데? 하면서 애러남...!
+
+
+# pnpm 의 경우
+- 내부에서 생성한 패키지가 packages 폴더에 있고
+- app에서   "@ncui/js-util": "workspace:^", 이런식으로 디펜더시를 참조 하면
+- app 안의  node_modules 폴더 안에 심볼릭 링크로 packages 폴더를 참조 하게 된다. 
+- 즉, 진짜 파일은 packages안에 있다는것 (node_modules) 가 아니라
+- 이러면 웹팩의 exclude: /node_modules/ 가 내부에서 생성한 패키지를 거르지 못하고, 실제 프로젝트 파일이라고 생각해버린다. 
+- 그래서 존재하는것이 웹팩 설정중 symlinks: false, 가 존재한다. 
+- 이렇게 하면 실제경로를 보는게 아니라 node_modules를 바라보게 됨으로서 
+- exclude가 잘 동작 하게 된다.
