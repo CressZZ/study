@@ -2,6 +2,8 @@
 바벨은 ESLint(.eslintrc)나 Prettier(.prettierrc)도 세부 설정이 가능한것처럼 옵션을 파일로 뺄수 있습니다. 
 모든 바벨 API옵션이 허용됩니다. 그러나 옵션중에 자바스크립트 언어가 필요한 경우(함수 같은거) configuration file을 .js 파일로 만들어야 합니다. 
 
+참고: https://eslint.org/blog/2022/08/new-config-system-part-2/#main
+
 ## 사용방법
 - monorepo를 사용하고 있습니까?
 - `node_module`을 컴파일 하고 싶습니까?
